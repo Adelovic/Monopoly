@@ -1,0 +1,195 @@
+package monopoly;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Controleur
+{
+    private Monopoly monopoly;
+    private Ihm ihm;
+    
+    
+    public Controleur()
+    {
+        monopoly = new Monopoly(); 
+        ihm = new Ihm(this);
+        lancerJeu();
+    }
+    
+    private void lancerJeu()
+    {
+        creerGroupes();
+        creerPlateau("/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/data.txt");
+        initialiserJoueurs();
+        
+        int numJoueurCourant = 0;
+        while (monopoly.getJoueurs().size() > 1)
+        {
+            Joueur joueurCourant = monopoly.getJoueurs().get(numJoueurCourant);
+            jouerCoup(joueurCourant);
+            
+            numJoueurCourant++;
+            if (numJoueurCourant >= monopoly.getJoueurs().size())
+            {
+                numJoueurCourant = 0;
+            }
+        }
+        Joueur gagnant = monopoly.getJoueurs().get(0);
+        ihm.notifierGagnant(gagnant);
+        ihm.afficherClassement(gagnant, monopoly.getJoueursElimines());
+    }
+    
+    private void initialiserJoueurs()
+    {
+        int nombreJoueur = ihm.demanderNombreJoueur();
+        for (int i = 1; i <= nombreJoueur; i++)
+        {
+           String nom = ihm.demanderNom(i);
+           monopoly.addJoueur(new Joueur(nom));
+        }
+    }
+    
+    private void jouerCoup(Joueur joueur)
+    {
+        Carreau c = lancerDesEtAvancer(joueur);
+        
+        ihm.notifierLancerDes(joueur);
+        
+        Action action = c.action(joueur);
+        
+        boolean elimine = false;
+        
+        if (action != null)
+        {
+            ihm.notifier(action.getMessage());
+            boolean reponseJ = true;
+            if (action.entraineDemande())
+            {
+                reponseJ = ihm.demanderJoueur();
+            }
+
+            ResultatAction res = action.faireAction(reponseJ);
+
+            ihm.notifier(res.getMessage());
+            
+            if (!res.getSucces())
+            {
+                monopoly.removeJoueur(joueur);
+                monopoly.addJoueurElimine(joueur);
+                ihm.joueurElimine(joueur);
+                elimine = true;
+            }
+            else
+            {
+                ihm.afficherInfoJoueur(joueur);
+                
+            }
+            
+        }
+        else
+        {
+            System.out.println(joueur.getNom() + " est tombé sur le carreau " + c.getNom() + " et ne peut rien faire !");
+            ihm.afficherInfoJoueur(joueur);
+        }
+        
+        if (!elimine && joueur.getDernierDes()[0] == joueur.getDernierDes()[1])
+        {
+            ihm.notifierDoubleDes(joueur);
+            jouerCoup(joueur);
+        }
+
+        
+    }
+    
+    private int[] lancerDes()
+    { 
+        Random random = new Random();
+        return new int[] { random.nextInt(6)+1, random.nextInt(6)+1 };
+    }
+    
+    private Carreau lancerDesEtAvancer(Joueur j)
+    {
+        int[] des = lancerDes();
+        j.setDernierDes(des);
+        
+        monopoly.avancerJoueur(j, des);
+        
+        return j.getPositionCourante();
+    }
+    
+    private void creerGroupes()
+    {
+        for (CouleurPropriete couleur : CouleurPropriete.values())
+        {
+            monopoly.addGroupe(new Groupe(couleur));
+        }
+    }
+    
+    private void creerPlateau(String dataFilename)
+    {
+        try
+        {
+            ArrayList<String[]> data = readDataFile(dataFilename, ",");
+            
+            for(int i=0; i<data.size(); ++i)
+            {
+                String[] caseInfos = data.get(i);
+                String caseType = caseInfos[0];
+                if(caseType.compareTo("P") == 0)
+                {
+                    System.out.println("Propriété :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
+                    monopoly.addCarreau(new ProprieteAConstruire(Integer.valueOf(caseInfos[1]), caseInfos[2], monopoly.getGroupe(caseInfos[3]), Integer.valueOf(caseInfos[4]), Integer.valueOf(caseInfos[5])));
+                }
+                else if(caseType.compareTo("G") == 0)
+                {
+                    System.out.println("Gare :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
+                    monopoly.addCarreau(new Gare(Integer.valueOf(caseInfos[1]), caseInfos[2], Integer.valueOf(caseInfos[3])));
+                }
+                else if(caseType.compareTo("C") == 0)
+                {
+                    System.out.println("Compagnie :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
+                    monopoly.addCarreau(new Compagnie(Integer.valueOf(caseInfos[1]), caseInfos[2], Integer.valueOf(caseInfos[3])));
+                }
+                else if(caseType.compareTo("AU") == 0)
+                {
+                    System.out.println("Case Autre :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
+                    monopoly.addCarreau(new AutreCarreau(Integer.valueOf(caseInfos[1]), caseInfos[2]));
+                }
+                else
+                {
+                    System.err.println("[buildGamePleateau()] : Invalid Data type");
+                }
+            }
+            
+        }
+        catch(FileNotFoundException e)
+        {
+            System.err.println("[buildGamePlateau()] : File not found!");
+        }
+        catch(IOException e)
+        {
+            System.err.println("[buildGamePlateau()] : Error while reading file!");
+        }
+    }
+    
+    private ArrayList<String[]> readDataFile(String filename, String token) throws FileNotFoundException, IOException
+    {
+        ArrayList<String[]> data = new ArrayList<String[]>();
+        
+        BufferedReader reader  = new BufferedReader(new FileReader(filename));
+        String line = null;
+        while((line = reader.readLine()) != null)
+        {
+            data.add(line.split(token));
+        }
+        
+        reader.close();
+        
+        return data;
+    }
+}
+
