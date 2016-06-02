@@ -1,4 +1,7 @@
-package monopoly;
+package model;
+
+import model.Joueur;
+import model.Propriete;
 
 public class ActionAchat extends Action 
 {
@@ -14,6 +17,7 @@ public class ActionAchat extends Action
     * Le joueur tombe sur une case propriété
     * qu'il a la possibilité d'acheter
     */
+    @Override
     public ResultatAction faireAction(boolean reponseJ) 
     {
         if (reponseJ)
@@ -29,11 +33,13 @@ public class ActionAchat extends Action
         }
     }
     
+    @Override
     public String getMessage() 
     {
         return joueur.getNom() + " est tombé sur la case " + propriete.getNom() + " et a la possibilité de l'acheter pour " + propriete.getPrix() + "$";
     }
     
+    @Override
     public boolean entraineDemande() 
     {
         return true;

@@ -1,4 +1,6 @@
-package monopoly;
+package model;
+
+import model.Carreau;
 
 public abstract class Propriete extends Carreau 
 {

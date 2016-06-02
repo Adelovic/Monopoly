@@ -1,5 +1,7 @@
-package monopoly;
+package model;
 
+import model.Compagnie;
+import model.Gare;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -102,7 +104,7 @@ public class Monopoly
         return joueurs;
     }
 
-    ArrayList<Joueur> getJoueursElimines() 
+    public ArrayList<Joueur> getJoueursElimines() 
     {
         return joueursElimines;
     }

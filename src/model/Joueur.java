@@ -1,5 +1,8 @@
-package monopoly;
+package model;
 
+import model.Carreau;
+import model.Compagnie;
+import model.Gare;
 import java.util.ArrayList;
 public class Joueur 
 {

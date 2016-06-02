@@ -3,24 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Joueur.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/ActionAchat.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Ihm.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/AutreCarreau.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/CouleurPropriete.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Compagnie.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Propriete.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Monopoly.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/ProprieteAConstruire.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Groupe.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Gare.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Action.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/data.txt</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/ActionLoyer.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Main.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/ResultatAction.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Carreau.java</file>
-            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/Controleur.java</file>
+            <file>file:/D:/Stockage/Outils/NetBeans%208.1/Projects/Monopoly/src/monopoly/Gare.java</file>
+            <file>file:/D:/Stockage/Outils/NetBeans%208.1/Projects/Monopoly/src/monopoly/Monopoly.java</file>
+            <file>file:/D:/Stockage/Outils/NetBeans%208.1/Projects/Monopoly/src/monopoly/ActionAchat.java</file>
+            <file>file:/D:/Stockage/Outils/NetBeans%208.1/Projects/Monopoly/src/monopoly/Controleur.java</file>
+            <file>file:/D:/Stockage/Outils/NetBeans%208.1/Projects/Monopoly/src/monopoly/Action.java</file>
+            <file>file:/D:/Stockage/Outils/NetBeans%208.1/Projects/Monopoly/src/monopoly/Carreau.java</file>
+            <file>file:/D:/Stockage/Outils/NetBeans%208.1/Projects/Monopoly/src/monopoly/ActionLoyer.java</file>
+            <file>file:/D:/Stockage/Outils/NetBeans%208.1/Projects/Monopoly/src/monopoly/data.txt</file>
+            <file>file:/D:/Stockage/Outils/NetBeans%208.1/Projects/Monopoly/src/monopoly/Propriete.java</file>
         </group>
     </open-files>
 </project-private>

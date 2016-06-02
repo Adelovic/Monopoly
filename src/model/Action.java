@@ -1,4 +1,6 @@
-package monopoly;
+package model;
+
+import model.Joueur;
 
 public abstract class Action 
 {
@@ -21,7 +23,6 @@ public abstract class Action
     * après sa réception
     */
     public abstract ResultatAction faireAction(boolean reponseJ);
-    
     
     /*
     * Message informatif pour que le joueur puisse savoir

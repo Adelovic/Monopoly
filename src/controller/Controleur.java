@@ -1,11 +1,23 @@
-package monopoly;
+package controller;
 
+import view.Ihm;
+import model.Action;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import model.AutreCarreau;
+import model.Carreau;
+import model.Compagnie;
+import model.CouleurPropriete;
+import model.Gare;
+import model.Groupe;
+import model.Joueur;
+import model.Monopoly;
+import model.ProprieteAConstruire;
+import model.ResultatAction;
 
 public class Controleur
 {
@@ -31,7 +43,7 @@ public class Controleur
     private void lancerJeu()
     {
         creerGroupes();
-        creerPlateau("/users/info/etu-s2/raffya/M2103/java/Monopoly/src/monopoly/data.txt");
+        creerPlateau("src/data/data.txt");
         initialiserJoueurs();
         
         int numJoueurCourant = 0;
@@ -71,11 +83,11 @@ public class Controleur
     */
     private void jouerCoup(Joueur joueur)
     {
-        Carreau c = lancerDesEtAvancer(joueur);
+        Carreau carreau = lancerDesEtAvancer(joueur);
         
         ihm.notifierLancerDes(joueur);
         
-        Action action = c.action(joueur);
+        Action action = carreau.action(joueur);
         
         boolean elimine = false;
         
@@ -107,7 +119,7 @@ public class Controleur
         }
         else
         {
-            System.out.println(joueur.getNom() + " est tombé sur le carreau " + c.getNom() + " et ne peut rien faire !");
+            System.out.println(joueur.getNom() + " est tombé sur le carreau " + carreau.getNom() + " et ne peut rien faire !");
             ihm.afficherInfoJoueur(joueur);
         }
         

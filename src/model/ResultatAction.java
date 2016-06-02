@@ -1,4 +1,4 @@
-package monopoly;
+package model;
 
 public class ResultatAction
 {

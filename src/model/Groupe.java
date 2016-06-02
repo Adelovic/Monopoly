@@ -1,5 +1,6 @@
-package monopoly;
+package model;
 
+import model.CouleurPropriete;
 import java.util.ArrayList;
 
 public class Groupe 
