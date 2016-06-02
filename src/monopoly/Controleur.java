@@ -20,6 +20,14 @@ public class Controleur
         lancerJeu();
     }
     
+    public static void main(String[] args)
+    {
+        new Controleur();
+    }
+    
+    /*
+    * Lance le jeu en créant propriétés, groupes et joueurs, puis gère la boucle de jeu principale
+    */
     private void lancerJeu()
     {
         creerGroupes();
@@ -43,6 +51,9 @@ public class Controleur
         ihm.afficherClassement(gagnant, monopoly.getJoueursElimines());
     }
     
+    /*
+    * Initialise les joueurs en demandant les noms à l'IHM
+    */
     private void initialiserJoueurs()
     {
         int nombreJoueur = ihm.demanderNombreJoueur();
@@ -53,6 +64,11 @@ public class Controleur
         }
     }
     
+    /*
+    * Joue un coup du joueur
+    * Execute l'action renvoyée par le carreau et traite la réponse de l'exécution
+    * Gère les doubles dés et se rappelle si les dés sont identiques
+    */
     private void jouerCoup(Joueur joueur)
     {
         Carreau c = lancerDesEtAvancer(joueur);
@@ -78,8 +94,7 @@ public class Controleur
             
             if (!res.getSucces())
             {
-                monopoly.removeJoueur(joueur);
-                monopoly.addJoueurElimine(joueur);
+                monopoly.eliminerJoueur(joueur);
                 ihm.joueurElimine(joueur);
                 elimine = true;
             }
@@ -105,12 +120,19 @@ public class Controleur
         
     }
     
+    /*
+    * Lance deux dés et les renvoie sous forme de liste
+    */
     private int[] lancerDes()
     { 
         Random random = new Random();
         return new int[] { random.nextInt(6)+1, random.nextInt(6)+1 };
     }
     
+    /*
+    * Lance les des, met à jour les derniers dés du joueur
+    * et renvoie sa position courant mise à jour
+    */
     private Carreau lancerDesEtAvancer(Joueur j)
     {
         int[] des = lancerDes();
@@ -121,6 +143,10 @@ public class Controleur
         return j.getPositionCourante();
     }
     
+    /*
+    * Crée les groupes de propriété à partir de CouleurPropriete
+    * Une couleur représente un groupe
+    */
     private void creerGroupes()
     {
         for (CouleurPropriete couleur : CouleurPropriete.values())
@@ -129,6 +155,10 @@ public class Controleur
         }
     }
     
+    /*
+    * Crée le plateau en initialisant les propriétés
+    * et en les ajoutant au monopoly
+    */
     private void creerPlateau(String dataFilename)
     {
         try
@@ -176,6 +206,9 @@ public class Controleur
         }
     }
     
+    /*
+    * Lis le fichier des carreaux et le renvoie sous forme de matrice
+    */
     private ArrayList<String[]> readDataFile(String filename, String token) throws FileNotFoundException, IOException
     {
         ArrayList<String[]> data = new ArrayList<String[]>();

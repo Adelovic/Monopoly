@@ -2,6 +2,9 @@ package monopoly;
 
 public class ActionLoyer extends Action 
 {
+    /*
+    * Propriété
+    */
     private Propriete propriete;
     
     public ActionLoyer(Joueur j, Propriete propriete) 
@@ -10,6 +13,10 @@ public class ActionLoyer extends Action
         this.propriete = propriete;
     }
     
+    /*
+    * Le joueur tombe sur une case propriété
+    * qui est déjà achetée, il doit payer le loyer au propriétaire
+    */
     public ResultatAction faireAction(boolean reponseJ) 
     {
         int loyer = propriete.calculLoyer();

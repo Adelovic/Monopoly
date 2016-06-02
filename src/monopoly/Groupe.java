@@ -7,6 +7,9 @@ public class Groupe
     private ArrayList<ProprieteAConstruire> proprietes;
     private CouleurPropriete couleurPropriete;
     
+    /*
+    * Représente un groupe de propriété. Il ne peut y en avoir qu'un seul par CouleurPropriete
+    */
     public Groupe(CouleurPropriete couleurPropriete)
     {
         this.couleurPropriete = couleurPropriete;

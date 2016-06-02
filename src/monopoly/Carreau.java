@@ -22,5 +22,9 @@ public abstract class Carreau
         return nom;
     }
     
+    /*
+    * Renvoie l'action que le joueur subira
+    * en fonction de différents paramètres
+    */
     public abstract Action action(Joueur j);
 }

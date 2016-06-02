@@ -5,11 +5,34 @@ import java.util.HashMap;
 
 public class Monopoly
 {
+    
+    /*
+    * Groupe de propriété, un groupe correspond à une CouleurPropriete
+    */
     private HashMap<String, Groupe> groupes = new HashMap<String, Groupe>();
+    
+    /*
+    * Carreaux du jeu
+    */
     private HashMap<Integer, Carreau> carreaux = new HashMap<Integer, Carreau>();
+    
+    /*
+    * Représente les joueurs encore en jeu
+    * Ceux qui sont eliminés sont déplacés dans joueursElimines
+    */
     private ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
+    
+    /*
+    * Représente les joueurs éliminés
+    */
     private ArrayList<Joueur> joueursElimines = new ArrayList<Joueur>();
     
+    
+    
+    /*
+    * Calcule le nouveau carreau à partir des deux dés
+    * et y déplace le joueur
+    */
     public void avancerJoueur(Joueur j, int[] totalDes)
     {
         Carreau carr = j.getPositionCourante();
@@ -46,7 +69,12 @@ public class Monopoly
         joueur.setPositionCourante(carreaux.get(1));
     }
     
-    public void removeJoueur(Joueur joueur)
+    /*
+    * Supprime le joueur des joueurs encore en course
+    * et l'ajoute aux joueurs éliminés
+    * Supprime également ces titres de propriétés
+    */
+    public void eliminerJoueur(Joueur joueur)
     {
         joueurs.remove(joueur);
         // Supprimer les propriétés à construire
@@ -66,16 +94,12 @@ public class Monopoly
         joueur.getProprietes().clear();
         joueur.getGares().clear();
         joueur.getCompagnies().clear();
+        joueursElimines.add(joueur);
     }
         
     public ArrayList<Joueur> getJoueurs()
     {
         return joueurs;
-    }
-    
-    public void addJoueurElimine(Joueur j)
-    {
-        joueursElimines.add(j);
     }
 
     ArrayList<Joueur> getJoueursElimines() 

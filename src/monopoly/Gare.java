@@ -9,6 +9,10 @@ public class Gare extends Propriete
     {
         super(numero, nom, prix);
     }
+    
+    /*
+    * Loyer = 25 * le nombre de gares possédées par le joueur
+    */
     public int calculLoyer()
     {
         int nbGares = getProprietaire().getNbGares();

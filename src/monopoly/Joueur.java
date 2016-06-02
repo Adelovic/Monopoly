@@ -18,14 +18,23 @@ public class Joueur
     
     
     //Getters
-
     public ArrayList<Gare> getGares(){ return gares; }
 
     public ArrayList<ProprieteAConstruire> getProprietes(){ return proprietes;}
 
     public ArrayList<Compagnie> getCompagnies() {return compagnies;}
+         
+    public String getNom() { return nomJoueur; }
     
+    public int getNbGares() { return gares.size(); }
     
+    public int getNbCompagnies()  { return compagnies.size(); }
+    
+    public int getNbProprieteAConstruire() { return proprietes.size(); }
+    
+    public int getCash() { return this.cash; }
+    
+    public int[] getDernierDes() { return this.dernierDes; }
     
     
     public void setPositionCourante(Carreau carreau) 
@@ -41,37 +50,6 @@ public class Joueur
     public Carreau getPositionCourante() 
     {
         return this.positionCourante;
-    }
-    
-    public String getNom() 
-    {
-        return nomJoueur;
-    }
-    
-    public int getNbGares() 
-    {
-        return gares.size();
-    }
-    
-    public int getNbCompagnies() 
-    {
-        return compagnies.size();
-    }
-    
-    public int getNbProprieteAConstruire() 
-    {
-        return proprietes.size();
-    }
-    
-    
-    public int getCash() 
-    {
-        return this.cash;
-    }
-    
-    public int[] getDernierDes() 
-    {
-        return this.dernierDes;
     }
     
     public void addCash(int cash) 

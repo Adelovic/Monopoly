@@ -4,9 +4,19 @@ import java.util.ArrayList;
 
 public class ProprieteAConstruire extends Propriete
 {
+    /*
+    * Représente le groupe de couleur auquel appartient la propriété
+    */
     private Groupe groupe;
+    
+    /*
+    * Loyer de base de la propriété, sans ajouts supplémentaires(Maison etc..)
+    */
     private int loyerNu;
 
+    /*
+    * Proprieté construisible (ajouts de maisons etc..)
+    */
     public ProprieteAConstruire(int numero, String nom, Groupe groupe, int prix, int loyerNu) 
     {
         super(numero, nom, prix);
@@ -15,6 +25,10 @@ public class ProprieteAConstruire extends Propriete
         this.groupe.addPropriete(this);
     }
     
+    /*
+    * Loyer = Loyer nu si le joueur n'a pas toutes les propriétés du groupe
+    * Sinon le loyer = 2*loyer nu
+    */
     public int calculLoyer() 
     {
         Joueur proprio = getProprietaire();

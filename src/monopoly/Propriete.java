@@ -11,13 +11,23 @@ public abstract class Propriete extends Carreau
         this.prix = prix;
     }
     
+    /*
+    * Calcule le loyer en fonction des différents types de propriété
+    * Chaque type de proprieté calcule le loyer d'une façon différente
+    */
     public abstract int calculLoyer();
+    
     
     public void acheter(Joueur j)
     {
         this.setProprietaire(j);
     }
     
+    /*
+    * Renvoie les actions possibles au controleur
+    * Achat si la propriété n'a pas de propriétaire et que le joueur a suffisamment d'argent
+    * Sinon si proprietaire, payer le loyer
+    */
     public Action action(Joueur j) 
     { 
         // Aucun proprietaire

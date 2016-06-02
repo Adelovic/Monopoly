@@ -10,6 +10,10 @@ public class ActionAchat extends Action
         this.propriete = propriete;
     }
     
+    /*
+    * Le joueur tombe sur une case propriété
+    * qu'il a la possibilité d'acheter
+    */
     public ResultatAction faireAction(boolean reponseJ) 
     {
         if (reponseJ)
