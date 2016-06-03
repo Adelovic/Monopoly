@@ -184,7 +184,7 @@ public class Controleur
                 if(caseType.compareTo("P") == 0)
                 {
                     System.out.println("Propriété :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
-                    monopoly.addCarreau(new ProprieteAConstruire(Integer.valueOf(caseInfos[1]), caseInfos[2], monopoly.getGroupe(caseInfos[3]), Integer.valueOf(caseInfos[4]), Integer.valueOf(caseInfos[5])));
+                    monopoly.addCarreau(new ProprieteAConstruire(Integer.valueOf(caseInfos[1]), caseInfos[2], monopoly.getGroupe(CouleurPropriete.valueOf(caseInfos[3])), Integer.valueOf(caseInfos[4]), Integer.valueOf(caseInfos[5])));
                 }
                 else if(caseType.compareTo("G") == 0)
                 {

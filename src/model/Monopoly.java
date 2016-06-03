@@ -11,7 +11,7 @@ public class Monopoly
     /*
     * Groupe de propriété, un groupe correspond à une CouleurPropriete
     */
-    private HashMap<String, Groupe> groupes = new HashMap<String, Groupe>();
+    private HashMap<CouleurPropriete, Groupe> groupes = new HashMap<CouleurPropriete, Groupe>();
     
     /*
     * Carreaux du jeu
@@ -47,7 +47,7 @@ public class Monopoly
     
     public void addGroupe(Groupe groupe)
     {
-        groupes.put(groupe.getCouleur().toString(), groupe);
+        groupes.put(groupe.getCouleur(), groupe);
     }
     
     public void addCarreau(Carreau carreau)
@@ -60,7 +60,7 @@ public class Monopoly
         return carreaux.get(numero);
     }
     
-    public Groupe getGroupe(String couleur)
+    public Groupe getGroupe(CouleurPropriete couleur)
     {
         return groupes.get(couleur);
     }

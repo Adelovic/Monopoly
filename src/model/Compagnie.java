@@ -12,6 +12,7 @@ public class Compagnie extends Propriete
     * Loyer = 4 fois le nombre de dés si le joueur possède une compagnie
     * Sinon Loyer = 10 fois le nombre de dés
     */
+    @Override
     public int calculLoyer() 
     {
         Joueur proprio = getProprietaire();
