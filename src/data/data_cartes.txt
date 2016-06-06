@@ -1,7 +1,7 @@
 ch,LP,Vous êtes libéré de prison. Cette carte peut être conservée jusqu'à ce qu'elle soit utilisée.
 ch,DR,Reculez de trois cases,-3
 ch,TP,Vous êtes imposés pour les réparations de voirie à raison de : 40 € par maison et 115€ par hôtel.,40,115
-ch,Amende pour excèsde vitesse : 15€,TF,-15
+ch,TF,Amende pour excès de vitesse : 15€,-15
 ch,TP,Faites des réparations dans toutes vos maisons : versez pour chaque maison 25€ et pour chaque hôtel 100€,25,100
 ch,TF,Amende pour ivresse : 20€,-20
 ch,DF,Avancez jusqu'à la case Départ.,1,true
@@ -16,7 +16,7 @@ ch,TF,Votre immeuble et votre prêt rapportent. Vous devez toucher 150€.,150
 ch,DF,Accédez au Boulevard de la Villette. Si vous passez par la case Départ recevez 200€,12,true
 c,LP,Vous êtes libéré de prison. Cette carte peut être conservée jusqu'à ce qu'elle soit utilisée.
 c,TF,Payez une amende de 10€.,-10
-c,A,C'est votre anniversaire, chaque joueur doit vous donner 10€.
+c,TA,C'est votre anniversaire, chaque joueur doit vous donner 10€.
 c,TF,Erreur de la banque en votre faveur. Recevez 200€.,200,
 c,DF,Retournez à Belleville.,2,false
 c,TF,Payez la note du medecin.,-50

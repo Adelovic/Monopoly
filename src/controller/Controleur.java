@@ -218,6 +218,67 @@ public class Controleur
             System.err.println("[buildGamePlateau()] : Error while reading file!");
         }
     }
+  
+    private void creerCartes(String dataFilename)
+    {
+        try
+        {
+            ArrayList<String[]> data = readDataFile(dataFilename, ",");
+            
+            for(int i=0; i<data.size(); ++i)
+            {
+                String[] carteInfos = data.get(i);
+                
+                TypeCarte type = carteInfos.equals("ch") ? TypeCarte.CHANCE : TypeCarte.COMMUNAUTE;
+                
+                String carteType = carteInfos[1];
+                
+                // Libération prison
+                if(carteType.compareTo("LP") == 0)
+                {
+                    monopoly.addCarte()
+                }
+                // Déplacement relatif
+                else if(carteType.compareTo("DR") == 0)
+                {
+                    monopoly.addCarte();
+                }
+                // Déplacement fixe
+                else if(carteType.compareTo("DF") == 0)
+                {
+                    monopoly.addCarte();
+                }
+                // Transaction propriété
+                else if(carteType.compareTo("TP") == 0)
+                {
+                   monopoly.addCarte(); 
+                }
+                // Transaction fixe 
+                else if(carteType.compareTo("TF") == 0)
+                {
+                    monopoly.addCarte();
+                }
+                // Transaction anniversaire 
+                else if(carteType.compareTo("TA") == 0)
+                {
+                    monopoly.addCarte();
+                }
+                else
+                {
+                    System.err.println("[creerCartes()] : Invalid Data type");
+                }
+            }
+            
+        }
+        catch(FileNotFoundException e)
+        {
+            System.err.println("[buildGamePlateau()] : File not found!");
+        }
+        catch(IOException e)
+        {
+            System.err.println("[buildGamePlateau()] : Error while reading file!");
+        }
+    }
     
     /*
     * Lis le fichier des carreaux et le renvoie sous forme de matrice
