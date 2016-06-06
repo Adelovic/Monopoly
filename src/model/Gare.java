@@ -1,4 +1,4 @@
-package model;
+  package model;
 
 public class Gare extends Propriete
 {
@@ -13,12 +13,14 @@ public class Gare extends Propriete
     /*
     * Loyer = 25 * le nombre de gares possédées par le joueur
     */
+    @Override
     public int calculLoyer()
     {
         int nbGares = getProprietaire().getNbGares();
         return LOYER_GARE * nbGares;
     }
     
+    @Override
     public void acheter(Joueur j)
     {
         super.acheter(j);

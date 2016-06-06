@@ -1,9 +1,15 @@
 package model;
 
-import model.Carreau;
 
 public abstract class Propriete extends Carreau 
 {
+    
+    /*
+    * Dernier joueur a être passé sur la propriété
+    * Utilisé pour calculLoyer de certaines propriétés pour récupérer les dés
+    */
+    protected Joueur dernierJoueur;
+    
     private int prix;
     private Joueur proprietaire;
     
@@ -25,6 +31,11 @@ public abstract class Propriete extends Carreau
         this.setProprietaire(j);
     }
     
+    public void setDernierJoueur(Joueur j)
+    {
+        this.dernierJoueur = j;
+    }
+    
     /*
     * Renvoie les actions possibles au controleur
     * Achat si la propriété n'a pas de propriétaire et que le joueur a suffisamment d'argent
@@ -32,6 +43,8 @@ public abstract class Propriete extends Carreau
     */
     public Action action(Joueur j) 
     { 
+        this.setDernierJoueur(j);
+        
         // Aucun proprietaire
         if (proprietaire == null)
         {
@@ -45,9 +58,10 @@ public abstract class Propriete extends Carreau
                return null;
            }
         }
-        // La propriete a un proprietaire, on fait payer!
+        // La propriete a un proprietaire, le joueur doit payer
         else if (proprietaire != j)
         {
+            
             return new ActionLoyer(j, this);
         }
         else

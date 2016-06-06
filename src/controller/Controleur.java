@@ -69,6 +69,7 @@ public class Controleur
     private void initialiserJoueurs()
     {
         int nombreJoueur = ihm.demanderNombreJoueur();
+        
         for (int i = 1; i <= nombreJoueur; i++)
         {
            String nom = ihm.demanderNom(i);
@@ -119,7 +120,7 @@ public class Controleur
         }
         else
         {
-            System.out.println(joueur.getNom() + " est tombé sur le carreau " + carreau.getNom() + " et ne peut rien faire !");
+            ihm.notifierCarreauSansAction(joueur, carreau);
             ihm.afficherInfoJoueur(joueur);
         }
         

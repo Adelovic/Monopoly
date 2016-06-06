@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import controller.Controleur;
+import model.Carreau;
 import model.Joueur;
 
 public class Ihm 
@@ -40,10 +41,15 @@ public class Ihm
     
     public String demanderNom(int numeroJoueur)
     {
-        System.out.println("----------------------------------------------------");
-        System.out.println("Nom du joueur " + numeroJoueur + " ?");
-        Scanner scan = new Scanner(System.in);
-        return scan.nextLine();
+        String nom = "";
+        while (nom.isEmpty() || nom.contains(" "))
+        {
+            System.out.println("----------------------------------------------------");
+            System.out.println("Nom du joueur " + numeroJoueur + " ? (Sans espaces)");
+            Scanner scan = new Scanner(System.in);
+            nom = scan.nextLine();
+        }
+        return nom;
     }
     
     public int demanderNombreJoueur()
@@ -68,10 +74,19 @@ public class Ihm
     public void afficherInfoJoueur(Joueur joueur)
     {   System.out.println("------------------- INFORMATIONS -------------------");
         System.out.println(joueur.getNom() + " :");
-        System.out.println("- Argent : " + joueur.getCash());
+        System.out.println("- Argent : " + joueur.getCash() + "$");
+        System.out.println("- Position : " + joueur.getPositionCourante().getNumero());
         System.out.println("- Nombre de propriétés à construire : " + joueur.getNbProprieteAConstruire());
         System.out.println("- Nombre de gares : " + joueur.getNbGares());
         System.out.println("- Nombre de compagnies : " + joueur.getNbCompagnies());
+        System.out.println("");
+        System.out.println("");
+        
+    }
+    
+    public void notifierCarreauSansAction(Joueur joueur, Carreau carreau)
+    {
+        System.out.println(joueur.getNom() + " est tombé sur le carreau " + carreau.getNom() + " et ne peut rien faire !");
     }
     
     public void joueurElimine(Joueur j)
