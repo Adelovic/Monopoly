@@ -1,4 +1,7 @@
-package model;
+package model.carreaux.propriete;
+
+import model.Joueur;
+import model.carreaux.propriete.Propriete;
 
 public class Compagnie extends Propriete 
 {

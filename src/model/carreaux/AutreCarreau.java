@@ -1,4 +1,8 @@
-package model;
+package model.carreaux;
+
+import model.Joueur;
+import model.actions.Action;
+import model.carreaux.Carreau;
 
 public class AutreCarreau extends Carreau 
 {

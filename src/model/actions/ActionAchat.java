@@ -1,7 +1,9 @@
-package model;
+package model.actions;
 
 import model.Joueur;
-import model.Propriete;
+import model.Message;
+import model.TypeAction;
+import model.carreaux.propriete.Propriete;
 
 public class ActionAchat extends Action 
 {
@@ -18,18 +20,27 @@ public class ActionAchat extends Action
     * qu'il a la possibilité d'acheter
     */
     @Override
-    public ResultatAction faireAction(boolean reponseJ) 
+    public Message faireAction(boolean reponseJ) 
     {
+        int prix = propriete.getPrix();
+        
+        Message message = new Message();
+        message.setJoueur(joueur);
+        message.setProprietaire(propriete.getProprietaire());
+        message.setPrix(prix);
+        
         if (reponseJ)
         {
-            int prix = propriete.getPrix();
             joueur.removeCash(prix);
             propriete.acheter(joueur);
-            return new ResultatAction(true, joueur.getNom() + " a acheté " + propriete.getNom() + " pour " + prix + "$");
+            
+            message.setType(TypeAction.ACHAT);
+            return message;
         }
         else
         {
-            return new ResultatAction(true, joueur.getNom() + " n'a pas souhaité acheter la case " + propriete.getNom());
+            message.setType(TypeAction.REFUS_ACHAT);
+            return message;
         }
     }
     
@@ -43,5 +54,17 @@ public class ActionAchat extends Action
     public boolean entraineDemande() 
     {
         return true;
+    }
+    
+    @Override
+    public boolean entraineTirage() 
+    {
+        return false;
+    }
+    
+    @Override
+    public boolean entraineNouveauCoup()
+    {
+        return false;
     }
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import controller.Controleur;
-import model.Carreau;
+import model.carreaux.Carreau;
 import model.Joueur;
 
 public class Ihm 

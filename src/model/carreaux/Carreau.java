@@ -1,4 +1,7 @@
-package model;
+package model.carreaux;
+
+import model.actions.Action;
+import model.Joueur;
 
 
 public abstract class Carreau

@@ -1,23 +1,24 @@
 package controller;
 
 import view.Ihm;
-import model.Action;
+import model.actions.Action;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import model.AutreCarreau;
-import model.Carreau;
-import model.Compagnie;
+import model.carreaux.AutreCarreau;
+import model.carreaux.Carreau;
+import model.carreaux.propriete.Compagnie;
 import model.CouleurPropriete;
-import model.Gare;
+import model.carreaux.propriete.Gare;
 import model.Groupe;
 import model.Joueur;
 import model.Monopoly;
-import model.ProprieteAConstruire;
-import model.ResultatAction;
+import model.carreaux.propriete.ProprieteAConstruire;
+import model.Message;
+import model.TypeCarte;
 
 public class Controleur
 {
@@ -101,11 +102,11 @@ public class Controleur
                 reponseJ = ihm.demanderJoueur();
             }
 
-            ResultatAction res = action.faireAction(reponseJ);
+            Message res = action.faireAction(reponseJ);
 
             ihm.notifier(res.getMessage());
             
-            if (!res.getSucces())
+            if (joueur.getCash() == 0)
             {
                 monopoly.eliminerJoueur(joueur);
                 ihm.joueurElimine(joueur);
@@ -166,6 +167,8 @@ public class Controleur
         {
             monopoly.addGroupe(new Groupe(couleur));
         }
+        
+        
     }
     
     /*

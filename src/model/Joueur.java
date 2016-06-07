@@ -1,8 +1,10 @@
+
 package model;
 
-import model.Carreau;
-import model.Compagnie;
-import model.Gare;
+import model.carreaux.propriete.ProprieteAConstruire;
+import model.carreaux.Carreau;
+import model.carreaux.propriete.Compagnie;
+import model.carreaux.propriete.Gare;
 import java.util.ArrayList;
 public class Joueur 
 {

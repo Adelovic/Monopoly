@@ -1,7 +1,9 @@
 package model;
 
-import model.Compagnie;
-import model.Gare;
+import model.carreaux.propriete.ProprieteAConstruire;
+import model.carreaux.Carreau;
+import model.carreaux.propriete.Compagnie;
+import model.carreaux.propriete.Gare;
 import java.util.ArrayList;
 import java.util.HashMap;
 

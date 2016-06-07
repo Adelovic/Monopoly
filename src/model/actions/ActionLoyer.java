@@ -1,7 +1,9 @@
-package model;
+package model.actions;
 
 import model.Joueur;
-import model.Propriete;
+import model.Message;
+import model.TypeAction;
+import model.carreaux.propriete.Propriete;
 
 public class ActionLoyer extends Action 
 {
@@ -21,7 +23,7 @@ public class ActionLoyer extends Action
     * qui est déjà achetée, il doit payer le loyer au propriétaire
     */
     @Override
-    public ResultatAction faireAction(boolean reponseJ) 
+    public Message faireAction(boolean reponseJ) 
     {
         int loyer = propriete.calculLoyer();
         Joueur proprio = propriete.getProprietaire();
@@ -40,7 +42,12 @@ public class ActionLoyer extends Action
             proprio.addCash(cashJ);
         }
         
-        return new ResultatAction(success,joueur.getNom() + " a payé " + (success ? loyer : cashJ) + "$ de loyer à " + proprio.getNom());
+        Message message = new Message();
+        message.setType(TypeAction.PAYER_LOYER);
+        message.setJoueur(joueur);
+        message.setProprietaire(proprio);
+        message.setLoyer(loyer);
+        return message;
     }
     
     @Override
@@ -55,5 +62,15 @@ public class ActionLoyer extends Action
         return false;
     }
     
-    
+    @Override
+    public boolean entraineNouveauCoup()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean entraineTirage() 
+    {
+        return false;
+    }
 }

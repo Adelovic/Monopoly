@@ -1,5 +1,6 @@
 package model;
 
+import model.carreaux.propriete.ProprieteAConstruire;
 import model.CouleurPropriete;
 import java.util.ArrayList;
 

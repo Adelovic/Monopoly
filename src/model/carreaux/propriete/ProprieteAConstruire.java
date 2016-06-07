@@ -1,6 +1,9 @@
-package model;
+package model.carreaux.propriete;
 
+import model.carreaux.propriete.Propriete;
 import java.util.ArrayList;
+import model.Groupe;
+import model.Joueur;
 
 public class ProprieteAConstruire extends Propriete
 {

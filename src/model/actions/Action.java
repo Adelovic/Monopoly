@@ -1,4 +1,7 @@
-package model;
+package model.actions;
+
+import model.Joueur;
+import model.Message;
 
 public abstract class Action 
 {
@@ -20,7 +23,7 @@ public abstract class Action
     * Action qui sera executée par le controleur
     * après sa réception
     */
-    public abstract ResultatAction faireAction(boolean reponseJ);
+    public abstract Message faireAction(boolean reponseJ);
     
     /*
     * Message informatif pour que le joueur puisse savoir
@@ -32,4 +35,15 @@ public abstract class Action
     * Est-ce que l'action requiert un choix du joueur
     */
     public abstract boolean entraineDemande();
+    
+        /*
+    * Est-ce que l'action requiert de rejouer(Ex : Carte de deplacement)
+    */
+    public abstract boolean entraineNouveauCoup();
+    
+    /*
+    * Est-ce que l'action requiert de tirer une carte(Ex : Carte de deplacement)
+    */
+    public abstract boolean entraineTirage();
+    
 }

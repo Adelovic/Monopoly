@@ -1,4 +1,10 @@
-package model;
+package model.carreaux.propriete;
+
+import model.actions.Action;
+import model.actions.ActionAchat;
+import model.actions.ActionLoyer;
+import model.Joueur;
+import model.carreaux.Carreau;
 
 
 public abstract class Propriete extends Carreau 
