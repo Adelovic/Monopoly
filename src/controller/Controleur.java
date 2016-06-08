@@ -26,38 +26,45 @@ import model.carreaux.Taxe;
 import model.cartes.Carte;
 import model.cartes.CarteLiberationPrison;
 import model.cartes.deplacement.CarteDeplacement;
+import model.cartes.deplacement.CarteDeplacementAbsolu;
+import model.cartes.deplacement.CarteDeplacementRelatif;
 import model.cartes.transaction.CarteAnniversaire;
 import model.cartes.transaction.CarteReparation;
 import model.cartes.transaction.CarteTransactionFixe;
+import view.Observateur;
 
 public class Controleur
 {
     private Monopoly monopoly;
     
-    
-    private Ihm ihm;
+    private Observateur observateur;
     
     
     public Controleur()
     {
         monopoly = new Monopoly(); 
-        ihm = new Ihm(this);
-        lancerJeu();
     }
     
     public static void main(String[] args)
     {
-        new Controleur();
+        new Ihm(new Controleur());
     }
     
     /*
     * Lance le jeu en créant propriétés, groupes et joueurs, puis gère la boucle de jeu principale
     */
-    private void lancerJeu()
+    public void lancerJeu()
     {
         creerGroupes();
         creerPlateau("src/data/data.txt");
-        initialiserJoueurs();
+        creerCartes("src/data/data_cartes.txt");
+        
+        
+        // Placer les joueurs sur la case départ
+        for (Joueur joueur : monopoly.getJoueurs())
+        {
+            joueur.setPositionCourante(monopoly.getCarreau(1));
+        }
         
         int numJoueurCourant = 0;
         while (monopoly.getJoueurs().size() > 1)
@@ -72,20 +79,17 @@ public class Controleur
             }
         }
         Joueur gagnant = monopoly.getJoueurs().get(0);
-        ihm.notifierGagnant(gagnant);
-        ihm.afficherClassement(gagnant, monopoly.getJoueursElimines());
+        //ihm.notifierGagnant(gagnant);
+        //ihm.afficherClassement(gagnant, monopoly.getJoueursElimines());
     }
     
     /*
     * Initialise les joueurs en demandant les noms à l'IHM
     */
-    private void initialiserJoueurs()
+    public void initialiserJoueurs(ArrayList<String> noms)
     {
-        int nombreJoueur = ihm.demanderNombreJoueur();
-        
-        for (int i = 1; i <= nombreJoueur; i++)
+        for (String nom : noms)
         {
-           String nom = ihm.demanderNom(i);
            monopoly.addJoueur(new Joueur(nom));
         }
     }
@@ -97,66 +101,90 @@ public class Controleur
     */
     private void jouerCoup(Joueur joueur)
     {
-        boolean peutJouer = true;
-        
-        // Lancer les dés
-        Carreau carreau = lancerDesEtAvancer(joueur);
-        
-        // Notification à l'ihm du lancé de dés
-        Message msg = new Message();
-        msg.setType(TypeAction.LANCER_DES);
-        msg.setDerniersDes(joueur.getDernierDes());
-        ihm.notifier(msg);
-        
-        // Si en prison
-            // Incrémenter tourPrison
-            // Si double ou si tourPrison = 3
-                // Libérer et réinitialiser tourPrison
-        // Sinon
-        boolean peutRejouer = true;
-        while (peutRejouer && joueur.getCash() > 0)
+        if (joueur.isEnPrison())
         {
-            Message message = carreau.action(joueur);
-
-
-            switch (message.getType())
+            joueur.addTourPrison();
+            if (joueur.doubleDes() || joueur.getTourPrison() > 3)
             {
-                case TIRER_CARTE:
-                    Carte carte = monopoly.tirerCarte(message.getTypeCarte());
-                    Message messageCarte = carte.actionCarte(joueur);
-                            switch (messageCarte.getType())
-                            {
-                                case C_LIBERATION :
-                                case C_TRANSACTION_FIXE :
-                                    int montantTransaction = message.getMontantTransaction();
-                                    joueur.retirerCash(montantTransaction);
-                                case C_ANNIVERSAIRE : 
-                                case C_REPARATION : 
-                                case C_DEPLACEMENT :
-                                case PRISON : 
-                            }
-
-
-                case PRISON:
-                    ihm.notifier(message);
-                    monopoly.emprisonner(joueur);
-                case PAYER_LOYER:
-                    Joueur proprio = message.getPropriete().getProprietaire();
-                    int loyer = message.getPropriete().calculLoyer();
-                    int cashJ = joueur.getCash();
-                    int aPrendre = cashJ > loyer ? loyer : cashJ;
-                    joueur.removeCash(aPrendre);
-                    proprio.addCash(aPrendre);     
-                    ihm.notifier(message);
-                case ACHAT:
-                    ihm.notifier(message);
-                    break;
-                case RIEN: 
-                    ihm.notifier(message);
-                    break;
-
-
+                monopoly.liberer(joueur);
+                jouerCoup(joueur);
             }
+        }
+        else
+        {
+            // Lancer les dés
+            int[] des = lancerDes();
+            joueur.setDernierDes(des);
+            Carreau carreau = monopoly.avancerJoueur(joueur, des[0]+des[1]);
+
+            // Notification à l'ihm du lancé de dés
+            Message msg = new Message();
+            msg.setType(TypeAction.LANCER_DES);
+            msg.setDerniersDes(joueur.getDernierDes());
+            observateur.notifier(msg);
+            
+            boolean peutRejouer = true;
+            while (peutRejouer && joueur.getCash() > 0)
+            {
+                peutRejouer = false;
+                Message message = carreau.action(joueur);
+                message.setJoueur(joueur);
+
+
+                switch (message.getType())
+                {
+                    case TIRER_CARTE:
+                        Carte carte = monopoly.tirerCarte(message.getTypeCarte());
+                        message.setCarte(carte);
+                        Message messageCarte = carte.actionCarte(joueur);
+                        switch (messageCarte.getType()) 
+                        {
+                            case C_LIBERATION:
+                                break;
+                            case C_TRANSACTION_FIXE:
+                                int montantTransaction = message.getMontantTransaction();
+                                joueur.retirerCash(montantTransaction);
+                                break;
+                            case C_ANNIVERSAIRE:
+                                break;
+                            case C_REPARATION:
+                                break;
+                            case C_DEPLACEMENT_RELATIF:
+                                peutRejouer = true;
+                                int deplacement = message.getDeplacement();
+                                //monopoly.avancerJoueur(joueur, deplacement);
+                                break;
+                            case C_DEPLACEMENT_ABSOLU:
+                                peutRejouer = true;
+                                deplacement = message.getDeplacement();
+                                //joueur.setPositionCourante(monopoly.getCarreau(deplacement));
+                                break;
+                            case PRISON:
+                                monopoly.emprisonner(joueur);
+                                break;
+                        }
+                        break;
+                    case PRISON:
+                        monopoly.emprisonner(joueur);
+                        break;
+                    case PAYER_LOYER:
+                        Joueur proprio = message.getPropriete().getProprietaire();
+                        int loyer = message.getPropriete().calculLoyer();
+                        int cashJ = joueur.getCash();
+                        int aPrendre = cashJ > loyer ? loyer : cashJ;
+                        joueur.removeCash(aPrendre);
+                        proprio.addCash(aPrendre);     
+                        break;
+                    case ACHAT:
+                        break;
+                    case RIEN: 
+                        break;
+
+
+                }
+                observateur.notifier(message);
+            }
+        }
     //        if (action != null)
     //        {
     //            ihm.notifier(action.getMessage());
@@ -194,9 +222,6 @@ public class Controleur
     //            ihm.notifierDoubleDes(joueur);
     //            jouerCoup(joueur);
     //        }
-
-            ihm.notifier(message);
-        }
     }
     
     /*
@@ -206,20 +231,6 @@ public class Controleur
     { 
         Random random = new Random();
         return new int[] { random.nextInt(6)+1, random.nextInt(6)+1 };
-    }
-    
-    /*
-    * Lance les des, met à jour les derniers dés du joueur
-    * et renvoie sa position courant mise à jour
-    */
-    private Carreau lancerDesEtAvancer(Joueur j)
-    {
-        int[] des = lancerDes();
-        j.setDernierDes(des);
-        
-        monopoly.avancerJoueur(j, des);
-        
-        return j.getPositionCourante();
     }
     
     /*
@@ -254,9 +265,9 @@ public class Controleur
                 {
                     System.out.println("Propriété :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
                     ArrayList<Integer> loyers = new ArrayList();
-                    for (int j = 6; j <= 10; i++)
+                    for (int j = 6; j <= 10; j++)
                     {
-                        loyers.add(Integer.valueOf(caseInfos[i]));
+                        loyers.add(Integer.valueOf(caseInfos[j]));
                     }
                     
                     monopoly.addCarreau(new ProprieteAConstruire(Integer.valueOf(caseInfos[1]), caseInfos[2], monopoly.getGroupe(CouleurPropriete.valueOf(caseInfos[3])), Integer.valueOf(caseInfos[4]), Integer.valueOf(caseInfos[5]), loyers, Integer.valueOf(caseInfos[11]), Integer.valueOf(caseInfos[12]) ));
@@ -333,15 +344,15 @@ public class Controleur
                     monopoly.addCarte(type, new CarteLiberationPrison(type, carteInfos[2]));
                 }
                 // Déplacement relatif
-                else if(carteType.compareTo("DR") == 0)
+                else if(carteType.compareTo("DA") == 0)
                 {
                     
-                    monopoly.addCarte(type, new CarteDeplacement(type, carteInfos[2], Integer.parseInt(carteInfos[3]), true, Boolean.valueOf(carteInfos[3])));
+                    monopoly.addCarte(type, new CarteDeplacementAbsolu(type, carteInfos[2], Integer.parseInt(carteInfos[3]), Boolean.valueOf(carteInfos[4])));
                 }
                 // Déplacement fixe
-                else if(carteType.compareTo("DF") == 0)
+                else if(carteType.compareTo("DR") == 0)
                 {
-                    monopoly.addCarte(type, new CarteDeplacement(type, carteInfos[2], Integer.parseInt(carteInfos[3]), false, Boolean.valueOf(carteInfos[3])));
+                    monopoly.addCarte(type, new CarteDeplacementRelatif(type, carteInfos[2], Integer.parseInt(carteInfos[3])));
                 }
                 // Transaction propriété
                 else if(carteType.compareTo("TP") == 0)
@@ -356,7 +367,7 @@ public class Controleur
                 // Transaction anniversaire 
                 else if(carteType.compareTo("TA") == 0)
                 {
-                    monopoly.addCarte(type, new CarteAnniversaire(type, carteInfos[2], Integer.parseInt(carteInfos[3])));
+                    monopoly.addCarte(type, new CarteAnniversaire(type, carteInfos[2]));
                 }
                 else
                 {
@@ -392,6 +403,10 @@ public class Controleur
         reader.close();
         
         return data;
+    }
+
+    public void setObservateur(Observateur observateur) {
+        this.observateur = observateur;
     }
 }
 

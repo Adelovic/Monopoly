@@ -42,14 +42,24 @@ public class Monopoly
     * Calcule le nouveau carreau à partir des deux dés
     * et y déplace le joueur
     */
-    public void avancerJoueur(Joueur j, int[] totalDes)
+    public Carreau avancerJoueur(Joueur j, int montant)
     {
         Carreau carr = j.getPositionCourante();
+        
+        System.out.println(carr);
         int carrPos = carr.getNumero();
-        int prochainCarreau = carrPos+totalDes[0]+totalDes[1];
+        
+        System.out.println("Carreau : " + carr.getNumero());
+        
+        int prochainCarreau = carrPos+montant;
+        
+        System.out.println("Prochain carreau : " + prochainCarreau);
         Carreau nouveauCarr = getCarreau(prochainCarreau > carreaux.size() ? prochainCarreau%carreaux.size() : prochainCarreau);
         
+        System.out.println("Nouveau carreau : " + nouveauCarr);
+        
         j.setPositionCourante(nouveauCarr);
+        return nouveauCarr;
     }
     
     public void addGroupe(Groupe groupe)
@@ -173,6 +183,12 @@ public class Monopoly
     {
         j.setPositionCourante(carreaux.get(11));
         j.setEnPrison(true);    
+    }
+    
+    public void liberer(Joueur j)            
+    {
+        j.setEnPrison(false);    
+        j.setTourPrison(0);
     }
   
     

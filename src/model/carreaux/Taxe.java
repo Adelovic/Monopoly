@@ -25,7 +25,7 @@ public class Taxe extends Carreau {
     @Override
     public Message action(Joueur j) {
         Message message = new Message();
-        message.setType(TypeAction.C_TRANSACTION);
+        message.setType(TypeAction.C_TRANSACTION_FIXE);
         return message;
     }
 

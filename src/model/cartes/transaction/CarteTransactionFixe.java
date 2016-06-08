@@ -2,18 +2,22 @@ package model.cartes.transaction;
 
 import model.Joueur;
 import model.Message;
+import model.TypeAction;
 import model.TypeCarte;
 
 public class CarteTransactionFixe extends CarteTransaction
 {
 
-    public CarteTransactionFixe(TypeCarte type, String description, int montant ) 
+    public CarteTransactionFixe(TypeCarte type, String description, int montant) 
     {
         super(type, description, montant);
     }
 
     @Override
     public Message actionCarte(Joueur j) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Message message = new Message();
+        message.setType(TypeAction.C_TRANSACTION_FIXE);
+        message.setMontantTransaction(getMontant());
+        return message;
     }
 }

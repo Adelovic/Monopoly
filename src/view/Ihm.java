@@ -20,11 +20,10 @@ public class Ihm implements Observateur
     public Ihm(Controleur controleur)
     {
         this.controleur = controleur;
-    }
-    
-    public void notifier(String msg)
-    {
-        System.out.println(msg);
+        controleur.setObservateur(this);
+        
+        controleur.initialiserJoueurs(demanderNoms());
+        controleur.lancerJeu();
     }
     
     public boolean demanderJoueur()
@@ -40,7 +39,7 @@ public class Ihm implements Observateur
         return reponse.equals("oui");
     }
     
-    public String demanderNom(int numeroJoueur)
+    private String demanderNom(int numeroJoueur)
     {
         String nom = "";
         while (nom.isEmpty() || nom.contains(" "))
@@ -53,7 +52,28 @@ public class Ihm implements Observateur
         return nom;
     }
     
-    public int demanderNombreJoueur()
+    private ArrayList<String> demanderNoms()
+    {
+        int nombreJoueur = demanderNombreJoueur();
+        ArrayList<String> nomJoueurs = new ArrayList<String>();
+        int i = 0;
+        while (i < nombreJoueur)
+        {
+            String nom = demanderNom(i+1);
+            if (nomJoueurs.contains(nom))
+            {
+                System.out.println("Le nom existe déjà!");
+            }
+            else
+            {
+                nomJoueurs.add(nom);
+                i++;
+            }
+        }
+        return nomJoueurs;
+    }
+    
+    private int demanderNombreJoueur()
     {
         int nombreJoueur = 0;
         while (nombreJoueur <= 1 || nombreJoueur > 6)
@@ -127,6 +147,19 @@ public class Ihm implements Observateur
     @Override
     public void notifier(Message message) 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        switch (message.getType())
+        {
+            case TIRER_CARTE:
+                System.out.println("Le joueur " + message.getJoueur().getNom() + " tire une carte!");
+                break;
+            case LANCER_DES:
+            case PRISON:
+            case PAYER_LOYER:
+            case REFUS_ACHAT:
+            case ACHAT:
+            case RIEN:
+            default:
+                break;
+        }
     }
 }

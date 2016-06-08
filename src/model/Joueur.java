@@ -17,6 +17,8 @@ public class Joueur
     private ArrayList<Compagnie> compagnies = new ArrayList<Compagnie>();
     private boolean enPrison;
     
+    private int tourPrison;
+    
     public Joueur(String nomJoueur)
     {
         this.nomJoueur = nomJoueur;
@@ -105,6 +107,25 @@ public class Joueur
         this.enPrison = enPrison;
     }
     
+    public boolean doubleDes()
+    {
+        return dernierDes[0] == dernierDes[1];
+    }
+
+    public int getTourPrison() 
+    {
+        return tourPrison;
+    }
+
+    public void setTourPrison(int tourPrison) 
+    {
+        this.tourPrison = tourPrison;
+    }
+    
+    public void addTourPrison()
+    {
+        tourPrison ++;
+    }
     
 
 }

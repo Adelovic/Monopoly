@@ -50,7 +50,6 @@ public abstract class Propriete extends Carreau
     public Message action(Joueur j) 
     { 
         Message message = new Message();
-        message.setJoueur(j);
         message.setPropriete(this);
         
         // Aucun proprietaire

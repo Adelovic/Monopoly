@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import model.carreaux.propriete.Propriete;
+import model.cartes.Carte;
 
 public class Message
 {
@@ -33,6 +34,30 @@ public class Message
     private int montantTransaction;
     private Propriete propriete;
     private int[] derniersDes;
+    
+    private Carte carte;
+    
+    private int deplacement;
+    
+    private boolean passerCaseDepart;
+
+    public void setDeplacement(int deplacement)
+    {
+        this.deplacement = deplacement;
+    }
+    
+    public int getDeplacement() 
+    {
+        return deplacement;
+    }
+    
+    public void setCarte(Carte carte) {
+        this.carte = carte;
+    }
+
+    public Carte getCarte() {
+        return carte;
+    }
     
     
     public Propriete getPropriete() {
@@ -120,12 +145,22 @@ public class Message
         this.propriete = prop;
     }
 
-    public int[] getsDerniersDes() {
+    public int[] getDerniersDes() {
         return derniersDes;
     }
 
     public void setDerniersDes(int[] dernierDes) {
         this.derniersDes = dernierDes;
+    }
+    
+    public boolean getPasserCaseDepart()
+    {
+        return passerCaseDepart;
+    }
+    
+    public void setPasserCaseDepart(boolean passerCaseDepart)
+    {
+        this.passerCaseDepart = passerCaseDepart;
     }
 
     

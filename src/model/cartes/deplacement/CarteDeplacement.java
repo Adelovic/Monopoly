@@ -5,23 +5,23 @@ import model.Message;
 import model.TypeCarte;
 import model.cartes.Carte;
 
-public class CarteDeplacement extends Carte
+public abstract class CarteDeplacement extends Carte
 {
     private int deplacement;
-    private boolean relatif;
-    private boolean passerCaseDepart;
+
     
-    public CarteDeplacement(TypeCarte type, String description, int deplacement, boolean relatif, boolean passerCasedepart) 
+    public CarteDeplacement(TypeCarte type, String description, int deplacement) 
     {
         super(type, description);
         this.deplacement = deplacement;
-        this.relatif = relatif;
-        this.passerCaseDepart = passerCasedepart;
     }
 
     @Override
-    public Message actionCarte(Joueur j) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public abstract Message actionCarte(Joueur j);
+    
+    public int getDeplacement()
+    {
+        return deplacement;
     }
     
     

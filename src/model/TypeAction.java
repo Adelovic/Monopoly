@@ -17,7 +17,8 @@ public enum TypeAction
     C_TRANSACTION_FIXE,
     C_ANNIVERSAIRE,
     C_REPARATION,
-    C_DEPLACEMENT;
+    C_DEPLACEMENT_RELATIF,
+    C_DEPLACEMENT_ABSOLU;
     
     
     
