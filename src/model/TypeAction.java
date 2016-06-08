@@ -8,7 +8,6 @@ public enum TypeAction
     LANCER_DES,
     PRISON,
     PAYER_LOYER,
-    REFUS_ACHAT,
     ACHAT,
     RIEN,
     

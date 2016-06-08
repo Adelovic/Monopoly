@@ -22,11 +22,11 @@ public class CarteDeplacementRelatif extends CarteDeplacement {
     }
 
     @Override
-    public Message actionCarte(Joueur j) 
+    public Message actionCarte() 
     {
         Message message = new Message();
         message.setType(TypeAction.C_DEPLACEMENT_RELATIF);
-        message.setMontantTransaction(getDeplacement());
+        message.setDeplacement(getDeplacement());
         return message;
     }
     

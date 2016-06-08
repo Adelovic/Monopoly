@@ -16,7 +16,7 @@ public abstract class CarteTransaction extends Carte
     }
     
     @Override
-    public abstract Message actionCarte(Joueur j);
+    public abstract Message actionCarte();
     
     public int getMontant()
     {

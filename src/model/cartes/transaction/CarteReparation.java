@@ -4,6 +4,7 @@ import model.Joueur;
 import model.Message;
 import model.TypeAction;
 import model.TypeCarte;
+import model.cartes.Carte;
 
 public class CarteReparation extends Carte 
 {
@@ -19,12 +20,12 @@ public class CarteReparation extends Carte
     }
 
     @Override
-    public Message actionCarte(Joueur j) 
+    public Message actionCarte() 
     {
         Message message = new Message();
         message.setType(TypeAction.C_REPARATION);
-        message.setCoutMaison(coutParMaison);
-        message.setCoutHotel(coutParHotel);
+        message.setCoutParMaison(coutParMaison);
+        message.setCoutParHotel(coutParHotel);
         return message;
     }
     

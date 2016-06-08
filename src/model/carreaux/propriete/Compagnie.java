@@ -1,7 +1,7 @@
 package model.carreaux.propriete;
 
 import model.Joueur;
-import model.carreaux.propriete.Propriete;
+
 
 public class Compagnie extends Propriete 
 {
@@ -20,7 +20,7 @@ public class Compagnie extends Propriete
     {
         Joueur proprio = getProprietaire();
         int nbCompagnies = proprio.getNbCompagnies();
-        int[] dernierDes = dernierJoueur.getDernierDes();
+        int[] dernierDes = getDernierJoueur().getDernierDes();
         int totalDes = dernierDes[0]+dernierDes[1];
         
         return nbCompagnies == 1 ? 4*totalDes : 10*totalDes;

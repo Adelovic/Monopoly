@@ -40,6 +40,27 @@ public class Message
     private int deplacement;
     
     private boolean passerCaseDepart;
+    
+    private int coutParMaison;
+    private int coutParHotel;
+
+    public void setCoutParMaison(int coutParMaison) 
+    {
+        this.coutParMaison = coutParMaison;
+    }
+
+    public void setCoutParHotel(int coupParHotel) 
+    {
+        this.coutParHotel = coupParHotel;
+    }
+
+    public int getCoutParMaison() {
+        return coutParMaison;
+    }
+
+    public int getCoutParHotel() {
+        return coutParHotel;
+    }
 
     public void setDeplacement(int deplacement)
     {

@@ -1,15 +1,13 @@
 package model.cartes.deplacement;
 
-import model.Joueur;
 import model.Message;
 import model.TypeCarte;
 import model.cartes.Carte;
 
 public abstract class CarteDeplacement extends Carte
 {
-    private int deplacement;
+    private final int deplacement;
 
-    
     public CarteDeplacement(TypeCarte type, String description, int deplacement) 
     {
         super(type, description);
@@ -17,7 +15,7 @@ public abstract class CarteDeplacement extends Carte
     }
 
     @Override
-    public abstract Message actionCarte(Joueur j);
+    public abstract Message actionCarte();
     
     public int getDeplacement()
     {

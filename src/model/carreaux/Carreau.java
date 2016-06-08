@@ -9,6 +9,8 @@ public abstract class Carreau
     private int numero;
     private String nom;
     
+    private Joueur dernierJoueur;
+    
     public Carreau(int numero, String nom)
     {
         this.numero = numero;
@@ -25,6 +27,15 @@ public abstract class Carreau
         return nom;
     }
     
+    public void setDernierJoueur(Joueur dernierJoueur) 
+    {
+        this.dernierJoueur = dernierJoueur;
+    }
+
+    public Joueur getDernierJoueur() 
+    {
+        return dernierJoueur;
+    }
     /*
     * Renvoie le message que le controleur
     * pourra traiter en fonction

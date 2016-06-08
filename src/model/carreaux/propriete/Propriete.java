@@ -13,7 +13,6 @@ public abstract class Propriete extends Carreau
     * Dernier joueur a être passé sur la propriété
     * Utilisé pour calculLoyer de certaines propriétés pour récupérer les dés
     */
-    protected Joueur dernierJoueur;
     
     private int prix;
     private Joueur proprietaire;
@@ -34,11 +33,6 @@ public abstract class Propriete extends Carreau
     public void acheter(Joueur j)
     {
         this.setProprietaire(j);
-    }
-    
-    public void setDernierJoueur(Joueur j)
-    {
-        this.dernierJoueur = j;
     }
     
     /*
@@ -68,6 +62,7 @@ public abstract class Propriete extends Carreau
         // La propriete a un proprietaire, le joueur doit payer
         else if (proprietaire != j)
         {  
+            message.setLoyer(calculLoyer());
             message.setType(TypeAction.PAYER_LOYER);
         }
         else

@@ -25,11 +25,11 @@ public class CarteDeplacementAbsolu extends CarteDeplacement{
     }
 
     @Override
-    public Message actionCarte(Joueur j) 
+    public Message actionCarte() 
     {
         Message message = new Message();
         message.setType(TypeAction.C_DEPLACEMENT_ABSOLU);
-        message.setMontantTransaction(getDeplacement());
+        message.setDeplacement(getDeplacement());
         message.setPasserCaseDepart(passerCasedepart);
         return message;
     }

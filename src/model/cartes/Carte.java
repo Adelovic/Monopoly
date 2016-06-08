@@ -29,5 +29,5 @@ public abstract class Carte
         return description;
     }
     
-    public abstract Message actionCarte(Joueur j);
+    public abstract Message actionCarte();
 }

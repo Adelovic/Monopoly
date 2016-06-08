@@ -12,6 +12,7 @@ import controller.Controleur;
 import model.carreaux.Carreau;
 import model.Joueur;
 import model.Message;
+import model.TypeAction;
 
 public class Ihm implements Observateur
 {
@@ -26,14 +27,14 @@ public class Ihm implements Observateur
         controleur.lancerJeu();
     }
     
-    public boolean demanderJoueur()
+    public boolean demanderJoueur(String message)
     {
         Scanner scan = new Scanner(System.in);
         
         String reponse = "";
         while (!reponse.equals("oui") && !reponse.equals("non"))
         {
-            System.out.println("Oui ou non ?");
+            System.out.println(message + " (Oui/Non)");
             reponse = scan.nextLine().toLowerCase();
         }   
         return reponse.equals("oui");
@@ -151,13 +152,24 @@ public class Ihm implements Observateur
         {
             case TIRER_CARTE:
                 System.out.println("Le joueur " + message.getJoueur().getNom() + " tire une carte!");
+                System.out.println(message.getCarte().getDescription());
                 break;
             case LANCER_DES:
+                break;
             case PRISON:
+                break;
             case PAYER_LOYER:
-            case REFUS_ACHAT:
+                System.out.println("Le joueur " + message.getJoueur().getNom() + " a payé " + message.getLoyer() + "$ de loyer à " + message.getPropriete().getProprietaire().getNom());
+                break;
             case ACHAT:
+                //boolean achat = demanderJoueur("Voulez-vous acheter " + message.getPropriete().getNom() + " pour " + message.getPropriete().getPrix() + " ?");
+                if (true)
+                {
+                    controleur.acheterPropriete(message.getJoueur(), message.getPropriete());
+                }
+                break;
             case RIEN:
+                break;
             default:
                 break;
         }

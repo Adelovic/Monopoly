@@ -42,21 +42,14 @@ public class Monopoly
     * Calcule le nouveau carreau à partir des deux dés
     * et y déplace le joueur
     */
-    public Carreau avancerJoueur(Joueur j, int montant)
+    public Carreau deplacerJoueur(Joueur j, int montant)
     {
         Carreau carr = j.getPositionCourante();
         
-        System.out.println(carr);
         int carrPos = carr.getNumero();
-        
-        System.out.println("Carreau : " + carr.getNumero());
-        
         int prochainCarreau = carrPos+montant;
         
-        System.out.println("Prochain carreau : " + prochainCarreau);
-        Carreau nouveauCarr = getCarreau(prochainCarreau > carreaux.size() ? prochainCarreau%carreaux.size() : prochainCarreau);
-        
-        System.out.println("Nouveau carreau : " + nouveauCarr);
+        Carreau nouveauCarr = getCarreau(prochainCarreau > carreaux.size() ? prochainCarreau%carreaux.size() : prochainCarreau < 1 ? carreaux.size()+(prochainCarreau-1) : prochainCarreau);
         
         j.setPositionCourante(nouveauCarr);
         return nouveauCarr;

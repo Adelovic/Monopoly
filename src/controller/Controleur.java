@@ -23,6 +23,7 @@ import model.carreaux.CarreauSansAction;
 import model.carreaux.CarreauTirage;
 import model.carreaux.Prison;
 import model.carreaux.Taxe;
+import model.carreaux.propriete.Propriete;
 import model.cartes.Carte;
 import model.cartes.CarteLiberationPrison;
 import model.cartes.deplacement.CarteDeplacement;
@@ -115,8 +116,8 @@ public class Controleur
             // Lancer les dés
             int[] des = lancerDes();
             joueur.setDernierDes(des);
-            Carreau carreau = monopoly.avancerJoueur(joueur, des[0]+des[1]);
-
+            Carreau carreau = monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+            carreau.setDernierJoueur(joueur);
             // Notification à l'ihm du lancé de dés
             Message msg = new Message();
             msg.setType(TypeAction.LANCER_DES);
@@ -136,14 +137,14 @@ public class Controleur
                     case TIRER_CARTE:
                         Carte carte = monopoly.tirerCarte(message.getTypeCarte());
                         message.setCarte(carte);
-                        Message messageCarte = carte.actionCarte(joueur);
+                        Message messageCarte = carte.actionCarte();
                         switch (messageCarte.getType()) 
                         {
                             case C_LIBERATION:
                                 break;
                             case C_TRANSACTION_FIXE:
-                                int montantTransaction = message.getMontantTransaction();
-                                joueur.retirerCash(montantTransaction);
+                                int montantTransaction = messageCarte.getMontantTransaction();
+                                joueur.modifierCash(montantTransaction);
                                 break;
                             case C_ANNIVERSAIRE:
                                 break;
@@ -151,13 +152,14 @@ public class Controleur
                                 break;
                             case C_DEPLACEMENT_RELATIF:
                                 peutRejouer = true;
-                                int deplacement = message.getDeplacement();
-                                //monopoly.avancerJoueur(joueur, deplacement);
+                                int deplacement = messageCarte.getDeplacement();
+                                carreau = monopoly.deplacerJoueur(joueur, deplacement);
                                 break;
                             case C_DEPLACEMENT_ABSOLU:
                                 peutRejouer = true;
-                                deplacement = message.getDeplacement();
-                                //joueur.setPositionCourante(monopoly.getCarreau(deplacement));
+                                deplacement = messageCarte.getDeplacement();
+                                carreau = monopoly.getCarreau(deplacement);
+                                joueur.setPositionCourante(carreau);
                                 break;
                             case PRISON:
                                 monopoly.emprisonner(joueur);
@@ -169,7 +171,7 @@ public class Controleur
                         break;
                     case PAYER_LOYER:
                         Joueur proprio = message.getPropriete().getProprietaire();
-                        int loyer = message.getPropriete().calculLoyer();
+                        int loyer = message.getLoyer();
                         int cashJ = joueur.getCash();
                         int aPrendre = cashJ > loyer ? loyer : cashJ;
                         joueur.removeCash(aPrendre);
@@ -184,46 +186,20 @@ public class Controleur
                 }
                 observateur.notifier(message);
             }
+            
+            if (joueur.getCash() <= 0)
+            {
+                System.out.println("Le joueur " + joueur.getNom() + " a été éliminé");
+                monopoly.eliminerJoueur(joueur);
+            }
         }
-    //        if (action != null)
-    //        {
-    //            ihm.notifier(action.getMessage());
-    //            boolean reponseJ = true;
-    //            if (action.entraineDemande())
-    //            {
-    //                reponseJ = ihm.demanderJoueur();
-    //            }
-    //
-    //            Message res = action.faireAction(reponseJ);
-    //
-    //            ihm.notifier(res.getMessage());
-    //            
-    //            if (joueur.getCash() == 0)
-    //            {
-    //                monopoly.eliminerJoueur(joueur);
-    //                ihm.joueurElimine(joueur);
-    //                elimine = true;
-    //            }
-    //            else
-    //            {
-    //                ihm.afficherInfoJoueur(joueur);
-    //                
-    //            }
-    //            
-    //        }
-    //        else
-    //        {
-    //            ihm.notifierCarreauSansAction(joueur, carreau);
-    //            ihm.afficherInfoJoueur(joueur);
-    //        }
-    //        
-    //        if (!elimine && joueur.getDernierDes()[0] == joueur.getDernierDes()[1])
-    //        {
-    //            ihm.notifierDoubleDes(joueur);
-    //            jouerCoup(joueur);
-    //        }
     }
     
+    
+    public void acheterPropriete(Joueur joueur, Propriete propriete)
+    {
+        propriete.acheter(joueur);
+    }
     /*
     * Lance deux dés et les renvoie sous forme de liste
     */
@@ -357,7 +333,7 @@ public class Controleur
                 // Transaction propriété
                 else if(carteType.compareTo("TP") == 0)
                 {
-                   monopoly.addCarte(type, new CarteReparation(type, carteInfos[2], Integer.parseInt(carteInfos[3]))); 
+                   monopoly.addCarte(type, new CarteReparation(type, carteInfos[2], Integer.parseInt(carteInfos[3]), Integer.parseInt(carteInfos[4]))); 
                 }
                 // Transaction fixe 
                 else if(carteType.compareTo("TF") == 0)

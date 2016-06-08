@@ -15,7 +15,7 @@ public class CarteAnniversaire extends Carte
     }
 
     @Override
-    public Message actionCarte(Joueur j) 
+    public Message actionCarte() 
     {
         Message message = new Message();
         message.setType(TypeAction.C_ANNIVERSAIRE);

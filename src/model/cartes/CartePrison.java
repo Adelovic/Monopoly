@@ -22,7 +22,7 @@ public class CartePrison extends Carte
     }
 
     @Override
-    public Message actionCarte(Joueur j) {
+    public Message actionCarte() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

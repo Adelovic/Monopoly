@@ -59,10 +59,13 @@ public class Joueur
     {
         return this.positionCourante;
     }
-    public void retirerCash(int cash)
+    public void modifierCash(int cash)
     {
-        int aRetirer = this.cash >= cash ? cash : this.cash;
-        this.cash -= aRetirer;
+        cash += cash;
+        if (cash < 0) 
+        {
+            cash = 0;
+        }
     }
     public void addCash(int cash) 
     {
