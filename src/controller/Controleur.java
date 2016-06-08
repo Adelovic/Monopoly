@@ -17,6 +17,7 @@ import model.Joueur;
 import model.Monopoly;
 import model.carreaux.propriete.ProprieteAConstruire;
 import model.Message;
+import model.TypeAction;
 import model.TypeCarte;
 import model.carreaux.CarreauSansAction;
 import model.carreaux.CarreauTirage;
@@ -96,90 +97,106 @@ public class Controleur
     */
     private void jouerCoup(Joueur joueur)
     {
+        boolean peutJouer = true;
+        
+        // Lancer les dés
         Carreau carreau = lancerDesEtAvancer(joueur);
         
-        ihm.notifierLancerDes(joueur);
+        // Notification à l'ihm du lancé de dés
+        Message msg = new Message();
+        msg.setType(TypeAction.LANCER_DES);
+        msg.setDerniersDes(joueur.getDernierDes());
+        ihm.notifier(msg);
         
-        Message message = carreau.action(joueur);
-        
-        boolean elimine = false;
-        
-        
-        switch (message.getType())
+        // Si en prison
+            // Incrémenter tourPrison
+            // Si double ou si tourPrison = 3
+                // Libérer et réinitialiser tourPrison
+        // Sinon
+        boolean peutRejouer = true;
+        while (peutRejouer && joueur.getCash() > 0)
         {
-            case TIRER_CARTE:
-                Carte carte = monopoly.tirerCarte(message.getTypeCarte());
-                Message messageCarte = carte.actionCarte(joueur);
-                        switch (messageCarte.getType())
-                        {
-                            case C_LIBERATION :
-                            case C_TRANSACTION_FIXE :
-                                int montantTransaction = message.getMontantTransaction();
-                                joueur.retirerCash(montantTransaction);
-                            case C_ANNIVERSAIRE : 
-                            case C_REPARATION : 
-                            case C_DEPLACEMENT :
-                            case PRISON : 
-                        }
-            case LANCER_DES:
-                
-            case PRISON:
-                
-            case PAYER_LOYER:
-                Joueur proprio = message.getProprietaire();
-                int loyer = message.getLoyer();
-                int cashJ = joueur.getCash();
-                int aprendre = cashJ > loyer ? loyer : cashJ;
-                joueur.removeCash(aprendre);
-                proprio.addCash(aprendre);          
-            case ACHAT:
-                int prix = message.getPrix();
-                
-                break;
-            case RIEN: 
-                break;
-                
-        }
-//        if (action != null)
-//        {
-//            ihm.notifier(action.getMessage());
-//            boolean reponseJ = true;
-//            if (action.entraineDemande())
-//            {
-//                reponseJ = ihm.demanderJoueur();
-//            }
-//
-//            Message res = action.faireAction(reponseJ);
-//
-//            ihm.notifier(res.getMessage());
-//            
-//            if (joueur.getCash() == 0)
-//            {
-//                monopoly.eliminerJoueur(joueur);
-//                ihm.joueurElimine(joueur);
-//                elimine = true;
-//            }
-//            else
-//            {
-//                ihm.afficherInfoJoueur(joueur);
-//                
-//            }
-//            
-//        }
-//        else
-//        {
-//            ihm.notifierCarreauSansAction(joueur, carreau);
-//            ihm.afficherInfoJoueur(joueur);
-//        }
-//        
-//        if (!elimine && joueur.getDernierDes()[0] == joueur.getDernierDes()[1])
-//        {
-//            ihm.notifierDoubleDes(joueur);
-//            jouerCoup(joueur);
-//        }
+            Message message = carreau.action(joueur);
 
-        ihm.notifier(message);
-        
+
+            switch (message.getType())
+            {
+                case TIRER_CARTE:
+                    Carte carte = monopoly.tirerCarte(message.getTypeCarte());
+                    Message messageCarte = carte.actionCarte(joueur);
+                            switch (messageCarte.getType())
+                            {
+                                case C_LIBERATION :
+                                case C_TRANSACTION_FIXE :
+                                    int montantTransaction = message.getMontantTransaction();
+                                    joueur.retirerCash(montantTransaction);
+                                case C_ANNIVERSAIRE : 
+                                case C_REPARATION : 
+                                case C_DEPLACEMENT :
+                                case PRISON : 
+                            }
+
+
+                case PRISON:
+                    ihm.notifier(message);
+                    monopoly.emprisonner(joueur);
+                case PAYER_LOYER:
+                    Joueur proprio = message.getPropriete().getProprietaire();
+                    int loyer = message.getPropriete().calculLoyer();
+                    int cashJ = joueur.getCash();
+                    int aPrendre = cashJ > loyer ? loyer : cashJ;
+                    joueur.removeCash(aPrendre);
+                    proprio.addCash(aPrendre);     
+                    ihm.notifier(message);
+                case ACHAT:
+                    ihm.notifier(message);
+                    break;
+                case RIEN: 
+                    ihm.notifier(message);
+                    break;
+
+
+            }
+    //        if (action != null)
+    //        {
+    //            ihm.notifier(action.getMessage());
+    //            boolean reponseJ = true;
+    //            if (action.entraineDemande())
+    //            {
+    //                reponseJ = ihm.demanderJoueur();
+    //            }
+    //
+    //            Message res = action.faireAction(reponseJ);
+    //
+    //            ihm.notifier(res.getMessage());
+    //            
+    //            if (joueur.getCash() == 0)
+    //            {
+    //                monopoly.eliminerJoueur(joueur);
+    //                ihm.joueurElimine(joueur);
+    //                elimine = true;
+    //            }
+    //            else
+    //            {
+    //                ihm.afficherInfoJoueur(joueur);
+    //                
+    //            }
+    //            
+    //        }
+    //        else
+    //        {
+    //            ihm.notifierCarreauSansAction(joueur, carreau);
+    //            ihm.afficherInfoJoueur(joueur);
+    //        }
+    //        
+    //        if (!elimine && joueur.getDernierDes()[0] == joueur.getDernierDes()[1])
+    //        {
+    //            ihm.notifierDoubleDes(joueur);
+    //            jouerCoup(joueur);
+    //        }
+
+            ihm.notifier(message);
+        }
     }
     
     /*

@@ -5,7 +5,6 @@ import model.carreaux.Carreau;
 import model.carreaux.propriete.Compagnie;
 import model.carreaux.propriete.Gare;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import model.cartes.Carte;

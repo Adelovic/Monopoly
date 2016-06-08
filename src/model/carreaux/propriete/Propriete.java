@@ -51,9 +51,7 @@ public abstract class Propriete extends Carreau
     { 
         Message message = new Message();
         message.setJoueur(j);
-        message.setProprietaire(proprietaire);
-        message.setLoyer(calculLoyer());
-        //this.setDernierJoueur(j);
+        message.setPropriete(this);
         
         // Aucun proprietaire
         if (proprietaire == null)

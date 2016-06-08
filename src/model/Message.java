@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import model.carreaux.propriete.Propriete;
 
 public class Message
 {
@@ -30,6 +31,13 @@ public class Message
     private int loyer;
     private int prix;
     private int montantTransaction;
+    private Propriete propriete;
+    private int[] derniersDes;
+    
+    
+    public Propriete getPropriete() {
+        return propriete;
+    }
 
     public void setMontantTransaction(int montantTransaction) {
         this.montantTransaction = montantTransaction;
@@ -108,4 +116,17 @@ public class Message
         return succes;
     }
 
+    public void setPropriete(Propriete prop) {
+        this.propriete = prop;
+    }
+
+    public int[] getsDerniersDes() {
+        return derniersDes;
+    }
+
+    public void setDerniersDes(int[] dernierDes) {
+        this.derniersDes = dernierDes;
+    }
+
+    
 }
