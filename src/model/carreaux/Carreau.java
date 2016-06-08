@@ -1,7 +1,7 @@
 package model.carreaux;
 
-import model.actions.Action;
 import model.Joueur;
+import model.Message;
 
 
 public abstract class Carreau
@@ -26,8 +26,9 @@ public abstract class Carreau
     }
     
     /*
-    * Renvoie l'action que le joueur subira
-    * en fonction de différents paramètres
+    * Renvoie le message que le controleur
+    * pourra traiter en fonction
+    * des différents paramètres
     */
-    public abstract Action action(Joueur j);
+    public abstract Message action(Joueur j);
 }

@@ -12,11 +12,9 @@ public class Message
     */
     private TypeAction type;
     
-        
     private Joueur proprietaire;
     
     private Joueur joueur;
-    
     private TypeCarte typeCarte;
     
     /*
@@ -29,11 +27,17 @@ public class Message
     * Le message sert à notifier le joueur de l'action et de son déroulement
     */
     private String message;
-    
     private int loyer;
-    
     private int prix;
+    private int montantTransaction;
 
+    public void setMontantTransaction(int montantTransaction) {
+        this.montantTransaction = montantTransaction;
+    }
+
+    public int getMontantTransaction() {
+        return montantTransaction;
+    }
     public void setPrix(int prix) {
         this.prix = prix;
     }
@@ -103,4 +107,5 @@ public class Message
     public boolean isSucces() {
         return succes;
     }
+
 }

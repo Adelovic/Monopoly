@@ -1,7 +1,7 @@
 package model.cartes;
 
 import model.Joueur;
-import model.actions.Action;
+import model.Message;
 import model.TypeCarte;
 
 public abstract class Carte 
@@ -19,8 +19,6 @@ public abstract class Carte
         this.description = description;
     }
     
-    public abstract Action getAction(Joueur j);
-    
     public TypeCarte getType()
     {
         return type;
@@ -30,4 +28,6 @@ public abstract class Carte
     {
         return description;
     }
+    
+    public abstract Message actionCarte(Joueur j);
 }

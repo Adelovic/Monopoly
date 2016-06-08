@@ -1,4 +1,4 @@
-package model.actions;
+package backup;
 
 import model.Joueur;
 import model.Message;

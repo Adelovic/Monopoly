@@ -9,7 +9,19 @@ public enum TypeAction
     PRISON,
     PAYER_LOYER,
     REFUS_ACHAT,
-    ACHAT;
+    ACHAT,
+    RIEN,
+    
+    
+    C_LIBERATION,
+    C_TRANSACTION_FIXE,
+    C_ANNIVERSAIRE,
+    C_REPARATION,
+    C_DEPLACEMENT;
+    
+    
+    
+    
     
     
 }

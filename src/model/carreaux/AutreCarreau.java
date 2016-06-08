@@ -1,8 +1,8 @@
 package model.carreaux;
 
 import model.Joueur;
-import model.actions.Action;
-import model.carreaux.Carreau;
+import model.Message;
+import model.TypeAction;
 
 public class AutreCarreau extends Carreau 
 {
@@ -21,8 +21,10 @@ public class AutreCarreau extends Carreau
     * car il n'y a aucune action sur les cases vides
     */
     @Override
-    public Action action(Joueur j) 
+    public Message action(Joueur j) 
     {
-        return null;
+        Message message = new Message();
+        message.setType(TypeAction.RIEN);
+        return message;
     }
 }

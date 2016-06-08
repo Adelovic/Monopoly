@@ -20,12 +20,21 @@ public class ProprieteAConstruire extends Propriete
     /*
     * Proprieté construisible (ajouts de maisons etc..)
     */
-    public ProprieteAConstruire(int numero, String nom, Groupe groupe, int prix, int loyerNu) 
+    
+    private int nbMaisons, nbHotels;
+    private int prixMaison;
+    private int prixHotel = 5 * prixMaison; 
+    private ArrayList <Integer> loyers;
+    
+    public ProprieteAConstruire(int numero, String nom, Groupe groupe, int prix, int loyerNu, ArrayList<Integer> loyers, int prixM, int prixH) 
     {
         super(numero, nom, prix);
         this.groupe = groupe;
         this.loyerNu = loyerNu;
         this.groupe.addPropriete(this);
+        this.loyers = loyers;
+        this.prixMaison = prixM;
+        this.prixHotel = prixH;
     }
     
     /*
@@ -47,6 +56,29 @@ public class ProprieteAConstruire extends Propriete
         return 2*getLoyerNu();
     }
     
+    public boolean etudeConstructionMaison()    
+    {
+        boolean constructionPossible = true;
+        Joueur proprio = getProprietaire();
+        int cashJ = proprio.getCash();
+        if(cashJ >= prixMaison)
+        {
+            ArrayList<ProprieteAConstruire> proprietes = groupe.getProprietes();
+            for(ProprieteAConstruire p : proprietes)
+            {
+                if(p.getProprietaire() != proprio || nbMaisons > p.getNbMaisons())
+                {
+                    constructionPossible =  false;
+                }
+            }
+        }
+        else 
+        {
+            constructionPossible = false;
+        }
+        return constructionPossible;
+    }
+    
     public Groupe getGroupe() 
     {
         return groupe;
@@ -63,4 +95,24 @@ public class ProprieteAConstruire extends Propriete
     {
         return loyerNu;
     }
+
+    
+    // Getters et setters maisons et hotels
+    public int getNbMaisons() {
+        return nbMaisons;
+    }
+
+    public void setNbMaisons(int nbMaisons) {
+        this.nbMaisons = nbMaisons;
+    }
+
+    public int getNbHotels() {
+        return nbHotels;
+    }
+
+    public void setNbHotels(int nbHotels) {
+        this.nbHotels = nbHotels;
+    }
+    
+    
 }

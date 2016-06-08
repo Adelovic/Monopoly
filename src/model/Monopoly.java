@@ -5,7 +5,10 @@ import model.carreaux.Carreau;
 import model.carreaux.propriete.Compagnie;
 import model.carreaux.propriete.Gare;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import model.cartes.Carte;
 
 public class Monopoly
 {
@@ -31,6 +34,9 @@ public class Monopoly
     */
     private ArrayList<Joueur> joueursElimines = new ArrayList<Joueur>();
     
+    // Piles de cartes
+    private ArrayList <Carte> cartesChance = new ArrayList<Carte>();
+    private ArrayList <Carte> cartesCommunaute = new ArrayList<Carte>();
     
     
     /*
@@ -110,4 +116,65 @@ public class Monopoly
     {
         return joueursElimines;
     }
+    
+    public void addCarte (TypeCarte type, Carte carte)
+    {
+        switch(type){
+            case CHANCE:
+                cartesChance.add(carte);
+                break;
+            case COMMUNAUTE:
+                cartesCommunaute.add(carte);
+                break;
+        }
+    }
+    
+    public Carte tirerCarte( TypeCarte type )
+    {
+        Carte carte = null;
+        if(type == TypeCarte.CHANCE)
+        {
+            ArrayList<Carte> cartesChanceTmp = new ArrayList();
+            carte = cartesChance.get(cartesChance.size()-1);
+            cartesChanceTmp.add(carte);
+            for( Carte c : cartesChance)
+            {
+                if (c != carte)
+                {
+                    cartesChanceTmp.add(c);
+                }
+                cartesChance = cartesChanceTmp;  
+            }
+            
+        }
+        else 
+        {
+            ArrayList<Carte> cartesCommunauteTmp = new ArrayList();
+            carte = cartesCommunaute.get(cartesCommunaute.size()-1);
+            cartesCommunauteTmp.add(carte);
+            for( Carte c : cartesCommunaute)
+            {
+                if (c != carte)
+                {
+                    cartesCommunauteTmp.add(c);
+                }
+                cartesCommunaute = cartesCommunauteTmp;  
+            }
+        }
+        return carte;
+    }
+    
+    public void  melangerCartes() 
+    {
+        Collections.shuffle(cartesChance);
+        Collections.shuffle(cartesCommunaute);
+    }
+    
+    public void emprisonner(Joueur j)
+    {
+        j.setPositionCourante(carreaux.get(11));
+        j.setEnPrison(true);    
+    }
+  
+    
 }

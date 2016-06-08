@@ -1,26 +1,24 @@
-package model.actions;
+package backup;
 
 import model.Joueur;
 import model.Message;
 import model.TypeAction;
-import model.TypeCarte;
 
-public class ActionTirage extends Action
+
+public class ActionPrison extends Action
 {
-    private final TypeCarte typeCarte;
-    
-    public ActionTirage(Joueur j, TypeCarte typeCarte) 
+
+    public ActionPrison(Joueur j) 
     {
         super(j);
-        this.typeCarte = typeCarte;
     }
 
     @Override
-    public Message faireAction(boolean reponseJ)
+    public Message faireAction(boolean reponseJ) 
     {
         Message message = new Message();
-        message.setType(TypeAction.LANCER_DES);
-        message.setTypeCarte(typeCarte);
+        message.setType(TypeAction.PRISON);
+        message.setJoueur(joueur);
         return message;
     }
 
@@ -45,7 +43,7 @@ public class ActionTirage extends Action
     @Override
     public boolean entraineTirage() 
     {
-        return true;
+        return false;
     }
     
 }

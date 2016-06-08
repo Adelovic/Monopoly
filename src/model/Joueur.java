@@ -15,6 +15,7 @@ public class Joueur
     private ArrayList<Gare> gares = new ArrayList<Gare>();
     private ArrayList<ProprieteAConstruire> proprietes = new ArrayList<ProprieteAConstruire>();
     private ArrayList<Compagnie> compagnies = new ArrayList<Compagnie>();
+    private boolean enPrison;
     
     public Joueur(String nomJoueur)
     {
@@ -56,7 +57,11 @@ public class Joueur
     {
         return this.positionCourante;
     }
-    
+    public void retirerCash(int cash)
+    {
+        int aRetirer = this.cash >= cash ? cash : this.cash;
+        this.cash -= aRetirer;
+    }
     public void addCash(int cash) 
     {
         this.cash += cash;
@@ -81,5 +86,25 @@ public class Joueur
     {
         compagnies.add(c);
     }
+
+    public String getNomJoueur() {
+        return nomJoueur;
+    }
+
+    public void setNomJoueur(String nomJoueur) {
+        this.nomJoueur = nomJoueur;
+    }
+
+    public boolean isEnPrison() 
+    {
+        return enPrison;
+    }
+
+    public void setEnPrison(boolean enPrison) 
+    {
+        this.enPrison = enPrison;
+    }
+    
+    
 
 }

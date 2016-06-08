@@ -1,9 +1,8 @@
 package model.carreaux.propriete;
 
-import model.actions.Action;
-import model.actions.ActionAchat;
-import model.actions.ActionLoyer;
 import model.Joueur;
+import model.Message;
+import model.TypeAction;
 import model.carreaux.Carreau;
 
 
@@ -30,7 +29,7 @@ public abstract class Propriete extends Carreau
     * Chaque type de proprieté calcule le loyer d'une façon différente
     */
     public abstract int calculLoyer();
-    
+            
     
     public void acheter(Joueur j)
     {
@@ -43,13 +42,18 @@ public abstract class Propriete extends Carreau
     }
     
     /*
-    * Renvoie les actions possibles au controleur
+    * Renvoie les informations nécessaires au controleur
     * Achat si la propriété n'a pas de propriétaire et que le joueur a suffisamment d'argent
     * Sinon si proprietaire, payer le loyer
     */
-    public Action action(Joueur j) 
+    @Override
+    public Message action(Joueur j) 
     { 
-        this.setDernierJoueur(j);
+        Message message = new Message();
+        message.setJoueur(j);
+        message.setProprietaire(proprietaire);
+        message.setLoyer(calculLoyer());
+        //this.setDernierJoueur(j);
         
         // Aucun proprietaire
         if (proprietaire == null)
@@ -57,23 +61,24 @@ public abstract class Propriete extends Carreau
            // Le joueur a assez pour acheter 
            if (j.getCash() >= prix) 
            {
-               return new ActionAchat(j, this);
+                message.setType(TypeAction.ACHAT);
            }
            else
            {
-               return null;
+               message.setType(TypeAction.RIEN);
            }
         }
         // La propriete a un proprietaire, le joueur doit payer
         else if (proprietaire != j)
-        {
-            
-            return new ActionLoyer(j, this);
+        {  
+            message.setType(TypeAction.PAYER_LOYER);
         }
         else
         {
-            return null;
+            message.setType(TypeAction.RIEN);
         }
+        
+        return message;
     }
     
     

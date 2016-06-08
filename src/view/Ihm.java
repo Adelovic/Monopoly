@@ -11,8 +11,9 @@ import java.util.Scanner;
 import controller.Controleur;
 import model.carreaux.Carreau;
 import model.Joueur;
+import model.Message;
 
-public class Ihm 
+public class Ihm implements Observateur
 {
     private Controleur controleur;
     
@@ -121,5 +122,11 @@ public class Ihm
             System.out.println((i+2) + " : " + joueursElimine.get(joueursElimine.size()-i-1).getNom());
         }
         System.out.println("----------------------------------------------------");
+    }
+
+    @Override
+    public void notifier(Message message) 
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

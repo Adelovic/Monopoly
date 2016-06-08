@@ -13,10 +13,9 @@ import model.TypeCarte;
  *
  * @author raffya
  */
-public class CartePrison extends Carte
-{
-
-    public CartePrison(TypeCarte type, String description) 
+public class CarteLiberationPrison extends Carte {
+    
+    public CarteLiberationPrison(TypeCarte type, String description) 
     {
         super(type, description);
     }
