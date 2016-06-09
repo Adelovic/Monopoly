@@ -34,6 +34,7 @@ public class Message
     private int montantTransaction;
     private Propriete propriete;
     private int[] derniersDes;
+    private int montantAnniversaire;
     
     private Carte carte;
     
@@ -43,7 +44,20 @@ public class Message
     
     private int coutParMaison;
     private int coutParHotel;
+    
+    
+    
 
+    public int getMontantAnniversaire() {
+        return montantAnniversaire;
+    }
+
+    public void setMontantAnniversaire(int montantAnniversaire) {
+        this.montantAnniversaire = montantAnniversaire;
+    }
+
+    
+    
     public void setCoutParMaison(int coutParMaison) 
     {
         this.coutParMaison = coutParMaison;

@@ -26,7 +26,6 @@ import model.carreaux.Taxe;
 import model.carreaux.propriete.Propriete;
 import model.cartes.Carte;
 import model.cartes.CarteLiberationPrison;
-import model.cartes.deplacement.CarteDeplacement;
 import model.cartes.deplacement.CarteDeplacementAbsolu;
 import model.cartes.deplacement.CarteDeplacementRelatif;
 import model.cartes.transaction.CarteAnniversaire;
@@ -36,11 +35,13 @@ import view.Observateur;
 
 public class Controleur
 {
+    /** Plateau de jeu **/
     private Monopoly monopoly;
     
+    /** Observateur qui va recevoir les messages depuis jouerCoup **/
     private Observateur observateur;
     
-    
+    /** Initialise le plateau **/
     public Controleur()
     {
         monopoly = new Monopoly(); 
@@ -51,15 +52,22 @@ public class Controleur
         new Ihm(new Controleur());
     }
     
-    /*
-    * Lance le jeu en créant propriétés, groupes et joueurs, puis gère la boucle de jeu principale
-    */
+        
+    /** Initialise les joueurs en demandant les noms à l'IHM **/
+    public void initialiserJoueurs(ArrayList<String> noms)
+    {
+        for (String nom : noms)
+        {
+           monopoly.addJoueur(new Joueur(nom));
+        }
+    }
+    
+    /**  Lance le jeu en créant propriétés, groupes et joueurs, puis gère la boucle de jeu principale **/
     public void lancerJeu()
     {
         creerGroupes();
         creerPlateau("src/data/data.txt");
         creerCartes("src/data/data_cartes.txt");
-        
         
         // Placer les joueurs sur la case départ
         for (Joueur joueur : monopoly.getJoueurs())
@@ -80,44 +88,20 @@ public class Controleur
             }
         }
         Joueur gagnant = monopoly.getJoueurs().get(0);
-        //ihm.notifierGagnant(gagnant);
+        Message message = new Message();
+        message.setType(TypeAction.FIN_PARTIE);
+        message.setJoueur(gagnant);
+        observateur.notifier(message);
         //ihm.afficherClassement(gagnant, monopoly.getJoueursElimines());
     }
     
-    /*
-    * Initialise les joueurs en demandant les noms à l'IHM
-    */
-    public void initialiserJoueurs(ArrayList<String> noms)
-    {
-        for (String nom : noms)
-        {
-           monopoly.addJoueur(new Joueur(nom));
-        }
-    }
     
-    /*
-    * Joue un coup du joueur
-    * Execute l'action renvoyée par le carreau et traite la réponse de l'exécution
-    * Gère les doubles dés et se rappelle si les dés sont identiques
-    */
-    private void jouerCoup(Joueur joueur)
+    /** Fais avancer le joueur d'un montant de des et traite l'action, et les actions engendrées à la suite **/
+    private void avancerEtJouer(Joueur joueur, int des)
     {
-        if (joueur.isEnPrison())
-        {
-            joueur.addTourPrison();
-            if (joueur.doubleDes() || joueur.getTourPrison() > 3)
-            {
-                monopoly.liberer(joueur);
-                jouerCoup(joueur);
-            }
-        }
-        else
-        {
-            // Lancer les dés
-            int[] des = lancerDes();
-            joueur.setDernierDes(des);
-            Carreau carreau = monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+            Carreau carreau = monopoly.deplacerJoueur(joueur, des);
             carreau.setDernierJoueur(joueur);
+            
             // Notification à l'ihm du lancé de dés
             Message msg = new Message();
             msg.setType(TypeAction.LANCER_DES);
@@ -125,9 +109,11 @@ public class Controleur
             observateur.notifier(msg);
             
             boolean peutRejouer = true;
-            while (peutRejouer && joueur.getCash() > 0)
+            while (peutRejouer && joueur.getCash() >= 0)
             {
-                peutRejouer = false;
+                peutRejouer = joueur.doubleDes();
+                
+                
                 Message message = carreau.action(joueur);
                 message.setJoueur(joueur);
 
@@ -147,8 +133,25 @@ public class Controleur
                                 joueur.modifierCash(montantTransaction);
                                 break;
                             case C_ANNIVERSAIRE:
+                                int montantAnniversaire = messageCarte.getMontantAnniversaire();
+                                for(Joueur j : monopoly.getJoueurs())
+                                {
+                                    if(j != joueur)
+                                    {   
+                                        j.payerA(joueur, montantAnniversaire);
+                                    }
+                                }
                                 break;
                             case C_REPARATION:
+                                int nbHotels = 0;
+                                int nbMaisons = 0;
+                                for(ProprieteAConstruire p : joueur.getProprietes())
+                                {
+                                    nbMaisons += p.getNbMaisons();
+                                    nbHotels += p.getNbHotels();
+                                }
+                                int montant = (nbMaisons * message.getCoutParMaison()) + (nbHotels * message.getCoutParHotel());
+                                joueur.removeCash(montant);
                                 break;
                             case C_DEPLACEMENT_RELATIF:
                                 peutRejouer = true;
@@ -164,6 +167,7 @@ public class Controleur
                             case PRISON:
                                 monopoly.emprisonner(joueur);
                                 break;
+                                
                         }
                         break;
                     case PRISON:
@@ -171,14 +175,11 @@ public class Controleur
                         break;
                     case PAYER_LOYER:
                         Joueur proprio = message.getPropriete().getProprietaire();
-                        int loyer = message.getLoyer();
-                        int cashJ = joueur.getCash();
-                        int aPrendre = cashJ > loyer ? loyer : cashJ;
-                        joueur.removeCash(aPrendre);
-                        proprio.addCash(aPrendre);     
+                        joueur.payerA(proprio, message.getLoyer());   
                         break;
                     case ACHAT:
                         break;
+                    case CONSTRUIRE:
                     case RIEN: 
                         break;
 
@@ -189,25 +190,49 @@ public class Controleur
             
             if (joueur.getCash() <= 0)
             {
-                System.out.println("Le joueur " + joueur.getNom() + " a été éliminé");
+                Message message = new Message();
+                message.setType(TypeAction.ELIMINER_JOUEUR);
+                message.setJoueur(joueur);
+                observateur.notifier(message);
                 monopoly.eliminerJoueur(joueur);
             }
-        }
     }
     
     
+    /** Jouer un coup du joueur **/
+    private void jouerCoup(Joueur joueur)
+    {
+        // Lancer les dés
+        int[] des = monopoly.lancerDes();
+        joueur.setDernierDes(des);
+            
+        if (joueur.isEnPrison())
+        {
+            joueur.addTourPrison();
+            if (joueur.doubleDes())
+            {
+                monopoly.liberer(joueur);
+            }
+            else if (joueur.getTourPrison() == 3)
+            {
+                joueur.removeCash(50);
+                monopoly.liberer(joueur);
+            }
+            
+            avancerEtJouer(joueur, des[0]+des[1]);
+        }
+        else
+        {
+           avancerEtJouer(joueur, des[0]+des[1]);
+        }
+    }
+    
+    /** Acheter une propriété, est appelé par l'observateur **/
     public void acheterPropriete(Joueur joueur, Propriete propriete)
     {
         propriete.acheter(joueur);
     }
-    /*
-    * Lance deux dés et les renvoie sous forme de liste
-    */
-    private int[] lancerDes()
-    { 
-        Random random = new Random();
-        return new int[] { random.nextInt(6)+1, random.nextInt(6)+1 };
-    }
+
     
     /*
     * Crée les groupes de propriété à partir de CouleurPropriete
@@ -223,10 +248,7 @@ public class Controleur
         
     }
     
-    /*
-    * Crée le plateau en initialisant les propriétés
-    * et en les ajoutant au monopoly
-    */
+    /** Crée le plateau en initialisant les propriétés et en les ajoutant au monopoly **/
     private void creerPlateau(String dataFilename)
     {
         try
@@ -300,6 +322,7 @@ public class Controleur
         }
     }
   
+    /** Crée les cartes et les ajoute au monopoly **/
     private void creerCartes(String dataFilename)
     {
         try
@@ -362,9 +385,7 @@ public class Controleur
         }
     }
     
-    /*
-    * Lis le fichier des carreaux et le renvoie sous forme de matrice
-    */
+    /** Lis le fichier des carreaux et le renvoie sous forme de matrice **/
     private ArrayList<String[]> readDataFile(String filename, String token) throws FileNotFoundException, IOException
     {
         ArrayList<String[]> data = new ArrayList<String[]>();
@@ -381,7 +402,9 @@ public class Controleur
         return data;
     }
 
-    public void setObservateur(Observateur observateur) {
+    /** Définit l'observateur à qui on enverra les messages **/
+    public void setObservateur(Observateur observateur) 
+    {
         this.observateur = observateur;
     }
 }

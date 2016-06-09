@@ -7,6 +7,7 @@ import model.carreaux.propriete.Gare;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Random;
 import model.cartes.Carte;
 
 public class Monopoly
@@ -37,11 +38,14 @@ public class Monopoly
     private ArrayList <Carte> cartesChance = new ArrayList<Carte>();
     private ArrayList <Carte> cartesCommunaute = new ArrayList<Carte>();
     
-    
+    // Nombre de maisons et hotels maximums
+    private int maisons = 32;
+    private int hotels = 12;
+        
     /*
     * Calcule le nouveau carreau à partir des deux dés
     * et y déplace le joueur
-    */
+    */    
     public Carreau deplacerJoueur(Joueur j, int montant)
     {
         Carreau carr = j.getPositionCourante();
@@ -80,6 +84,14 @@ public class Monopoly
         joueurs.add(joueur);
         joueur.setPositionCourante(carreaux.get(1));
     }
+
+    /** Lance deux dés et les renvoie sous forme de liste **/
+    public int[] lancerDes()
+    { 
+        Random random = new Random();
+        return new int[] { random.nextInt(6)+1, random.nextInt(6)+1 };
+    }
+    
     
     /*
     * Supprime le joueur des joueurs encore en course
@@ -121,7 +133,8 @@ public class Monopoly
     
     public void addCarte (TypeCarte type, Carte carte)
     {
-        switch(type){
+        switch(type)
+        {
             case CHANCE:
                 cartesChance.add(carte);
                 break;
@@ -133,34 +146,34 @@ public class Monopoly
     
     public Carte tirerCarte( TypeCarte type )
     {
-        Carte carte = null;
-        if(type == TypeCarte.CHANCE)
+        Carte carte;
+        ArrayList<Carte> cartesTmp = new ArrayList();
+        
+        if (type == TypeCarte.CHANCE)
         {
-            ArrayList<Carte> cartesChanceTmp = new ArrayList();
             carte = cartesChance.get(cartesChance.size()-1);
-            cartesChanceTmp.add(carte);
+            cartesTmp.add(carte);
             for( Carte c : cartesChance)
             {
                 if (c != carte)
                 {
-                    cartesChanceTmp.add(c);
+                    cartesTmp.add(c);
                 }
-                cartesChance = cartesChanceTmp;  
+                cartesChance = cartesTmp;  
             }
             
         }
         else 
         {
-            ArrayList<Carte> cartesCommunauteTmp = new ArrayList();
             carte = cartesCommunaute.get(cartesCommunaute.size()-1);
-            cartesCommunauteTmp.add(carte);
+            cartesTmp.add(carte);
             for( Carte c : cartesCommunaute)
             {
                 if (c != carte)
                 {
-                    cartesCommunauteTmp.add(c);
+                    cartesTmp.add(c);
                 }
-                cartesCommunaute = cartesCommunauteTmp;  
+                cartesCommunaute = cartesTmp;  
             }
         }
         return carte;

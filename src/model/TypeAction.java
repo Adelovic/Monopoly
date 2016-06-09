@@ -10,7 +10,9 @@ public enum TypeAction
     PAYER_LOYER,
     ACHAT,
     RIEN,
-    
+    CONSTRUIRE,
+    ELIMINER_JOUEUR, // Envoyé en fin de tour quand le joueur est éliminé
+    FIN_PARTIE,
     
     C_LIBERATION,
     C_TRANSACTION_FIXE,

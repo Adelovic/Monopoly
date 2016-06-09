@@ -1,6 +1,5 @@
 package model.cartes.transaction;
 
-import model.Joueur;
 import model.Message;
 import model.TypeAction;
 import model.TypeCarte;

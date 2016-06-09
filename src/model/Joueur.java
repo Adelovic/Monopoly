@@ -45,6 +45,12 @@ public class Joueur
     public int[] getDernierDes() { return this.dernierDes; }
     
     
+    public void payerA(Joueur joueur, int montant)
+    {
+        int aPrendre = this.getCash() > montant ? montant : this.getCash();
+        this.removeCash(montant); // Le cash du joueur peut passer en dessous de 0
+        joueur.addCash(aPrendre);     
+    }
     public void setPositionCourante(Carreau carreau) 
     {
         this.positionCourante = carreau;
