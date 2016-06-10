@@ -1,7 +1,7 @@
 
 package model;
 
-import model.carreaux.propriete.ProprieteAConstruire;
+import model.carreaux.propriete.ProprieteConstructible;
 import model.carreaux.Carreau;
 import model.carreaux.propriete.Compagnie;
 import model.carreaux.propriete.Gare;
@@ -13,7 +13,7 @@ public class Joueur
     private int[] dernierDes;
     private Carreau positionCourante;
     private ArrayList<Gare> gares = new ArrayList<Gare>();
-    private ArrayList<ProprieteAConstruire> proprietes = new ArrayList<ProprieteAConstruire>();
+    private ArrayList<ProprieteConstructible> proprietes = new ArrayList<ProprieteConstructible>();
     private ArrayList<Compagnie> compagnies = new ArrayList<Compagnie>();
     private boolean enPrison;
     
@@ -28,7 +28,7 @@ public class Joueur
     //Getters
     public ArrayList<Gare> getGares(){ return gares; }
 
-    public ArrayList<ProprieteAConstruire> getProprietes(){ return proprietes;}
+    public ArrayList<ProprieteConstructible> getProprietes(){ return proprietes;}
 
     public ArrayList<Compagnie> getCompagnies() {return compagnies;}
          
@@ -73,6 +73,7 @@ public class Joueur
             cash = 0;
         }
     }
+    
     public void addCash(int cash) 
     {
         this.cash += cash;
@@ -88,7 +89,7 @@ public class Joueur
         gares.add(g);
     }
     
-    public void addProprieteAConstruire(ProprieteAConstruire p) 
+    public void addProprieteAConstruire(ProprieteConstructible p) 
     {
         proprietes.add(p);
     }

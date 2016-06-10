@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import model.carreaux.propriete.Propriete;
+import model.carreaux.propriete.ProprieteConstructible;
 import model.cartes.Carte;
 
 public class Message
@@ -44,10 +45,21 @@ public class Message
     
     private int coutParMaison;
     private int coutParHotel;
+    private ProprieteConstructible proprieteConstructible;
     
     
     
 
+    public void setProprieteConstructible(ProprieteConstructible prop)
+    {
+        this.proprieteConstructible = prop;
+    }
+    
+    public ProprieteConstructible getProprieteConstructible()
+    {
+        return proprieteConstructible;
+    }
+    
     public int getMontantAnniversaire() {
         return montantAnniversaire;
     }

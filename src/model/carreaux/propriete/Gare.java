@@ -1,9 +1,8 @@
   package model.carreaux.propriete;
 
 import model.Joueur;
-import model.carreaux.propriete.Propriete;
 
-public class Gare extends Propriete
+public class Gare extends ProprieteNonConstructible
 {
     
     private static final int LOYER_GARE = 25;

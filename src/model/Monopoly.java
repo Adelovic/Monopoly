@@ -1,6 +1,6 @@
 package model;
 
-import model.carreaux.propriete.ProprieteAConstruire;
+import model.carreaux.propriete.ProprieteConstructible;
 import model.carreaux.Carreau;
 import model.carreaux.propriete.Compagnie;
 import model.carreaux.propriete.Gare;
@@ -13,6 +13,7 @@ import model.cartes.Carte;
 public class Monopoly
 {
     
+    private int joueurCourant = 0;
     /*
     * Groupe de propriété, un groupe correspond à une CouleurPropriete
     */
@@ -39,24 +40,27 @@ public class Monopoly
     private ArrayList <Carte> cartesCommunaute = new ArrayList<Carte>();
     
     // Nombre de maisons et hotels maximums
-    private int maisons = 32;
-    private int hotels = 12;
+    private int maisonsDisponibles = 32;
+    private int hotelsDisponibles = 12;
         
     /*
     * Calcule le nouveau carreau à partir des deux dés
     * et y déplace le joueur
     */    
-    public Carreau deplacerJoueur(Joueur j, int montant)
+    public boolean deplacerJoueur(Joueur j, int montant)
     {
         Carreau carr = j.getPositionCourante();
         
         int carrPos = carr.getNumero();
         int prochainCarreau = carrPos+montant;
         
+        boolean passeCaseDepart = prochainCarreau > carreaux.size() || prochainCarreau < 1;
         Carreau nouveauCarr = getCarreau(prochainCarreau > carreaux.size() ? prochainCarreau%carreaux.size() : prochainCarreau < 1 ? carreaux.size()+(prochainCarreau-1) : prochainCarreau);
         
+        nouveauCarr.setDernierJoueur(j);
         j.setPositionCourante(nouveauCarr);
-        return nouveauCarr;
+        
+        return passeCaseDepart;
     }
     
     public void addGroupe(Groupe groupe)
@@ -93,6 +97,21 @@ public class Monopoly
     }
     
     
+    public Joueur getJoueurCourant()
+    {
+        return getJoueurs().get(joueurCourant);
+    }
+    
+    public Joueur prochainJoueur()
+    {
+        joueurCourant++;
+        if (joueurCourant >= getJoueurs().size())
+        {
+            joueurCourant = 0;
+        }
+        
+        return getJoueurCourant();
+    }
     /*
     * Supprime le joueur des joueurs encore en course
     * et l'ajoute aux joueurs éliminés
@@ -102,7 +121,7 @@ public class Monopoly
     {
         joueurs.remove(joueur);
         // Supprimer les propriétés à construire
-        for (ProprieteAConstruire prop : joueur.getProprietes())
+        for (ProprieteConstructible prop : joueur.getProprietes())
         {
             prop.setProprietaire(null);
         }
@@ -195,6 +214,37 @@ public class Monopoly
     {
         j.setEnPrison(false);    
         j.setTourPrison(0);
+    }
+    
+    public int getMaisonsDisponibles()
+    {
+        return maisonsDisponibles;
+    }
+    
+    public int getHotelsDisponibles()
+    {
+        return hotelsDisponibles;
+    }
+        
+    public void enleverMaison()
+    {
+        maisonsDisponibles++;
+    }
+    
+    public void ajouterMaison()
+    {
+        maisonsDisponibles--;
+    }
+    
+            
+    public void enleverHotel()
+    {
+        hotelsDisponibles++;
+    }
+    
+    public void ajouterHotel()
+    {
+        hotelsDisponibles--;
     }
   
     

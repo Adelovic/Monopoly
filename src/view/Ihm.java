@@ -12,7 +12,6 @@ import controller.Controleur;
 import model.carreaux.Carreau;
 import model.Joueur;
 import model.Message;
-import model.TypeAction;
 
 public class Ihm implements Observateur
 {
@@ -24,7 +23,9 @@ public class Ihm implements Observateur
         controleur.setObservateur(this);
         
         controleur.initialiserJoueurs(demanderNoms());
-        controleur.lancerJeu();
+        controleur.initialiserJeu();
+        
+        controleur.jouerCoup();
     }
     
     public boolean demanderJoueur(String message)
@@ -155,8 +156,10 @@ public class Ihm implements Observateur
                 System.out.println(message.getCarte().getDescription());
                 break;
             case LANCER_DES:
+                System.out.println(message.getJoueur().getNom() + " a obtenu les dés " + message.getDerniersDes()[0] + " " + message.getDerniersDes()[1]);
                 break;
             case PRISON:
+                System.out.println("Tombé en prison!");
                 break;
             case PAYER_LOYER:
                 System.out.println("Le joueur " + message.getJoueur().getNom() + " a payé " + message.getLoyer() + "$ de loyer à " + message.getPropriete().getProprietaire().getNom());
@@ -166,11 +169,39 @@ public class Ihm implements Observateur
                 if (true)
                 {
                     controleur.acheterPropriete(message.getJoueur(), message.getPropriete());
+                    System.out.println("Le joueur " + message.getJoueur().getNom() + " a acheté " + message.getPropriete().getNom() + " pour " + message.getPropriete().getPrix());
                 }
                 break;
             case RIEN:
+                System.out.println("RIEN!");
                 break;
-            default:
+            case ELIMINER_JOUEUR:
+                System.out.println("Elimnation du joueur " + message.getJoueur().getNom());
+                break;
+            case FIN_PARTIE:
+                System.out.println("Fin du jeu ! Gagnant :  " + message.getJoueur().getNom());
+                break;
+            case DEBUT_COUP:
+                System.out.println("Debut du coup de " + message.getJoueur().getNom());
+                controleur.jouerCoup();
+            case FIN_COUP:
+                System.out.println("Fin du coup de  " + message.getJoueur().getNom());
+                controleur.finCoup();
+                break;
+            case REJOUER_DOUBLE_DES:
+                System.out.println("Double dé de " + message.getJoueur().getNom());
+                controleur.jouerCoup();
+                break;
+            case REJOUER:
+                System.out.println("Le joueur" + message.getJoueur().getNom() + " rejoue");
+                controleur.jouerCarreau(message.getJoueur());
+                break;
+            case CONSTRUIRE:
+                System.out.println("Le joueur " + message.getJoueur().getNom() + " a la possibilité de construire sur " + message.getPropriete().getNom());
+                if (demanderJoueur("Voulez-vous construire pour " + message.getPrix() + " ?"))
+                {
+                    controleur.construirePropriete(message.getProprieteConstructible(), message.getPrix());
+                }
                 break;
         }
     }

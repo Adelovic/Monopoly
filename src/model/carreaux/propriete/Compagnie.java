@@ -3,7 +3,7 @@ package model.carreaux.propriete;
 import model.Joueur;
 
 
-public class Compagnie extends Propriete 
+public class Compagnie extends ProprieteNonConstructible 
 {
     
     public Compagnie(int numero, String nom, int prix) 

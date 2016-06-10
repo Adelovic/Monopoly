@@ -28,7 +28,6 @@ public abstract class Propriete extends Carreau
     * Chaque type de proprieté calcule le loyer d'une façon différente
     */
     public abstract int calculLoyer();
-            
     
     public void acheter(Joueur j)
     {
@@ -41,37 +40,7 @@ public abstract class Propriete extends Carreau
     * Sinon si proprietaire, payer le loyer
     */
     @Override
-    public Message action(Joueur j) 
-    { 
-        Message message = new Message();
-        message.setPropriete(this);
-        
-        // Aucun proprietaire
-        if (proprietaire == null)
-        {
-           // Le joueur a assez pour acheter 
-           if (j.getCash() >= prix) 
-           {
-                message.setType(TypeAction.ACHAT);
-           }
-           else
-           {
-               message.setType(TypeAction.RIEN);
-           }
-        }
-        // La propriete a un proprietaire, le joueur doit payer
-        else if (proprietaire != j)
-        {  
-            message.setLoyer(calculLoyer());
-            message.setType(TypeAction.PAYER_LOYER);
-        }
-        else
-        {
-            message.setType(TypeAction.RIEN);
-        }
-        
-        return message;
-    }
+    public abstract Message action(Joueur j);
     
     
     public int getPrix() 

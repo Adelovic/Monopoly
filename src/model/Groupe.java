@@ -1,12 +1,12 @@
 package model;
 
-import model.carreaux.propriete.ProprieteAConstruire;
+import model.carreaux.propriete.ProprieteConstructible;
 import model.CouleurPropriete;
 import java.util.ArrayList;
 
 public class Groupe 
 {
-    private ArrayList<ProprieteAConstruire> proprietes;
+    private ArrayList<ProprieteConstructible> proprietes;
     private CouleurPropriete couleurPropriete;
     
     /*
@@ -15,15 +15,15 @@ public class Groupe
     public Groupe(CouleurPropriete couleurPropriete)
     {
         this.couleurPropriete = couleurPropriete;
-        this.proprietes = new ArrayList<ProprieteAConstruire>();
+        this.proprietes = new ArrayList<ProprieteConstructible>();
     }
     
-    public void addPropriete(ProprieteAConstruire prop)
+    public void addPropriete(ProprieteConstructible prop)
     {
         proprietes.add(prop);
     }
     
-    public ArrayList<ProprieteAConstruire> getProprietes()
+    public ArrayList<ProprieteConstructible> getProprietes()
     {
         return proprietes;
     }

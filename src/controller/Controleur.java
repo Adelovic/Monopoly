@@ -15,7 +15,7 @@ import model.carreaux.propriete.Gare;
 import model.Groupe;
 import model.Joueur;
 import model.Monopoly;
-import model.carreaux.propriete.ProprieteAConstruire;
+import model.carreaux.propriete.ProprieteConstructible;
 import model.Message;
 import model.TypeAction;
 import model.TypeCarte;
@@ -63,7 +63,7 @@ public class Controleur
     }
     
     /**  Lance le jeu en créant propriétés, groupes et joueurs, puis gère la boucle de jeu principale **/
-    public void lancerJeu()
+    public void initialiserJeu()
     {
         creerGroupes();
         creerPlateau("src/data/data.txt");
@@ -74,137 +74,159 @@ public class Controleur
         {
             joueur.setPositionCourante(monopoly.getCarreau(1));
         }
-        
-        int numJoueurCourant = 0;
-        while (monopoly.getJoueurs().size() > 1)
-        {
-            Joueur joueurCourant = monopoly.getJoueurs().get(numJoueurCourant);
-            jouerCoup(joueurCourant);
-            
-            numJoueurCourant++;
-            if (numJoueurCourant >= monopoly.getJoueurs().size())
-            {
-                numJoueurCourant = 0;
-            }
-        }
-        Joueur gagnant = monopoly.getJoueurs().get(0);
-        Message message = new Message();
-        message.setType(TypeAction.FIN_PARTIE);
-        message.setJoueur(gagnant);
-        observateur.notifier(message);
+
         //ihm.afficherClassement(gagnant, monopoly.getJoueursElimines());
     }
     
     
     /** Fais avancer le joueur d'un montant de des et traite l'action, et les actions engendrées à la suite **/
-    private void avancerEtJouer(Joueur joueur, int des)
+    public void jouerCarreau(Joueur joueur)
     {
-            Carreau carreau = monopoly.deplacerJoueur(joueur, des);
-            carreau.setDernierJoueur(joueur);
-            
-            // Notification à l'ihm du lancé de dés
-            Message msg = new Message();
-            msg.setType(TypeAction.LANCER_DES);
-            msg.setDerniersDes(joueur.getDernierDes());
-            observateur.notifier(msg);
-            
-            boolean peutRejouer = true;
-            while (peutRejouer && joueur.getCash() >= 0)
-            {
-                peutRejouer = joueur.doubleDes();
-                
-                
-                Message message = carreau.action(joueur);
-                message.setJoueur(joueur);
+        
+        // Met à jour les propriétés constructible **/
+        Carreau carreau = joueur.getPositionCourante();
+        Message messageCarreau = carreau.action(joueur);
+        messageCarreau.setJoueur(joueur);
 
-
-                switch (message.getType())
+        boolean peutRejouer = false;
+        boolean passeCaseDepart = false;
+        switch (messageCarreau.getType()) 
+        {
+            case TIRER_CARTE:
+                Carte carte = monopoly.tirerCarte(messageCarreau.getTypeCarte());
+                messageCarreau.setCarte(carte);
+                Message messageCarte = carte.actionCarte();
+                switch (messageCarte.getType()) 
                 {
-                    case TIRER_CARTE:
-                        Carte carte = monopoly.tirerCarte(message.getTypeCarte());
-                        message.setCarte(carte);
-                        Message messageCarte = carte.actionCarte();
-                        switch (messageCarte.getType()) 
+                    case C_LIBERATION:
+                        break;
+                    case C_TRANSACTION_FIXE:
+                        int montantTransaction = messageCarte.getMontantTransaction();
+                        joueur.modifierCash(montantTransaction);
+                        break;
+                    case C_ANNIVERSAIRE:
+                        int montantAnniversaire = messageCarte.getMontantAnniversaire();
+                        for (Joueur j : monopoly.getJoueurs()) 
                         {
-                            case C_LIBERATION:
-                                break;
-                            case C_TRANSACTION_FIXE:
-                                int montantTransaction = messageCarte.getMontantTransaction();
-                                joueur.modifierCash(montantTransaction);
-                                break;
-                            case C_ANNIVERSAIRE:
-                                int montantAnniversaire = messageCarte.getMontantAnniversaire();
-                                for(Joueur j : monopoly.getJoueurs())
-                                {
-                                    if(j != joueur)
-                                    {   
-                                        j.payerA(joueur, montantAnniversaire);
-                                    }
-                                }
-                                break;
-                            case C_REPARATION:
-                                int nbHotels = 0;
-                                int nbMaisons = 0;
-                                for(ProprieteAConstruire p : joueur.getProprietes())
-                                {
-                                    nbMaisons += p.getNbMaisons();
-                                    nbHotels += p.getNbHotels();
-                                }
-                                int montant = (nbMaisons * message.getCoutParMaison()) + (nbHotels * message.getCoutParHotel());
-                                joueur.removeCash(montant);
-                                break;
-                            case C_DEPLACEMENT_RELATIF:
-                                peutRejouer = true;
-                                int deplacement = messageCarte.getDeplacement();
-                                carreau = monopoly.deplacerJoueur(joueur, deplacement);
-                                break;
-                            case C_DEPLACEMENT_ABSOLU:
-                                peutRejouer = true;
-                                deplacement = messageCarte.getDeplacement();
-                                carreau = monopoly.getCarreau(deplacement);
-                                joueur.setPositionCourante(carreau);
-                                break;
-                            case PRISON:
-                                monopoly.emprisonner(joueur);
-                                break;
-                                
+                            if (j != joueur) 
+                            {
+                                j.payerA(joueur, montantAnniversaire);
+                            }
                         }
+                        break;
+                    case C_REPARATION:
+                        int nbHotels = 0;
+                        int nbMaisons = 0;
+                        for (ProprieteConstructible p : joueur.getProprietes()) 
+                        {
+                            nbMaisons += p.getNbMaisons();
+                            nbHotels += p.getNbHotels();
+                        }
+                        int montant = (nbMaisons * messageCarreau.getCoutParMaison()) + (nbHotels * messageCarreau.getCoutParHotel());
+                        joueur.removeCash(montant);
+                        break;
+                    case C_DEPLACEMENT_RELATIF:
+                        peutRejouer = true;
+                        int deplacement = messageCarte.getDeplacement();
+                        passeCaseDepart = monopoly.deplacerJoueur(joueur, deplacement);
+                        break;
+                    case C_DEPLACEMENT_ABSOLU:
+                        peutRejouer = true;
+                        deplacement = messageCarte.getDeplacement();
+                        boolean doitPasserCaseDepart = messageCarte.getPasserCaseDepart();
+                        passeCaseDepart = (deplacement < joueur.getPositionCourante().getNumero() && doitPasserCaseDepart) || doitPasserCaseDepart;
+                        joueur.setPositionCourante(monopoly.getCarreau(deplacement));
                         break;
                     case PRISON:
                         monopoly.emprisonner(joueur);
                         break;
-                    case PAYER_LOYER:
-                        Joueur proprio = message.getPropriete().getProprietaire();
-                        joueur.payerA(proprio, message.getLoyer());   
-                        break;
-                    case ACHAT:
-                        break;
-                    case CONSTRUIRE:
-                    case RIEN: 
-                        break;
-
 
                 }
-                observateur.notifier(message);
-            }
-            
-            if (joueur.getCash() <= 0)
-            {
-                Message message = new Message();
-                message.setType(TypeAction.ELIMINER_JOUEUR);
-                message.setJoueur(joueur);
-                observateur.notifier(message);
-                monopoly.eliminerJoueur(joueur);
-            }
+                break;
+            case PRISON:
+                monopoly.emprisonner(joueur);
+                break;
+            case PAYER_LOYER:
+                Joueur proprio = messageCarreau.getPropriete().getProprietaire();
+                joueur.payerA(proprio, messageCarreau.getLoyer());
+                break;
+            case ACHAT:
+                break;
+            case CONSTRUIRE:
+                ProprieteConstructible prop = messageCarreau.getProprieteConstructible();
+                
+                if (prop.maisonConstructible() && joueur.getCash() > prop.getNbMaisons() && monopoly.getMaisonsDisponibles() > 0)
+                {
+                    messageCarreau.setPrix(prop.getPrixMaison());
+                }
+                else if (prop.hotelConstructible() && joueur.getCash() > prop.getNbHotels() && monopoly.getHotelsDisponibles() > 0)
+                {
+                    messageCarreau.setPrix(prop.getPrixHotel());
+                }
+                else
+                {
+                    messageCarreau.setType(TypeAction.RIEN);
+                }
+                break;
+            case RIEN:
+                break;
+        }
+        Message message = new Message();
+        message.setJoueur(joueur); 
+         
+        observateur.notifier(messageCarreau);
+        
+        if (passeCaseDepart)
+        {
+            joueur.modifierCash(200);
+            message.setType(TypeAction.TOUCHE_CASE_DEPART);
+            observateur.notifier(message);
+        }
+        
+        if (joueur.getCash() <= 0) 
+        {
+            message.setType(TypeAction.ELIMINER_JOUEUR);
+            monopoly.eliminerJoueur(joueur); 
+            observateur.notifier(message);
+        }
+        else if (peutRejouer)
+        {
+            message.setType(TypeAction.REJOUER);            
+            observateur.notifier(message);
+        }
+        
+        if (monopoly.getJoueurs().size() == 1)
+        {
+            Message messageFinPartie = new Message();
+            messageFinPartie.setType(TypeAction.FIN_PARTIE);
+            messageFinPartie.setJoueur(monopoly.getJoueurs().get(0));
+            observateur.notifier(messageFinPartie);
+        }
     }
     
+    public void finCoup()
+    {
+        Message message = new Message();
+        message.setType(TypeAction.FIN_COUP);
+        message.setJoueur(monopoly.prochainJoueur());
+        observateur.notifier(message);
+    
+    }
     
     /** Jouer un coup du joueur **/
-    private void jouerCoup(Joueur joueur)
+    public void jouerCoup()
     {
+        Joueur joueur = monopoly.getJoueurCourant();
         // Lancer les dés
         int[] des = monopoly.lancerDes();
         joueur.setDernierDes(des);
+                        
+        // Notification à l'ihm du lancé de dés
+        Message msg = new Message();
+        msg.setType(TypeAction.LANCER_DES);
+        msg.setJoueur(joueur);
+        msg.setDerniersDes(joueur.getDernierDes());
+        observateur.notifier(msg);
             
         if (joueur.isEnPrison())
         {
@@ -212,18 +234,29 @@ public class Controleur
             if (joueur.doubleDes())
             {
                 monopoly.liberer(joueur);
+                monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+                jouerCarreau(joueur);
             }
             else if (joueur.getTourPrison() == 3)
             {
                 joueur.removeCash(50);
                 monopoly.liberer(joueur);
-            }
-            
-            avancerEtJouer(joueur, des[0]+des[1]);
+                monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+                jouerCarreau(joueur);
+            }  
         }
         else
         {
-           avancerEtJouer(joueur, des[0]+des[1]);
+            monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+            jouerCarreau(joueur);
+        }
+        
+        if (joueur.doubleDes())
+        {
+            Message message = new Message();
+            message.setType(TypeAction.REJOUER_DOUBLE_DES);
+            message.setJoueur(joueur);
+            observateur.notifier(message);
         }
     }
     
@@ -233,7 +266,12 @@ public class Controleur
         propriete.acheter(joueur);
     }
 
-    
+    /** Construire une propriété, ajoute automatiquement une maison ou un hotel **/
+    public void construirePropriete(ProprieteConstructible propriete, int prix)
+    {
+        propriete.construire();
+        propriete.getProprietaire().removeCash(prix);
+    }
     /*
     * Crée les groupes de propriété à partir de CouleurPropriete
     * Une couleur représente un groupe
@@ -243,8 +281,7 @@ public class Controleur
         for (CouleurPropriete couleur : CouleurPropriete.values())
         {
             monopoly.addGroupe(new Groupe(couleur));
-        }
-        
+        }     
         
     }
     
@@ -268,7 +305,7 @@ public class Controleur
                         loyers.add(Integer.valueOf(caseInfos[j]));
                     }
                     
-                    monopoly.addCarreau(new ProprieteAConstruire(Integer.valueOf(caseInfos[1]), caseInfos[2], monopoly.getGroupe(CouleurPropriete.valueOf(caseInfos[3])), Integer.valueOf(caseInfos[4]), Integer.valueOf(caseInfos[5]), loyers, Integer.valueOf(caseInfos[11]), Integer.valueOf(caseInfos[12]) ));
+                    monopoly.addCarreau(new ProprieteConstructible(Integer.valueOf(caseInfos[1]), caseInfos[2], monopoly.getGroupe(CouleurPropriete.valueOf(caseInfos[3])), Integer.valueOf(caseInfos[4]), Integer.valueOf(caseInfos[5]), loyers, Integer.valueOf(caseInfos[11]), Integer.valueOf(caseInfos[12]) ));
                 }
                 else if(caseType.compareTo("G") == 0)
                 {
