@@ -31,6 +31,7 @@ import model.cartes.deplacement.CarteDeplacementRelatif;
 import model.cartes.transaction.CarteAnniversaire;
 import model.cartes.transaction.CarteReparation;
 import model.cartes.transaction.CarteTransactionFixe;
+import view.Ihm2;
 import view.Observateur;
 
 public class Controleur
@@ -49,7 +50,7 @@ public class Controleur
     
     public static void main(String[] args)
     {
-        new Ihm(new Controleur());
+        new Ihm2(new Controleur());
     }
     
         
@@ -60,6 +61,16 @@ public class Controleur
         {
            monopoly.addJoueur(new Joueur(nom));
         }
+        
+        
+        Message message = new Message();
+        message.setType(TypeAction.DEBUT_PARTIE);
+        message.setJoueurs(monopoly.getJoueurs());
+        observateur.notifier(message);
+        
+        message.setType(TypeAction.DEBUT_COUP);
+        message.setJoueur(monopoly.getJoueurCourant());
+        observateur.notifier(message);
     }
     
     /**  Lance le jeu en créant propriétés, groupes et joueurs, puis gère la boucle de jeu principale **/
@@ -74,7 +85,6 @@ public class Controleur
         {
             joueur.setPositionCourante(monopoly.getCarreau(1));
         }
-
         //ihm.afficherClassement(gagnant, monopoly.getJoueursElimines());
     }
     
@@ -93,6 +103,7 @@ public class Controleur
         switch (messageCarreau.getType()) 
         {
             case TIRER_CARTE:
+                System.out.println(messageCarreau.getTypeCarte());
                 Carte carte = monopoly.tirerCarte(messageCarreau.getTypeCarte());
                 messageCarreau.setCarte(carte);
                 Message messageCarte = carte.actionCarte();
@@ -129,6 +140,11 @@ public class Controleur
                         peutRejouer = true;
                         int deplacement = messageCarte.getDeplacement();
                         passeCaseDepart = monopoly.deplacerJoueur(joueur, deplacement);
+                        Message msgDeplacement = new Message();
+                        msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+                        msgDeplacement.setJoueur(joueur);
+                        msgDeplacement.setPasserCaseDepart(passeCaseDepart);
+                        observateur.notifier(msgDeplacement);
                         break;
                     case C_DEPLACEMENT_ABSOLU:
                         peutRejouer = true;
@@ -136,15 +152,28 @@ public class Controleur
                         boolean doitPasserCaseDepart = messageCarte.getPasserCaseDepart();
                         passeCaseDepart = (deplacement < joueur.getPositionCourante().getNumero() && doitPasserCaseDepart) || doitPasserCaseDepart;
                         joueur.setPositionCourante(monopoly.getCarreau(deplacement));
+                        msgDeplacement = new Message();
+                        msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+                        msgDeplacement.setJoueur(joueur);
+                        msgDeplacement.setPasserCaseDepart(passeCaseDepart && doitPasserCaseDepart);
+                        observateur.notifier(msgDeplacement);
                         break;
                     case PRISON:
                         monopoly.emprisonner(joueur);
+                        msgDeplacement = new Message();
+                        msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+                        msgDeplacement.setJoueur(joueur);
+                        observateur.notifier(msgDeplacement);
                         break;
 
                 }
                 break;
             case PRISON:
                 monopoly.emprisonner(joueur);
+                Message msgDeplacement = new Message();
+                msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+                msgDeplacement.setJoueur(joueur);
+                observateur.notifier(msgDeplacement);
                 break;
             case PAYER_LOYER:
                 Joueur proprio = messageCarreau.getPropriete().getProprietaire();
@@ -235,6 +264,11 @@ public class Controleur
             {
                 monopoly.liberer(joueur);
                 monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+                Message msgDeplacement = new Message();
+                msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+                msgDeplacement.setPasserCaseDepart(false);
+                msgDeplacement.setJoueur(joueur);
+                observateur.notifier(msgDeplacement);
                 jouerCarreau(joueur);
             }
             else if (joueur.getTourPrison() == 3)
@@ -242,16 +276,26 @@ public class Controleur
                 joueur.removeCash(50);
                 monopoly.liberer(joueur);
                 monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+                Message msgDeplacement = new Message();
+                msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+                msgDeplacement.setPasserCaseDepart(false);
+                msgDeplacement.setJoueur(joueur);
+                observateur.notifier(msgDeplacement);
                 jouerCarreau(joueur);
             }  
         }
         else
         {
-            monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+            boolean passeCaseDepart = monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+            Message msgDeplacement = new Message();
+            msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+            msgDeplacement.setJoueur(joueur);
+            msgDeplacement.setPasserCaseDepart(passeCaseDepart);
+            observateur.notifier(msgDeplacement);
             jouerCarreau(joueur);
         }
         
-        if (joueur.doubleDes())
+        if (joueur.doubleDes() && !joueur.isEnPrison())
         {
             Message message = new Message();
             message.setType(TypeAction.REJOUER_DOUBLE_DES);
@@ -335,7 +379,7 @@ public class Controleur
                 else if(caseType.compareTo("CT") == 0)
                 {
                     System.out.println("Carreau Tirage :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
-                    monopoly.addCarreau(new CarreauTirage(Integer.valueOf(caseInfos[1]), caseInfos[2]));
+                    monopoly.addCarreau(new CarreauTirage(Integer.valueOf(caseInfos[1]), caseInfos[2], TypeCarte.valueOf(caseInfos[3])));
                 }
                 else if(caseType.compareTo("AU") == 0)
                 {
@@ -370,7 +414,7 @@ public class Controleur
             {
                 String[] carteInfos = data.get(i);
                 
-                TypeCarte type = carteInfos.equals("ch") ? TypeCarte.CHANCE : TypeCarte.COMMUNAUTE;
+                TypeCarte type = carteInfos[0].equals("ch") ? TypeCarte.CHANCE : TypeCarte.COMMUNAUTE;
                 
                 String carteType = carteInfos[1];
                 

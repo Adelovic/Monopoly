@@ -137,5 +137,25 @@ public class Joueur
         tourPrison ++;
     }
     
+    public int getNbMaisons()
+    {
+        int nbMaisons = 0;
+        for (ProprieteConstructible p : getProprietes()) 
+        {
+            nbMaisons += p.getNbMaisons();
+        }
+        return nbMaisons;
+    }
+    
+    public int getNbHotels()
+    {
+        int nbHotels = 0;
+        for (ProprieteConstructible p : getProprietes()) 
+        {
+            nbHotels += p.getNbHotels();
+        }
+        return nbHotels;
+    }
+    
 
 }

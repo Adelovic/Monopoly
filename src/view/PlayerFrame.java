@@ -21,7 +21,6 @@ import model.Joueur;
 
 public class PlayerFrame extends JFrame implements ActionListener, KeyListener 
 {
-    private static ArrayList<Joueur> listJoueurs;
     private int joueursActifs = 2;
     private ArrayList<JTextField> listTextField;
     private boolean fenetreVisible = true;
@@ -42,12 +41,15 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
     private JLabel labelErreur2;
     private JPanel panelErreur2;
     
-    public PlayerFrame() {
+    private Ihm2 ihm;
+    
+    public PlayerFrame(Ihm2 ihm) 
+    {
+        this.ihm = ihm;
         initComponents();
     }
                           
     private void initComponents() {
-        listJoueurs = new ArrayList<>();
         listTextField = new ArrayList<>();
 
         jButtonValider = new JButton();
@@ -230,8 +232,6 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
             {
                 if (!j.getText().equals(""))
                 {
-                    listJoueurs.add(new Joueur(j.getText()));
-                    
                     if (listNom.contains(j.getText()))
                     {
                         fenetreVisible = true;
@@ -244,23 +244,20 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
                     listNom.add(j.getText());
                 }
             }
-            if (listJoueurs.size() <= 1 || erreur1)
+            if (listNom.size() <= 1 || erreur1)
             {
                 fenetreVisible = true;
-                listJoueurs = new ArrayList<>();
                 panelErreur2.setVisible(erreur1);
                 panelErreur1.setVisible(!erreur1);
             }
             else
             {
-                fenetreVisible = false;
+                fenetreVisible = false; 
+                System.out.println("ihm initJoueurs");
+                ihm.initialiserJoueurs(listNom);
+                this.dispose();
             } 
         }
-    }
-
-    public static ArrayList<Joueur> getListJoueurs() 
-    {
-        return listJoueurs;
     }
 
     public boolean isFrameVisible() 

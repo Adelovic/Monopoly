@@ -32,11 +32,11 @@ public final class Plateau extends Canvas
     
     public void setDe() throws IOException
     {
-        this.plateau = ImageIO.read(new File("C:\\Users\\schaelth\\Documents\\NetBeansProjects\\monopoly_test\\src\\PlateauFinal.png"));        
+        this.plateau = ImageIO.read(new File("src/view/PlateauFinal.png"));        
     }
     public void setPion() throws IOException
     {
-        this.pion = ImageIO.read(new File(facesDes[0]));        
+        this.pion = ImageIO.read(new File("src/view/" + facesDes[0]));        
     }
     
     @Override

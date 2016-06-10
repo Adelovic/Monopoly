@@ -150,7 +150,7 @@ public class Monopoly
         return joueursElimines;
     }
     
-    public void addCarte (TypeCarte type, Carte carte)
+    public void addCarte(TypeCarte type, Carte carte)
     {
         switch(type)
         {

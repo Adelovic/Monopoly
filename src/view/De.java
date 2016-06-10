@@ -37,7 +37,7 @@ public class De extends Canvas
     public void setValeurDe(int valeurDe) throws IOException 
     {
         this.valeurDe = valeurDe;
-        de = ImageIO.read(new File(facesDes[valeurDe - 1]));
+        de = ImageIO.read(new File("src/view/" + facesDes[valeurDe - 1]));
     }
 
     public int getValeurDe() 

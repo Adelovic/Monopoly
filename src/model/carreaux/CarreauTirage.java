@@ -8,21 +8,22 @@ package model.carreaux;
 import model.Joueur;
 import model.Message;
 import model.TypeAction;
+import model.TypeCarte;
 
-/**
- *
- * @author raffya
- */
-public class CarreauTirage extends Carreau {
-
-    public CarreauTirage(int numero, String nom) {
+public class CarreauTirage extends Carreau 
+{
+    private TypeCarte type;
+    
+    public CarreauTirage(int numero, String nom, TypeCarte type) {
         super(numero, nom);
+        this.type = type;
     }
 
     @Override
     public Message action(Joueur j) {
         Message message = new Message();
         message.setType(TypeAction.TIRER_CARTE);
+        message.setTypeCarte(type);
         return message;
     }
     

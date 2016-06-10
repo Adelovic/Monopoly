@@ -209,5 +209,8 @@ public class ProprieteConstructible extends Propriete
         return prixHotel;
     }
     
-    
+    public ArrayList<Integer> getLoyers()
+    {
+        return loyers;
+    }
 }

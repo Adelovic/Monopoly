@@ -46,7 +46,17 @@ public class Message
     private int coutParMaison;
     private int coutParHotel;
     private ProprieteConstructible proprieteConstructible;
-    
+    private ArrayList<Joueur> joueurs;
+
+    public void setJoueurs(ArrayList<Joueur> joueurs) 
+    {
+        this.joueurs = joueurs;
+    }
+
+    public ArrayList<Joueur> getJoueurs() 
+    {
+        return joueurs;
+    }
     
     
 
