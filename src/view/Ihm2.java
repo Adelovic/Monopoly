@@ -27,12 +27,12 @@ import model.cartes.Carte;
 
 public class Ihm2 extends JFrame implements ActionListener, Observateur
 {
-    private String[] icones = { "chien.png", "chapeau.png", "chaussure.png", "voiture.png", "bateau.png", "deACoudre.png" };
+    private String[] icones = { "chaussure.png", "chapeau.png", "chaussure.png", "voiture.png", "bateau.png", "deACoudre.png" };
        
     private HashMap<Joueur, ArrayList<ProprieteConstructible>> proprietesConstructibles;
     
     private Color[] listeCouleurs = {Color.red, Color.yellow, Color.green, Color.blue, Color.PINK, Color.GRAY};
-    private String[] listePions = {"voiturePion.gif", "DeACoudrePion.gif", "chienPion.gif", "chaussurePion.gif", "bateauPion.gif", "chapeauPion.gif"};
+    
     private boolean recuDes = false;
     
     private JPanel panelDes;
@@ -49,7 +49,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private JPanel panCaseActuelle;
     private JPanel panInfoJoueurCourant;
     private JPanel panInfoJoueurs;
-    private JLabel plateau;
+    private Plateau plateau;
     private JLabel wallpaper;  
     private JPanel panInfoPrison;
     private JButton buttonLancerDesPrison;
@@ -90,10 +90,8 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private JPanel panelCouleur;
     private JPanel panelLocation;
     private JPanel panInfoCarreau;;
-    private HashMap<String, JLabel> jPions;
     private JLabel labelCdC1;
     private JLabel labelCdC2;
-    private JLabel labInfoCarteChance;
     
     //infos des joueurs 
     private int[] des;
@@ -113,7 +111,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     float positionVerticale = 0;
     
     //controleur
-    private Controleur controleur;
+    private final Controleur controleur;
     
     public Ihm2(Controleur controleur) 
     {
@@ -126,23 +124,16 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         playerFrame.setSize(620, 380);
         playerFrame.setLocationRelativeTo(null);
         playerFrame.setVisible(true);
-        System.out.println(" constructeur ihm2");
         
     }
-  
-
+        
     public void initialiserJoueurs(ArrayList<String> noms)
     {
         this.controleur.initialiserJoueurs(noms);
-        jPions = new HashMap<>();
         
-        for (int i = 0; i < noms.size(); i++)
+        for (String nom : noms)
         {
-            JLabel pion = new JLabel();
-            pion.setIcon(new ImageIcon(getClass().getResource(listePions[i])));
-            plateau.add(pion);
-            pion.setBounds(810,810,50,50);
-            jPions.put(noms.get(i),pion);
+            plateau.addPion(nom, Pion.CHIEN);
         }
     }
     
@@ -158,7 +149,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         logoMrmonopolyChance = new JLabel();
         panDescCarteChance = new JPanel();
         panWallpaperChance = new JLabel();
-        plateau = new JLabel();
         panInfoJoueurCourant = new JPanel();
         labelNomTour = new JLabel();
         labelNomProprio = new JLabel();
@@ -208,7 +198,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panInfoCarreau = new JPanel();
         labelCdC2 = new JLabel();
         labelCdC1 = new JLabel();
-        labInfoCarteChance = new JLabel();
         
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -254,19 +243,18 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         logoMrmonopolyChance.setBounds(10, 10, 180, 250);
 
         panDescCarteChance.setBackground(new Color(255, 255, 255));
-        
+
         GroupLayout descriptionChanceLayout = new GroupLayout(panDescCarteChance);
         panDescCarteChance.setLayout(descriptionChanceLayout);
         descriptionChanceLayout.setHorizontalGroup(
             descriptionChanceLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(labInfoCarteChance)
             .addGap(0, 190, Short.MAX_VALUE)
         );
         descriptionChanceLayout.setVerticalGroup(
             descriptionChanceLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(labInfoCarteChance)
             .addGap(0, 170, Short.MAX_VALUE)
         );
+
         panelInfoChance.add(panDescCarteChance);
         panDescCarteChance.setBounds(190, 80, 190, 170);
 
@@ -390,13 +378,10 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panInfoPrison.setBounds(600, 270, 500, 450);
         panInfoPrison.setVisible(false);
         
-        
-        plateau.setBorder(new LineBorder(new Color(0, 0, 0), 10, true));
-        Plateau p1 = new Plateau();
-        plateau.setIcon(new ImageIcon(p1.getPlateau()));
+        plateau = new Plateau();
         
         fenetreJeu.add(plateau);
-        plateau.setBounds(390, 44, 920, 910);
+        plateau.setBounds(390, 44, 899, 899);
         
         //Bouton "fin de tour
         textButtonRouge.setFont(font4); 
@@ -663,6 +648,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             pan.setPreferredSize(new Dimension(340, 120));
             pan.setLayout(null);
 
+            System.out.println(icones[i]);
             JLabel icone = new JLabel();
             icone.setIcon(new ImageIcon(getClass().getResource(icones[i])));
             pan.add(icone);
@@ -705,7 +691,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
 
             JLabel nbCartesLiberte = new JLabel();
             nbCartesLiberte.setFont(font8); 
-            nbCartesLiberte.setText(joueurs.get(i).getNom() + " a " + joueurs.get(i)+ " carte de liberté");
+            nbCartesLiberte.setText(joueurs.get(0).getNom() + " a " + joueurs.get(i)+ " carte de liberté");
             sousPan.add(nbCartesLiberte);
 
             pan.add(sousPan);
@@ -926,6 +912,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             de2.paint(de2.getGraphics());
             
             recuDes = false;
+            buttonLancerDes.setVisible(false);
         }
         else if (e.getSource() == buttonTourSuivant)
         {
@@ -960,38 +947,8 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     public void deplacerPion(int num, String nom)
     {
         
-        int x;
-        int y;
-        
-        int deplacement = 75;
-        int decalage;
-        if (num >= 31)
-        {
-            x = 810;
-            y = 60+(num-31)*deplacement;
-        }
-        else if (num >= 21)
-        {
-            x = 60+deplacement*(num-21);
-            y = 60;
-        }
-        else if (num >= 11)
-        {
-            x = 60;
-            y = 810-(num-11)*deplacement;
-        }
-        else
-        {
-            decalage = num;
-            x = 810-deplacement*(decalage-1);
-            y = 810;
-        }
-
-        jPions.get(nom).setBounds((int)x, (int)y, 50, 50);
-        jPions.get(nom).setVisible(true);
-        
+        plateau.updatePion(nom, num);
     }  
-    
     public void afficherCarteChance()
     {
         clearPlateau();
@@ -1036,9 +993,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 System.out.println(carte.getType());
                 if (carte.getType() == TypeCarte.CHANCE)
                 {
-                    labInfoCarteChance.setFont(font7);
-                    labInfoCarteChance.setForeground(Color.BLACK);
-                    labInfoCarteChance.setText(carte.getDescription());
                     afficherCarteChance();
                 }
                 else
@@ -1050,7 +1004,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 System.out.println(message.getJoueur().getNom() + " a obtenu les dés " + message.getDerniersDes()[0] + " " + message.getDerniersDes()[1]);
                 setDes(message.getDerniersDes());
                 recuDes = true;
-                //buttonLancerDes.setEnabled(false);
                 break;
             case DEPLACER_JOUEUR:
                 deplacerPion(message.getJoueur().getPositionCourante().getNumero(), message.getJoueur().getNom());
@@ -1089,13 +1042,14 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             case DEBUT_COUP:
                 System.out.println("Debut du coup de " + message.getJoueur().getNom());
                 debutCoup(message.getJoueur());
+                buttonLancerDes.setVisible(true);
                 break;
             case REJOUER_DOUBLE_DES:
                 System.out.println("Double dé de " + message.getJoueur().getNom());
+                buttonLancerDes.setVisible(true);
                 break;
             case REJOUER:
                 System.out.println("Le joueur" + message.getJoueur().getNom() + " rejoue");
-                //buttonLancerDes.setEnabled(true);
                 controleur.jouerCarreau(message.getJoueur());
                 break;
             case CONSTRUIRE:

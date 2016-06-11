@@ -1,12 +1,10 @@
 package controller;
 
-import view.Ihm;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import model.carreaux.AutreCarreau;
 import model.carreaux.Carreau;
 import model.carreaux.propriete.Compagnie;
@@ -236,7 +234,7 @@ public class Controleur
     public void finCoup()
     {
         Message message = new Message();
-        message.setType(TypeAction.FIN_COUP);
+        message.setType(TypeAction.DEBUT_COUP);
         message.setJoueur(monopoly.prochainJoueur());
         observateur.notifier(message);
     
