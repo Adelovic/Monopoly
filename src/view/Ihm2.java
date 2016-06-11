@@ -7,7 +7,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -33,7 +32,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private HashMap<Joueur, ArrayList<ProprieteConstructible>> proprietesConstructibles;
     
     private Color[] listeCouleurs = {Color.red, Color.yellow, Color.green, Color.blue, Color.PINK, Color.GRAY};
-    
+    private String[] listePions = {"voiturePion.gif", "DeACoudrePion.gif", "chienPion.gif", "chaussurePion.gif", "bateauPion.gif", "chapeauPion.gif"};
     private boolean recuDes = false;
     
     private JPanel panelDes;
@@ -94,6 +93,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private HashMap<String, JLabel> jPions;
     private JLabel labelCdC1;
     private JLabel labelCdC2;
+    private JLabel labInfoCarteChance;
     
     //infos des joueurs 
     private int[] des;
@@ -117,10 +117,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     
     public Ihm2(Controleur controleur) 
     {
-        /*this.Des = Des;
-        this.joueurCourant = joueurCourant;
-        this.listJoueurs = list;
-        initComponents();*/
         this.controleur = controleur;
         this.controleur.setObservateur(this);
         
@@ -133,19 +129,20 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         System.out.println(" constructeur ihm2");
         
     }
-        
+  
+
     public void initialiserJoueurs(ArrayList<String> noms)
     {
         this.controleur.initialiserJoueurs(noms);
+        jPions = new HashMap<>();
         
         for (int i = 0; i < noms.size(); i++)
         {
             JLabel pion = new JLabel();
-            pion.setBorder(new LineBorder(new Color(0, 0, 0), 8, true));
-            pion.setBackground(listeCouleurs[i]);
-            pion.setBounds(810,810,30,30);
+            pion.setIcon(new ImageIcon(getClass().getResource(listePions[i])));
+            plateau.add(pion);
+            pion.setBounds(810,810,50,50);
             jPions.put(noms.get(i),pion);
-            fenetreJeu.add(pion);
         }
     }
     
@@ -211,6 +208,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panInfoCarreau = new JPanel();
         labelCdC2 = new JLabel();
         labelCdC1 = new JLabel();
+        labInfoCarteChance = new JLabel();
         
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -256,18 +254,19 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         logoMrmonopolyChance.setBounds(10, 10, 180, 250);
 
         panDescCarteChance.setBackground(new Color(255, 255, 255));
-
+        
         GroupLayout descriptionChanceLayout = new GroupLayout(panDescCarteChance);
         panDescCarteChance.setLayout(descriptionChanceLayout);
         descriptionChanceLayout.setHorizontalGroup(
             descriptionChanceLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(labInfoCarteChance)
             .addGap(0, 190, Short.MAX_VALUE)
         );
         descriptionChanceLayout.setVerticalGroup(
             descriptionChanceLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(labInfoCarteChance)
             .addGap(0, 170, Short.MAX_VALUE)
         );
-
         panelInfoChance.add(panDescCarteChance);
         panDescCarteChance.setBounds(190, 80, 190, 170);
 
@@ -706,7 +705,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
 
             JLabel nbCartesLiberte = new JLabel();
             nbCartesLiberte.setFont(font8); 
-            nbCartesLiberte.setText(joueurs.get(0).getNom() + " a " + joueurs.get(i)+ " carte de liberté");
+            nbCartesLiberte.setText(joueurs.get(i).getNom() + " a " + joueurs.get(i)+ " carte de liberté");
             sousPan.add(nbCartesLiberte);
 
             pan.add(sousPan);
@@ -961,8 +960,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     public void deplacerPion(int num, String nom)
     {
         
-        jPion.setVisible(true);
-        
         int x;
         int y;
         
@@ -990,9 +987,11 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             y = 810;
         }
 
-        jPion.setBounds((int)x, (int)y, 50, 50);
+        jPions.get(nom).setBounds((int)x, (int)y, 50, 50);
+        jPions.get(nom).setVisible(true);
         
     }  
+    
     public void afficherCarteChance()
     {
         clearPlateau();
@@ -1037,6 +1036,9 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 System.out.println(carte.getType());
                 if (carte.getType() == TypeCarte.CHANCE)
                 {
+                    labInfoCarteChance.setFont(font7);
+                    labInfoCarteChance.setForeground(Color.BLACK);
+                    labInfoCarteChance.setText(carte.getDescription());
                     afficherCarteChance();
                 }
                 else
@@ -1048,9 +1050,10 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 System.out.println(message.getJoueur().getNom() + " a obtenu les dés " + message.getDerniersDes()[0] + " " + message.getDerniersDes()[1]);
                 setDes(message.getDerniersDes());
                 recuDes = true;
+                //buttonLancerDes.setEnabled(false);
                 break;
             case DEPLACER_JOUEUR:
-                deplacerPion(message.getJoueur().getPositionCourante().getNumero());
+                deplacerPion(message.getJoueur().getPositionCourante().getNumero(), message.getJoueur().getNom());
                 break;
             case PRISON:
                 afficherPrison();
@@ -1092,6 +1095,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 break;
             case REJOUER:
                 System.out.println("Le joueur" + message.getJoueur().getNom() + " rejoue");
+                //buttonLancerDes.setEnabled(true);
                 controleur.jouerCarreau(message.getJoueur());
                 break;
             case CONSTRUIRE:
