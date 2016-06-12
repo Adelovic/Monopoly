@@ -221,6 +221,11 @@ public class Controleur
             message.setType(TypeAction.REJOUER);            
             observateur.notifier(message);
         }
+        else
+        {
+            message.setType(TypeAction.FIN_COUP);
+            observateur.notifier(message);
+        }
         
         if (monopoly.getJoueurs().size() == 1)
         {
@@ -231,6 +236,7 @@ public class Controleur
         }
     }
     
+    /* La fin d'un coup change le joueur courant et envoie le signal d'un nouveau courant à l'ihm */
     public void finCoup()
     {
         Message message = new Message();
@@ -324,7 +330,6 @@ public class Controleur
         {
             monopoly.addGroupe(new Groupe(couleur));
         }     
-        
     }
     
     /** Crée le plateau en initialisant les propriétés et en les ajoutant au monopoly **/

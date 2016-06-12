@@ -48,6 +48,8 @@ public class ProprieteConstructible extends Propriete
     {
         Message message = new Message();
         message.setPropriete(this);
+        message.setProprieteConstructible(this);
+        message.setEstConstructible(true);
         
         // Aucun proprietaire
         if (getProprietaire() == null)
@@ -72,7 +74,6 @@ public class ProprieteConstructible extends Propriete
         {
             // Le controleur vérifiera s'il peut construire
             message.setType(TypeAction.CONSTRUIRE);
-            message.setProprieteConstructible(this);
         }
         
         return message;

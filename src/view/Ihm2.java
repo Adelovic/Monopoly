@@ -21,6 +21,7 @@ import javax.swing.border.LineBorder;
 import model.Joueur;
 import model.Message;
 import model.TypeCarte;
+import model.carreaux.propriete.Propriete;
 import model.carreaux.propriete.ProprieteConstructible;
 import model.carreaux.propriete.ProprieteNonConstructible;
 import model.cartes.Carte;
@@ -74,7 +75,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private JLabel txtChance;
     private JLabel logoMrmonopolyChance;
     private JLabel panWallpaperChance;
-    private JLabel textButtonRouge;
+    private JLabel labelTourSuivant;
     private JButton buttonTourSuivant;
     private JToggleButton buttonAcheter;
     private JToggleButton buttonConstruire;
@@ -95,6 +96,10 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     
     //infos des joueurs 
     private int[] des;
+    
+    // Propriete courante
+    private Joueur joueurCourant;
+    private Propriete proprieteCourante;
     
     //Fonts
     Font font = new Font("TeXGyreAdventor", 1, 30);
@@ -180,7 +185,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         logoMrmonopolyCdC = new JLabel();
         descriptionCdC = new JPanel();
         panWallpaperCarteChance = new JLabel();
-        textButtonRouge = new JLabel();
+        labelTourSuivant = new JLabel();
         buttonTourSuivant = new JButton();
         buttonAcheter = new JToggleButton();
         buttonConstruire = new JToggleButton();
@@ -342,7 +347,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         buttonLancerDesPrison.setFont(font2); 
         buttonLancerDesPrison.addActionListener(this);
         buttonLancerDesPrison.setForeground(new Color(255, 255, 255));
-        buttonLancerDesPrison.setText("Lancer les Dés");
+        buttonLancerDesPrison.setText("Lancer les dés");
         panInfoPrison.add(buttonLancerDesPrison);
         buttonLancerDesPrison.setBounds(50, 370, 190, 60);
 
@@ -384,12 +389,12 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         plateau.setBounds(390, 44, 899, 899);
         
         //Bouton "fin de tour
-        textButtonRouge.setFont(font4); 
-        textButtonRouge.setForeground(new Color(255, 255, 255));
-        textButtonRouge.setText("TOUR SUIVANT");
-        textButtonRouge.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        fenetreJeu.add(textButtonRouge);
-        textButtonRouge.setBounds(1370, 893, 260, 40);
+        labelTourSuivant.setFont(font4); 
+        labelTourSuivant.setForeground(new Color(255, 255, 255));
+        labelTourSuivant.setText("TOUR SUIVANT");
+        labelTourSuivant.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        fenetreJeu.add(labelTourSuivant);
+        labelTourSuivant.setBounds(1370, 893, 260, 40);
 
         buttonTourSuivant.setIcon(new ImageIcon(getClass().getResource("bouton_rouge.png"))); 
         buttonTourSuivant.setBorder(null);
@@ -406,13 +411,8 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panInfoJoueurCourant.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
         labelNomTour.setFont(font5); 
-        //labelNomTour.setText("C'est votre tour " + joueurCourant.getNom());
-
         labelNomProprio.setFont(font6); 
-        //labelNomProprio.setText("Propriétés de : " + joueurCourant.getNom());
-
         labelSolde.setFont(font6); 
-        //labelSolde.setText("Votre solde s'élève à : " + joueurCourant.getCash() + " €");
 
         listProprietes.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         listProprietes.setFont(font7); 
@@ -701,95 +701,32 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         }
     }
     
-    public void displayProprieteConstructible(ProprieteConstructible prop)
+    public void afficherProprieteConstructible(ProprieteConstructible prop, boolean estConstructible, boolean estAchetable)
     {
-        panCaseActuelle.setBackground(new Color(208, 230, 205));
-        panCaseActuelle.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, new Color(255, 255, 255)));
-        panCaseActuelle.setLayout(null);
-
-        txtPosition.setFont(font5); 
-        txtPosition.setText("Position Actuelle");
-        panCaseActuelle.add(txtPosition);
-        txtPosition.setBounds(58, 4, 215, 30);
-
-        buttonAcheter.setBackground(new Color(153, 153, 153));
-        buttonAcheter.setFont(new Font("TeXGyreAdventor", 1, 19)); 
-        buttonAcheter.setForeground(new Color(255, 255, 255));
-        buttonAcheter.setText("Acheter");
-        buttonAcheter.addActionListener(this);
-        panCaseActuelle.add(buttonAcheter);
-        buttonAcheter.setBounds(190, 60, 120, 70);
-
-        buttonConstruire.setBackground(new Color(153, 153, 153));
-        buttonConstruire.setFont(new Font("TeXGyreAdventor", 1, 18)); 
-        buttonConstruire.setForeground(new Color(255, 255, 255));
-        buttonConstruire.setText("Constuire");
-        buttonConstruire.addActionListener(this);
-        panCaseActuelle.add(buttonConstruire);
-        buttonConstruire.setBounds(190, 170, 120, 70);
-
-        panelCartePosition.setBackground(new Color(203, 230, 208));
-        panelCartePosition.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
-        panelCartePosition.setLayout(null);
-
-        panelCouleur.setBackground(new Color(51, 153, 0));
-        panelCouleur.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0, 0, 0)));
-
-        GroupLayout panelCouleurLayout = new GroupLayout(panelCouleur);
-        panelCouleur.setLayout(panelCouleurLayout);
-        panelCouleurLayout.setHorizontalGroup(
-            panelCouleurLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 166, Short.MAX_VALUE)
-        );
-        panelCouleurLayout.setVerticalGroup(
-            panelCouleurLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 64, Short.MAX_VALUE)
-        );
-
-        panelCartePosition.add(panelCouleur);
-        panelCouleur.setBounds(2, 2, 166, 66);
-
-        panelLocation.setBackground(new Color(205, 230, 208));
-        panelLocation.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, new Color(0, 0, 0)));
-        panelLocation.setLayout(new GridLayout(6, 0));
-
+        //panelLocation.setBackground(prop.getGroupe().getCouleur());
         loyerVide.setText("Prix vide : " + prop.getPrix());
-        panelLocation.add(loyerVide);
-
         loyer1Maison.setText("Prix avec une maison " + prop.getLoyers().get(0));
-        panelLocation.add(loyer1Maison);
-
         loyer2Maisons.setText("Prix avec deux maison " + prop.getLoyers().get(1));
-        panelLocation.add(loyer2Maisons);
-
         loyer3Maisons.setText("Prix avec trois maison " + prop.getLoyers().get(2));
-        panelLocation.add(loyer3Maisons);
-
         loyer4Maisons.setText("Prix avec quatre maison " + prop.getLoyers().get(3));
-        panelLocation.add(loyer4Maisons);
-
         loyerHotel.setText("Prix avec un hôtel " + prop.getLoyers().get(4));
-        panelLocation.add(loyerHotel);
-
-        panelCartePosition.add(panelLocation);
-        panelLocation.setBounds(0, 100, 170, 100);
-
-        nomPropriete.setText(prop.getNom());
-        panelCartePosition.add(nomPropriete);
-        nomPropriete.setBounds(0, 70, 170, 30);
-
-        panInfoCarreau.setBackground(new Color(205, 230, 208));
-        panInfoCarreau.setBorder(BorderFactory.createMatteBorder(0, 1, 2, 2, new Color(0, 0, 0)));
-        panInfoCarreau.setLayout(new GridLayout(2, 0));
-
-        panelCartePosition.add(panInfoCarreau);
-        panInfoCarreau.setBounds(0, 200, 170, 30);
-
-        panCaseActuelle.add(panelCartePosition);
-        panelCartePosition.setBounds(10, 40, 170, 230);
-
-        fenetreJeu.add(panCaseActuelle);
-        panCaseActuelle.setBounds(1330, 570, 320, 280);
+        panCaseActuelle.setVisible(true);
+        
+        if (estConstructible)
+        {
+            buttonConstruire.setVisible(true);
+            buttonAcheter.setVisible(false);
+        }
+        else if (estAchetable)
+        {
+            buttonConstruire.setVisible(false);
+            buttonAcheter.setVisible(true);
+        }
+        else
+        {
+            buttonConstruire.setVisible(false);
+            buttonAcheter.setVisible(false);
+        }
     }
     
     public void displayProprieteNonConstructible(ProprieteNonConstructible prop)
@@ -873,6 +810,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttonLancerDes || e.getSource() == buttonLancerDesPrison)
         {
+            buttonLancerDes.setVisible(false);
             clearPlateau();
             controleur.jouerCoup();
             if (e.getSource() == buttonLancerDesPrison)
@@ -882,12 +820,10 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             
             Random r = new Random();
             
-            int tempsEcoule = 0;
             while (!recuDes)
             {
                 try {
-                    tempsEcoule += 80;
-                    Thread.sleep(80);
+                    Thread.sleep(500);
                     de1.setValeurDe(r.nextInt(6) + 1);
                     de2.setValeurDe(r.nextInt(6) + 1);
                 } 
@@ -912,7 +848,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             de2.paint(de2.getGraphics());
             
             recuDes = false;
-            buttonLancerDes.setVisible(false);
         }
         else if (e.getSource() == buttonTourSuivant)
         {
@@ -921,7 +856,9 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         }
         else if (e.getSource() == buttonAcheter)
         {
-            System.out.println("Achat de propriete");
+            controleur.acheterPropriete(joueurCourant, proprieteCourante);
+            System.out.println("Le joueur " + joueurCourant.getNom() + " a acheté " + proprieteCourante.getNom() + " pour " + proprieteCourante.getPrix());
+            buttonAcheter.setVisible(false);     
         }
         else if (e.getSource() == buttonConstruire)
         {
@@ -932,16 +869,23 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     
     public void debutCoup(final Joueur joueur)
     {
+        joueurCourant = joueur;
+        
         nbToursPrison.setText("il vous reste plus que " + joueur.getTourPrison() + " tour(s)");
-        labelNomTour.setText("C'est votre tour " + joueur.getNom());
-        labelNomProprio.setText("Propriétés de : " + joueur.getNom());
+        labelNomTour.setText("Tour de : " + joueur.getNom());
+        labelNomProprio.setText("Propriétés de " + joueur.getNom() + " :");
         labelSolde.setText("Votre solde s'élève à : " + joueur.getCash() + " €");
 
         listProprietes.setModel(new AbstractListModel() {
             ArrayList<ProprieteConstructible> strings = joueur.getProprietes();
             public int getSize() { return strings.size(); }
-            public Object getElementAt(int i) { return strings.get(i); }
+            public Object getElementAt(int i) { return strings.get(i).getNom(); }
         });
+        
+        buttonLancerDes.setVisible(true);
+        buttonTourSuivant.setVisible(false);
+        labelTourSuivant.setVisible(false);
+        panCaseActuelle.setVisible(false);
     }
     
     public void deplacerPion(int num, String nom)
@@ -1014,14 +958,25 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 break;
             case PAYER_LOYER:
                 System.out.println("Le joueur " + message.getJoueur().getNom() + " a payé " + message.getLoyer() + "$ de loyer à " + message.getPropriete().getProprietaire().getNom());
+                if (message.getEstConstructible())
+                {
+                    afficherProprieteConstructible(message.getProprieteConstructible(), false, false);
+                }
                 break;
             case ACHAT:
-                //boolean achat = demanderJoueur("Voulez-vous acheter " + message.getPropriete().getNom() + " pour " + message.getPropriete().getPrix() + " ?");
-                if (true)
+                if (message.getEstConstructible())
                 {
-                    controleur.acheterPropriete(message.getJoueur(), message.getPropriete());
-                    System.out.println("Le joueur " + message.getJoueur().getNom() + " a acheté " + message.getPropriete().getNom() + " pour " + message.getPropriete().getPrix());
+                    afficherProprieteConstructible(message.getProprieteConstructible(), false, true);
                 }
+                proprieteCourante = message.getPropriete();
+                break;
+            case CONSTRUIRE:
+                afficherProprieteConstructible(message.getProprieteConstructible(), true, false);
+                buttonConstruire.setEnabled(true);
+                //if (demanderJoueur("Voulez-vous construire pour " + message.getPrix() + " ?"))
+                //{
+                //    controleur.construirePropriete(message.getProprieteConstructible(), message.getPrix());
+                //}
                 break;
             case RIEN:
                 System.out.println("RIEN!");
@@ -1042,22 +997,18 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             case DEBUT_COUP:
                 System.out.println("Debut du coup de " + message.getJoueur().getNom());
                 debutCoup(message.getJoueur());
-                buttonLancerDes.setVisible(true);
+                break;
+            case FIN_COUP:
+                buttonTourSuivant.setVisible(true);
+                labelTourSuivant.setVisible(true);
                 break;
             case REJOUER_DOUBLE_DES:
                 System.out.println("Double dé de " + message.getJoueur().getNom());
-                buttonLancerDes.setVisible(true);
+                debutCoup(message.getJoueur());
                 break;
             case REJOUER:
                 System.out.println("Le joueur" + message.getJoueur().getNom() + " rejoue");
                 controleur.jouerCarreau(message.getJoueur());
-                break;
-            case CONSTRUIRE:
-                buttonConstruire.setEnabled(true);
-                //if (demanderJoueur("Voulez-vous construire pour " + message.getPrix() + " ?"))
-                //{
-                //    controleur.construirePropriete(message.getProprieteConstructible(), message.getPrix());
-                //}
                 break;
         }
     }

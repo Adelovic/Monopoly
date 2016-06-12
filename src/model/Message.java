@@ -47,7 +47,19 @@ public class Message
     private int coutParHotel;
     private ProprieteConstructible proprieteConstructible;
     private ArrayList<Joueur> joueurs;
+    
+    private boolean estConstructible;
 
+    
+    public void setEstConstructible(boolean estConstructible)
+    {
+        this.estConstructible = estConstructible;
+    }
+    
+    public boolean getEstConstructible()
+    {
+        return estConstructible;
+    }
     public void setJoueurs(ArrayList<Joueur> joueurs) 
     {
         this.joueurs = joueurs;
