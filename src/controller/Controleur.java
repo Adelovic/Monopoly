@@ -78,6 +78,7 @@ public class Controleur
         creerPlateau("src/data/data.txt");
         creerCartes("src/data/data_cartes.txt");
         
+        monopoly.melangerCartes();
         // Placer les joueurs sur la case départ
         for (Joueur joueur : monopoly.getJoueurs())
         {
@@ -241,6 +242,7 @@ public class Controleur
     {
         Message message = new Message();
         message.setType(TypeAction.DEBUT_COUP);
+        message.setJoueurs(monopoly.getJoueurs());
         message.setJoueur(monopoly.prochainJoueur());
         observateur.notifier(message);
     
@@ -286,7 +288,14 @@ public class Controleur
                 msgDeplacement.setJoueur(joueur);
                 observateur.notifier(msgDeplacement);
                 jouerCarreau(joueur);
-            }  
+            }
+            else
+            {
+                Message message = new Message();
+                message.setType(TypeAction.PRISON);
+                message.setJoueur(joueur);
+                observateur.notifier(message);
+            }
         }
         else
         {

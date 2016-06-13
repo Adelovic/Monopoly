@@ -53,7 +53,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private Plateau plateau;
     private JLabel wallpaper;  
     private JPanel panInfoPrison;
-    private JButton buttonLancerDesPrison;
+    private JButton buttonCautionPrison;
     private JButton buttonCarteLiberte;
     private JLabel imagePrison;
     private JLabel textPrison;
@@ -93,6 +93,8 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private JPanel panInfoCarreau;;
     private JLabel labelCdC1;
     private JLabel labelCdC2;
+    private JTextArea areaInfoCarteChance;
+    private JTextArea areaInfoCdC;
     
     //infos des joueurs 
     private int[] des;
@@ -138,7 +140,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         
         for (String nom : noms)
         {
-            plateau.addPion(nom, Pion.CHIEN);
+            plateau.addPion(nom, Pion.values()[new Random().nextInt(Pion.values().length)]);
         }
     }
     
@@ -169,7 +171,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panInfoJoueurs = new JPanel();
         wallpaper = new JLabel();
         panInfoPrison = new JPanel();
-        buttonLancerDesPrison = new JButton();
+        buttonCautionPrison = new JButton();
         buttonCarteLiberte = new JButton();
         imagePrison = new JLabel();
         textPrison = new JLabel();
@@ -203,6 +205,8 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panInfoCarreau = new JPanel();
         labelCdC2 = new JLabel();
         labelCdC1 = new JLabel();
+        areaInfoCarteChance = new JTextArea();
+        areaInfoCdC = new JTextArea();
         
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -253,10 +257,12 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panDescCarteChance.setLayout(descriptionChanceLayout);
         descriptionChanceLayout.setHorizontalGroup(
             descriptionChanceLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(areaInfoCarteChance)
             .addGap(0, 190, Short.MAX_VALUE)
         );
         descriptionChanceLayout.setVerticalGroup(
             descriptionChanceLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(areaInfoCarteChance)
             .addGap(0, 170, Short.MAX_VALUE)
         );
 
@@ -319,10 +325,12 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         descriptionCdC.setLayout(descriptionCdCLayout);
         descriptionCdCLayout.setHorizontalGroup(
             descriptionCdCLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(areaInfoCdC)
             .addGap(0, 220, Short.MAX_VALUE)
         );
         descriptionCdCLayout.setVerticalGroup(
             descriptionCdCLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(areaInfoCdC)
             .addGap(0, 180, Short.MAX_VALUE)
         );
 
@@ -343,13 +351,13 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         //fenetre Info prison
         panInfoPrison.setBorder(new LineBorder(new Color(0, 0, 0), 8, true));
         panInfoPrison.setLayout(null);
-        buttonLancerDesPrison.setBackground(new Color(153, 153, 153));
-        buttonLancerDesPrison.setFont(font2); 
-        buttonLancerDesPrison.addActionListener(this);
-        buttonLancerDesPrison.setForeground(new Color(255, 255, 255));
-        buttonLancerDesPrison.setText("Lancer les dés");
-        panInfoPrison.add(buttonLancerDesPrison);
-        buttonLancerDesPrison.setBounds(50, 370, 190, 60);
+        buttonCautionPrison.setBackground(new Color(153, 153, 153));
+        buttonCautionPrison.setFont(font2); 
+        buttonCautionPrison.addActionListener(this);
+        buttonCautionPrison.setForeground(new Color(255, 255, 255));
+        buttonCautionPrison.setText("Payer la caution");
+        panInfoPrison.add(buttonCautionPrison);
+        buttonCautionPrison.setBounds(50, 370, 190, 60);
 
         buttonCarteLiberte.setBackground(new Color(153, 153, 153));
         buttonCarteLiberte.setFont(font2); 
@@ -705,11 +713,11 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     {
         //panelLocation.setBackground(prop.getGroupe().getCouleur());
         loyerVide.setText("Prix vide : " + prop.getPrix());
-        loyer1Maison.setText("Prix avec une maison " + prop.getLoyers().get(0));
-        loyer2Maisons.setText("Prix avec deux maison " + prop.getLoyers().get(1));
-        loyer3Maisons.setText("Prix avec trois maison " + prop.getLoyers().get(2));
-        loyer4Maisons.setText("Prix avec quatre maison " + prop.getLoyers().get(3));
-        loyerHotel.setText("Prix avec un hôtel " + prop.getLoyers().get(4));
+        loyer1Maison.setText("1 maison " + prop.getLoyers().get(0));
+        loyer2Maisons.setText("2 maisons " + prop.getLoyers().get(1));
+        loyer3Maisons.setText("3 maisons " + prop.getLoyers().get(2));
+        loyer4Maisons.setText("4 maisons " + prop.getLoyers().get(3));
+        loyerHotel.setText("Hôtel " + prop.getLoyers().get(4));
         panCaseActuelle.setVisible(true);
         
         if (estConstructible)
@@ -808,15 +816,11 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == buttonLancerDes || e.getSource() == buttonLancerDesPrison)
+        if (e.getSource() == buttonLancerDes)
         {
             buttonLancerDes.setVisible(false);
             clearPlateau();
             controleur.jouerCoup();
-            if (e.getSource() == buttonLancerDesPrison)
-            {
-                panInfoPrison.setVisible(false);
-            }
             
             Random r = new Random();
             
@@ -853,6 +857,10 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         {
             clearPlateau();
             controleur.finCoup();
+        }
+        else if (e.getSource() == buttonCautionPrison)
+        {
+            
         }
         else if (e.getSource() == buttonAcheter)
         {
@@ -893,18 +901,23 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         
         plateau.updatePion(nom, num);
     }  
-    public void afficherCarteChance()
+    public void afficherCarteChance(String text)
     {
         clearPlateau();
         panInfoCarteChance.setVisible(true);
-        
+        areaInfoCarteChance.setText(text);
+        areaInfoCarteChance.setLineWrap(true);
+        areaInfoCarteChance.setFont(font2);
         panInfoCarteChance.paint(panInfoCarteChance.getGraphics());
     }
     
-    public void afficherCarteCommunaute()
+    public void afficherCarteCommunaute(String text)
     {
         clearPlateau();
         panInfoCdC.setVisible(true); 
+        areaInfoCdC.setText(text);
+        areaInfoCdC.setLineWrap(true);
+        areaInfoCdC.setFont(font2);
         panInfoCdC.paint(panInfoCdC.getGraphics());
     }
     
@@ -933,15 +946,16 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         {
             case TIRER_CARTE:
                 Carte carte = message.getCarte();
+                String description = carte.getDescription();
                 System.out.println(carte.getDescription());
                 System.out.println(carte.getType());
                 if (carte.getType() == TypeCarte.CHANCE)
                 {
-                    afficherCarteChance();
+                    afficherCarteChance(description);
                 }
                 else
                 {
-                    afficherCarteCommunaute();
+                    afficherCarteCommunaute(description);
                 }
                 break;
             case LANCER_DES:
@@ -996,6 +1010,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 break;
             case DEBUT_COUP:
                 System.out.println("Debut du coup de " + message.getJoueur().getNom());
+                displayJoueurs(message.getJoueurs());
                 debutCoup(message.getJoueur());
                 break;
             case FIN_COUP:
