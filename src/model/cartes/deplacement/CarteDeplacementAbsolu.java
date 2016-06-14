@@ -5,6 +5,7 @@
  */
 package model.cartes.deplacement;
 
+import model.Joueur;
 import model.Message;
 import model.TypeAction;
 import model.TypeCarte;

@@ -198,18 +198,6 @@ public class Monopoly
         return carte;
     }
     
-    public void retirerCarte(Carte carte)
-    {
-        if (carte.getType() == TypeCarte.CHANCE)
-        {
-            cartesChance.remove(carte);
-        }
-        else
-        {
-            cartesCommunaute.remove(carte);
-        }
-    }
-    
     public void  melangerCartes() 
     {
         Collections.shuffle(cartesChance);

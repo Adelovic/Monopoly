@@ -70,7 +70,7 @@ public class ProprieteConstructible extends Propriete
             message.setLoyer(calculLoyer());
             message.setType(TypeAction.PAYER_LOYER);
         }
-        else            
+        else
         {
             // Le controleur vérifiera s'il peut construire
             message.setType(TypeAction.CONSTRUIRE);

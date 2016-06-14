@@ -5,6 +5,7 @@
  */
 package model.cartes;
 
+import model.Joueur;
 import model.Message;
 import model.TypeAction;
 import model.TypeCarte;
@@ -13,8 +14,7 @@ import model.TypeCarte;
  *
  * @author raffya
  */
-public class CarteLiberationPrison extends Carte 
-{
+public class CarteLiberationPrison extends Carte {
     
     public CarteLiberationPrison(TypeCarte type, String description) 
     {
@@ -22,11 +22,9 @@ public class CarteLiberationPrison extends Carte
     }
 
     @Override
-    public Message actionCarte() 
-    {
+    public Message actionCarte() {
         Message message = new Message();
         message.setType(TypeAction.C_LIBERATION);
-        message.setCarteLiberation(this);
         return message;
     }
 }

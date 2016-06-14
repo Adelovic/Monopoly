@@ -9,17 +9,26 @@ import model.Joueur;
 import model.Message;
 import model.TypeAction;
 
-public class CartePrison extends Carreau{
-
-    public CartePrison(int numero, String nom) {
+/**
+ *
+ * @author raffya
+ */
+public class Taxe extends Carreau {
+    int montant;
+    
+    public Taxe(int numero, String nom, int montant) {
         super(numero, nom);
+        this.montant = montant;
+        
     }
 
     @Override
     public Message action(Joueur j) {
         Message message = new Message();
-        message.setType(TypeAction.PRISON);
+        message.setType(TypeAction.C_TRANSACTION_FIXE);
         return message;
     }
+
+   
     
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import model.carreaux.propriete.Propriete;
 import model.carreaux.propriete.ProprieteConstructible;
 import model.cartes.Carte;
-import model.cartes.CarteLiberationPrison;
 
 public class Message
 {
@@ -50,25 +49,6 @@ public class Message
     private ArrayList<Joueur> joueurs;
     
     private boolean estConstructible;
-    
-    private CarteLiberationPrison carteLiberation;
-
-    public Message() {}
-    
-    public Message(TypeAction type)
-    {
-        this.type = type;
-    }
-    
-    public void setCarteLiberation(CarteLiberationPrison carteLiberation) 
-    {
-        this.carteLiberation = carteLiberation;
-    }
-
-    public CarteLiberationPrison getCarteLiberation() 
-    {
-        return carteLiberation;
-    }
 
     
     public void setEstConstructible(boolean estConstructible)
