@@ -3,7 +3,31 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/U:/M2103/java/Monopoly/src/view/Ihm2.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/Monopoly.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/data/data_cartes.txt</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/Groupe.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/view/PlayerFrame.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/cartes/Carte.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/carreaux/propriete/Compagnie.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/controller/Controleur.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/cartes/CartePrison.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/carreaux/propriete/Gare.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/view/Ihm.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/Message.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/cartes/transaction/CarteAnniversaire.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/view/Ihm2.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/TypeAction.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/carreaux/Carreau.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/cartes/transaction/CarteReparation.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/view/Observateur.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/cartes/transaction/CarteTransactionFixe.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/Joueur.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/TypeCarte.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/cartes/deplacement/CarteDeplacement.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/carreaux/propriete/Propriete.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/CouleurPropriete.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/cartes/transaction/CarteTransaction.java</file>
+            <file>file:/users/info/etu-s2/raffya/M2103/java/Monopoly/src/model/carreaux/AutreCarreau.java</file>
         </group>
     </open-files>
 </project-private>

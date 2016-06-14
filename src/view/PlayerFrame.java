@@ -253,7 +253,6 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
             else
             {
                 fenetreVisible = false; 
-                System.out.println("ihm initJoueurs");
                 ihm.initialiserJoueurs(listNom);
                 this.dispose();
             } 

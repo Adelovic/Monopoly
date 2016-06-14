@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import model.carreaux.AutreCarreau;
 import model.carreaux.Carreau;
 import model.carreaux.propriete.Compagnie;
@@ -19,8 +20,8 @@ import model.TypeAction;
 import model.TypeCarte;
 import model.carreaux.CarreauSansAction;
 import model.carreaux.CarreauTirage;
-import model.carreaux.Prison;
-import model.carreaux.Taxe;
+import model.carreaux.CartePrison;
+import model.carreaux.CarreauTaxe;
 import model.carreaux.propriete.Propriete;
 import model.cartes.Carte;
 import model.cartes.CarteLiberationPrison;
@@ -87,7 +88,6 @@ public class Controleur
         //ihm.afficherClassement(gagnant, monopoly.getJoueursElimines());
     }
     
-    
     /** Fais avancer le joueur d'un montant de des et traite l'action, et les actions engendrées à la suite **/
     public void jouerCarreau(Joueur joueur)
     {
@@ -114,6 +114,8 @@ public class Controleur
                 {
                     /* Stocker la carte libération */
                     case C_LIBERATION:
+                        joueur.ajouterCarteLiberation(messageCarte.getCarteLiberation());
+                        monopoly.retirerCarte(messageCarte.getCarte());
                         break;
                         
                     /* Effectuer une transaction (Retirer ou ajouter) */
@@ -216,6 +218,10 @@ public class Controleur
                 }
                 break;
             
+            case TRANSACTION_FIXE:
+                joueur.removeCash(messageCarreau.getMontantTransaction());
+                break;
+                
             /* Aucune action n'est effectuée */
             case RIEN:
                 break;
@@ -269,6 +275,13 @@ public class Controleur
         message.setJoueurs(monopoly.getJoueurs());
         message.setJoueur(monopoly.prochainJoueur());
         observateur.notifier(message);
+       
+        /* On notifie dés le début si le joueur est en prison */
+        if (monopoly.getJoueurCourant().isEnPrison())
+        {
+            message.setType(TypeAction.PRISON);
+            observateur.notifier(message);
+        }
     
     }
     
@@ -277,7 +290,12 @@ public class Controleur
     {
         Joueur joueur = monopoly.getJoueurCourant();
         // Lancer les dés
-        int[] des = monopoly.lancerDes();
+        
+        System.out.println("Dés ? ");
+        Scanner scan = new Scanner(System.in);
+        
+        int[] des = new int[] { scan.nextInt(), scan.nextInt() };
+        //int[] des = monopoly.lancerDes();
         joueur.setDernierDes(des);
                         
         // Notification à l'ihm du lancé de dés
@@ -314,13 +332,6 @@ public class Controleur
                 observateur.notifier(msgDeplacement);
                 jouerCarreau(joueur);
             }
-            else
-            {
-                Message message = new Message();
-                message.setType(TypeAction.PRISON);
-                message.setJoueur(joueur);
-                observateur.notifier(message);
-            }
         }
         /* Sinon, on joue */
         else
@@ -337,9 +348,25 @@ public class Controleur
         /* Si le joueur a fait un double dé et qu'il n'est pas/plus en prison, on rejoue */
         if (joueur.doubleDes() && !joueur.isEnPrison())
         {
+            joueur.addDoubleDe();
             Message message = new Message();
-            message.setType(TypeAction.REJOUER_DOUBLE_DES);
             message.setJoueur(joueur);
+            
+            /* On envoie en prison le joueur et on envoie le message de déplacement à l'ihm */
+            if (joueur.getNbDoubleDes() == 3)
+            {
+                monopoly.emprisonner(joueur);
+                message.setType(TypeAction.PRISON);
+                joueur.resetNbDoubleDe();
+                Message msgDeplacement = new Message();
+                msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+                msgDeplacement.setJoueur(joueur);
+                observateur.notifier(msgDeplacement);
+            }
+            else
+            {
+                message.setType(TypeAction.REJOUER_DOUBLE_DES);
+            }
             observateur.notifier(message);
         }
     }
@@ -408,12 +435,12 @@ public class Controleur
                 else if(caseType.compareTo("PR") == 0)
                 {
                     System.out.println("Prison :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
-                    monopoly.addCarreau(new Prison(Integer.valueOf(caseInfos[1]), caseInfos[2]));
+                    monopoly.addCarreau(new CartePrison(Integer.valueOf(caseInfos[1]), caseInfos[2]));
                 }
                 else if(caseType.compareTo("TX") == 0)
                 {
                     System.out.println("Carreau taxe :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
-                    monopoly.addCarreau(new Taxe(Integer.valueOf(caseInfos[1]), caseInfos[2], Integer.valueOf(caseInfos[3])));
+                    monopoly.addCarreau(new CarreauTaxe(Integer.valueOf(caseInfos[1]), caseInfos[2], Integer.valueOf(caseInfos[3])));
                 }
                 else if(caseType.compareTo("CT") == 0)
                 {

@@ -13,17 +13,23 @@ import model.TypeAction;
  *
  * @author raffya
  */
-public class Prison extends Carreau{
-
-    public Prison(int numero, String nom) {
+public class CarreauTaxe extends Carreau {
+    int montant;
+    
+    public CarreauTaxe(int numero, String nom, int montant) {
         super(numero, nom);
+        this.montant = montant;
+        
     }
 
     @Override
     public Message action(Joueur j) {
         Message message = new Message();
-        message.setType(TypeAction.PRISON);
+        message.setType(TypeAction.TRANSACTION_FIXE);
+        message.setMontantTransaction(montant);
         return message;
     }
+
+   
     
 }
