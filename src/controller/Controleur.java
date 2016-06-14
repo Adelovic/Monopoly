@@ -97,23 +97,32 @@ public class Controleur
         Message messageCarreau = carreau.action(joueur);
         messageCarreau.setJoueur(joueur);
 
+        /* Utilisé pour savoir si l'utilisateur peut rejouer après une action */
         boolean peutRejouer = false;
+        
+        /* Utilisé pour savoir si le joueur passe par la case départ */
         boolean passeCaseDepart = false;
+        
+        /* On traite chaque action reçue par le carreau */
         switch (messageCarreau.getType()) 
         {
             case TIRER_CARTE:
-                System.out.println(messageCarreau.getTypeCarte());
                 Carte carte = monopoly.tirerCarte(messageCarreau.getTypeCarte());
                 messageCarreau.setCarte(carte);
                 Message messageCarte = carte.actionCarte();
                 switch (messageCarte.getType()) 
                 {
+                    /* Stocker la carte libération */
                     case C_LIBERATION:
                         break;
+                        
+                    /* Effectuer une transaction (Retirer ou ajouter) */
                     case C_TRANSACTION_FIXE:
                         int montantTransaction = messageCarte.getMontantTransaction();
                         joueur.modifierCash(montantTransaction);
                         break;
+                        
+                    /* Chaque joueur paye un montant fixe au joueur en question */
                     case C_ANNIVERSAIRE:
                         int montantAnniversaire = messageCarte.getMontantAnniversaire();
                         for (Joueur j : monopoly.getJoueurs()) 
@@ -124,6 +133,8 @@ public class Controleur
                             }
                         }
                         break;
+                        
+                    /* Le joueur repare ses proprietes, paye en fonction du nombre de maison et d'hotels */
                     case C_REPARATION:
                         int nbHotels = 0;
                         int nbMaisons = 0;
@@ -135,6 +146,8 @@ public class Controleur
                         int montant = (nbMaisons * messageCarreau.getCoutParMaison()) + (nbHotels * messageCarreau.getCoutParHotel());
                         joueur.removeCash(montant);
                         break;
+                        
+                    /* Déplace le joueur de X cases suivant sa position */
                     case C_DEPLACEMENT_RELATIF:
                         peutRejouer = true;
                         int deplacement = messageCarte.getDeplacement();
@@ -145,6 +158,8 @@ public class Controleur
                         msgDeplacement.setPasserCaseDepart(passeCaseDepart);
                         observateur.notifier(msgDeplacement);
                         break;
+                        
+                    /* Déplace le joueur à une case donnée */
                     case C_DEPLACEMENT_ABSOLU:
                         peutRejouer = true;
                         deplacement = messageCarte.getDeplacement();
@@ -157,6 +172,8 @@ public class Controleur
                         msgDeplacement.setPasserCaseDepart(passeCaseDepart && doitPasserCaseDepart);
                         observateur.notifier(msgDeplacement);
                         break;
+                        
+                    /* Emprisonne le joueur */
                     case PRISON:
                         monopoly.emprisonner(joueur);
                         msgDeplacement = new Message();
@@ -164,9 +181,10 @@ public class Controleur
                         msgDeplacement.setJoueur(joueur);
                         observateur.notifier(msgDeplacement);
                         break;
-
                 }
                 break;
+                
+            /* Emprisonne le joueur */
             case PRISON:
                 monopoly.emprisonner(joueur);
                 Message msgDeplacement = new Message();
@@ -174,12 +192,13 @@ public class Controleur
                 msgDeplacement.setJoueur(joueur);
                 observateur.notifier(msgDeplacement);
                 break;
+                
+            /* Paye le loyer du carreau sur lequel il est tombé */
             case PAYER_LOYER:
                 Joueur proprio = messageCarreau.getPropriete().getProprietaire();
                 joueur.payerA(proprio, messageCarreau.getLoyer());
                 break;
-            case ACHAT:
-                break;
+                
             case CONSTRUIRE:
                 ProprieteConstructible prop = messageCarreau.getProprieteConstructible();
                 
@@ -196,13 +215,18 @@ public class Controleur
                     messageCarreau.setType(TypeAction.RIEN);
                 }
                 break;
+            
+            /* Aucune action n'est effectuée */
             case RIEN:
                 break;
         }
+        
+        /* Envoyer le message au carreau */      
+        observateur.notifier(messageCarreau);
+        
+        /* Construire le nouveau packet à envoyer en fonction de l'état du joueur */
         Message message = new Message();
         message.setJoueur(joueur); 
-         
-        observateur.notifier(messageCarreau);
         
         if (passeCaseDepart)
         {
@@ -263,6 +287,7 @@ public class Controleur
         msg.setDerniersDes(joueur.getDernierDes());
         observateur.notifier(msg);
             
+        /* On ne joue pas le coup si le joueur est en prison, on verifie simplement le résultat des dés et le nombre de tour en prison */
         if (joueur.isEnPrison())
         {
             joueur.addTourPrison();
@@ -297,6 +322,7 @@ public class Controleur
                 observateur.notifier(message);
             }
         }
+        /* Sinon, on joue */
         else
         {
             boolean passeCaseDepart = monopoly.deplacerJoueur(joueur, des[0]+des[1]);
@@ -308,6 +334,7 @@ public class Controleur
             jouerCarreau(joueur);
         }
         
+        /* Si le joueur a fait un double dé et qu'il n'est pas/plus en prison, on rejoue */
         if (joueur.doubleDes() && !joueur.isEnPrison())
         {
             Message message = new Message();

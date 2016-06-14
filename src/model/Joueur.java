@@ -19,6 +19,8 @@ public class Joueur
     
     private int tourPrison;
     
+    private int cartesLiberation;
+    
     public Joueur(String nomJoueur)
     {
         this.nomJoueur = nomJoueur;
