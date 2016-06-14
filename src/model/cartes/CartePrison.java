@@ -7,6 +7,7 @@ package model.cartes;
 
 import model.Joueur;
 import model.Message;
+import model.TypeAction;
 import model.TypeCarte;
 
 /**
@@ -22,7 +23,10 @@ public class CartePrison extends Carte
     }
 
     @Override
-    public Message actionCarte() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Message actionCarte() 
+    {
+        Message message = new Message();
+        message.setType(TypeAction.ALLER_PRISON);
+        return message;
     }
 }

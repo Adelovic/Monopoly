@@ -174,7 +174,7 @@ public class Controleur
                         break;
                         
                     /* Emprisonne le joueur */
-                    case PRISON:
+                    case ALLER_PRISON:
                         monopoly.emprisonner(joueur);
                         msgDeplacement = new Message();
                         msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
@@ -185,7 +185,7 @@ public class Controleur
                 break;
                 
             /* Emprisonne le joueur */
-            case PRISON:
+            case ALLER_PRISON:
                 monopoly.emprisonner(joueur);
                 Message msgDeplacement = new Message();
                 msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
@@ -264,11 +264,21 @@ public class Controleur
     /* La fin d'un coup change le joueur courant et envoie le signal d'un nouveau courant à l'ihm */
     public void finCoup()
     {
+        Joueur joueur = monopoly.prochainJoueur();
         Message message = new Message();
         message.setType(TypeAction.DEBUT_COUP);
         message.setJoueurs(monopoly.getJoueurs());
-        message.setJoueur(monopoly.prochainJoueur());
+        message.setJoueur(joueur);
         observateur.notifier(message);
+       
+        /* On notifie dés le début si le joueur est en prison */
+        if (joueur.isEnPrison())
+        {
+            joueur.addTourPrison();
+            
+            message.setType(TypeAction.PRISON);
+            observateur.notifier(message);
+        }
     
     }
     
@@ -290,16 +300,14 @@ public class Controleur
         /* On ne joue pas le coup si le joueur est en prison, on verifie simplement le résultat des dés et le nombre de tour en prison */
         if (joueur.isEnPrison())
         {
-            joueur.addTourPrison();
+            Message messagePrison = new Message();
+            messagePrison.setJoueur(joueur);
             if (joueur.doubleDes())
             {
                 monopoly.liberer(joueur);
                 monopoly.deplacerJoueur(joueur, des[0]+des[1]);
-                Message msgDeplacement = new Message();
-                msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
-                msgDeplacement.setPasserCaseDepart(false);
-                msgDeplacement.setJoueur(joueur);
-                observateur.notifier(msgDeplacement);
+                messagePrison.setType(TypeAction.DEPLACER_JOUEUR);
+                messagePrison.setPasserCaseDepart(false);
                 jouerCarreau(joueur);
             }
             else if (joueur.getTourPrison() == 3)
@@ -307,20 +315,16 @@ public class Controleur
                 joueur.removeCash(50);
                 monopoly.liberer(joueur);
                 monopoly.deplacerJoueur(joueur, des[0]+des[1]);
-                Message msgDeplacement = new Message();
-                msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
-                msgDeplacement.setPasserCaseDepart(false);
-                msgDeplacement.setJoueur(joueur);
-                observateur.notifier(msgDeplacement);
+                messagePrison.setType(TypeAction.DEPLACER_JOUEUR);
+                messagePrison.setPasserCaseDepart(false);
                 jouerCarreau(joueur);
             }
             else
             {
-                Message message = new Message();
-                message.setType(TypeAction.PRISON);
-                message.setJoueur(joueur);
-                observateur.notifier(message);
+                messagePrison.setType(TypeAction.FIN_COUP);
+                messagePrison.setPasserCaseDepart(false);
             }
+            observateur.notifier(messagePrison);
         }
         /* Sinon, on joue */
         else
@@ -340,6 +344,22 @@ public class Controleur
             Message message = new Message();
             message.setType(TypeAction.REJOUER_DOUBLE_DES);
             message.setJoueur(joueur);
+            
+            /* On envoie en prison le joueur et on envoie le message de déplacement à l'ihm */
+            if (joueur.getNbDoubleDes() == 3)
+            {
+                monopoly.emprisonner(joueur);
+                message.setType(TypeAction.ALLER_PRISON);
+                joueur.resetNbDoubleDe();
+                Message msgDeplacement = new Message();
+                msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+                msgDeplacement.setJoueur(joueur);
+                observateur.notifier(msgDeplacement);
+            }
+            else
+            {
+                message.setType(TypeAction.REJOUER_DOUBLE_DES);
+            }
             observateur.notifier(message);
         }
     }

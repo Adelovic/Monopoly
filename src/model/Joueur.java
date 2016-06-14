@@ -6,6 +6,7 @@ import model.carreaux.Carreau;
 import model.carreaux.propriete.Compagnie;
 import model.carreaux.propriete.Gare;
 import java.util.ArrayList;
+import model.cartes.CarteLiberationPrison;
 public class Joueur 
 {
     private String nomJoueur;
@@ -18,14 +19,20 @@ public class Joueur
     private boolean enPrison;
     
     private int tourPrison;
+    private int nbDoubleDes;
     
-    private int cartesLiberation;
+    private ArrayList<CarteLiberationPrison> cartesLiberation = new ArrayList<CarteLiberationPrison>();
     
     public Joueur(String nomJoueur)
     {
         this.nomJoueur = nomJoueur;
     }
     
+    
+    public int getNbDoubleDes()
+    {
+        return nbDoubleDes;
+    }
     
     //Getters
     public ArrayList<Gare> getGares(){ return gares; }
@@ -46,7 +53,25 @@ public class Joueur
     
     public int[] getDernierDes() { return this.dernierDes; }
     
+    public int getNbCartesLiberation()
+    {
+        return cartesLiberation.size();
+    }
     
+    public void addDoubleDes()
+    {
+        nbDoubleDes++;
+    }
+    
+    public void resetNbDoubleDe()
+    {
+        nbDoubleDes = 0;
+    }
+    
+    public void ajouterCarteLiberation(CarteLiberationPrison carte)
+    {
+        cartesLiberation.add(carte);
+    }
     public void payerA(Joueur joueur, int montant)
     {
         int aPrendre = this.getCash() > montant ? montant : this.getCash();

@@ -6,6 +6,7 @@ public enum TypeAction
     LANCER_PARTIE,
     TIRER_CARTE,
     LANCER_DES,
+    ALLER_PRISON,
     PRISON,
     PAYER_LOYER,
     ACHAT,

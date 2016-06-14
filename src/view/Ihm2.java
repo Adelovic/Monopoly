@@ -823,7 +823,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
 
             JLabel nbCartesLiberte = new JLabel();
             nbCartesLiberte.setFont(font8); 
-            nbCartesLiberte.setText(joueurs.get(0).getNom() + " a " + joueurs.get(i)+ " carte de liberté");
+            nbCartesLiberte.setText(joueurs.get(i).getNom() + " a " + joueurs.get(i).getNbCartesLiberation() + " carte de liberté");
             sousPan.add(nbCartesLiberte);
 
             pan.add(sousPan);
@@ -1022,7 +1022,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     
     public void deplacerPion(int num, String nom)
     {
-        
         plateau.updatePion(nom, num);
     }  
     public void afficherCarteChance(String text)
@@ -1045,8 +1044,33 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panInfoCdC.paint(panInfoCdC.getGraphics());
     }
     
-    public void afficherPrison()
+    public void afficherPrison(int tourRestant, boolean aCarteLiberation)
     {
+        nbToursPrison.setText("il vous reste plus que " + tourRestant + " tour(s)");
+        
+        buttonCautionPrison.setVisible(true);
+        buttonCarteLiberte.setVisible(true);
+        if (tourRestant == 3)
+        {
+           buttonCautionPrison.setVisible(false);
+           buttonCarteLiberte.setVisible(false);
+        }
+        else if (tourRestant == 0)
+        {
+           buttonCautionPrison.setEnabled(true);
+           buttonCarteLiberte.setEnabled(false);
+        }
+        else if (aCarteLiberation)
+        {
+           buttonCautionPrison.setEnabled(false);
+           buttonCarteLiberte.setEnabled(true);            
+        }
+        else
+        {
+            buttonCautionPrison.setVisible(false);
+            buttonCarteLiberte.setVisible(false); 
+        }
+        
         panCaseActuelle.setVisible(false);
         panInfoPrison.setVisible(true);
         panInfoPrison.paint(panInfoPrison.getGraphics());
@@ -1095,8 +1119,10 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 deplacerPion(message.getJoueur().getPositionCourante().getNumero(), message.getJoueur().getNom());
                 break;
             case PRISON:
-                afficherPrison();
-                System.out.println("Tombé en prison!");
+                afficherPrison(3-message.getJoueur().getTourPrison(), message.getJoueur().getNbCartesLiberation() > 0);
+                break;
+            case ALLER_PRISON:
+                afficherPrison(3, message.getJoueur().getNbCartesLiberation() > 0);
                 break;
             case PAYER_LOYER:
                 System.out.println("Le joueur " + message.getJoueur().getNom() + " a payé " + message.getLoyer() + "$ de loyer à " + message.getPropriete().getProprietaire().getNom());
