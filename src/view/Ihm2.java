@@ -107,9 +107,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private JPanel fenetreClassement; 
     private JPanel panelClassement;
     private JPanel panelLogoPodium;
-    private JLabel labelLogoGagnant;
-    private JLabel labelLogoSecond;
-    private JLabel labelLogoTroisieme;
     private JPanel sousPanelLogoPodium;
     private JLabel labelGagnant;
     private JLabel labelSecond;
@@ -126,6 +123,14 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private JLabel labelNom4;
     private JLabel labelNom5;
     private JLabel labelNom6;
+    private IhmConstruire fenetreConstruire;
+    
+    //loyer
+    private JPanel panelCheque;
+    private JLabel ImageCheque;
+    private JLabel montantLoyer;
+    private JLabel causeDuPayement;
+    private JLabel destinataireDuLoyer;
     
     //Fonts
     Font font = new Font("TeXGyreAdventor", 1, 30);
@@ -144,6 +149,10 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     
     //controleur
     private final Controleur controleur;
+
+    public Controleur getControleur() {
+        return controleur;
+    }
     
     public Ihm2(Controleur controleur) 
     {
@@ -236,9 +245,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         fenetreClassement = new JPanel();
         panelClassement = new JPanel();
         panelLogoPodium = new JPanel();
-        labelLogoGagnant = new JLabel();
-        labelLogoSecond = new JLabel();
-        labelLogoTroisieme = new JLabel();
         sousPanelLogoPodium = new JPanel();
         labelGagnant = new JLabel();
         labelSecond = new JLabel();
@@ -255,11 +261,48 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         labelNom4 = new JLabel();
         labelNom5 = new JLabel();
         labelNom6 = new JLabel();
+        destinataireDuLoyer = new JLabel();
+        causeDuPayement = new JLabel();
+        montantLoyer = new JLabel();
+        ImageCheque = new JLabel();
+        panelCheque = new JPanel();
         
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         fenetreJeu.setBackground(new Color(204, 204, 204));
         fenetreJeu.setLayout(null);
+        
+        //Message loyer
+        panelCheque.setLayout(null);
+        destinataireDuLoyer.setFont(new java.awt.Font("Lato Semibold", 1, 20)); // NOI18N
+        destinataireDuLoyer.setText("");
+        panelCheque.add(destinataireDuLoyer);
+        destinataireDuLoyer.setBounds(775, 210, 220, 22);
+
+        causeDuPayement.setFont(new java.awt.Font("Lato Semibold", 1, 24)); // NOI18N
+        causeDuPayement.setText("");
+        panelCheque.add(causeDuPayement);
+        causeDuPayement.setBounds(20, 170, 700, 30);
+
+        montantLoyer.setFont(new java.awt.Font("Lato Heavy", 1, 48)); // NOI18N
+        montantLoyer.setForeground(new java.awt.Color(0, 0, 0));
+        montantLoyer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        montantLoyer.setText("");
+        panelCheque.add(montantLoyer);
+        montantLoyer.setBounds(780, 140, 230, 50);
+
+        ImageCheque.setIcon(new javax.swing.ImageIcon(getClass().getResource("cheque.jpg"))); // NOI18N
+        panelCheque.add(ImageCheque);
+        ImageCheque.setBounds(0, 0, 1024, 460);  
+    
+        fenetreJeu.add(panelCheque);
+        panelCheque.setBounds(350,350,1024,460);
+        panelCheque.setVisible(false);
+        
+        fenetreConstruire = new IhmConstruire(new Joueur(""), this);
+        fenetreJeu.add(fenetreConstruire);
+        fenetreConstruire.setBounds(550, 300, 560, 400);
+        fenetreConstruire.setVisible(false);
         
         //Classement général
         fenetreClassement.setBackground(new java.awt.Color(205, 230, 208));
@@ -936,6 +979,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
 
         fenetreJeu.add(panCaseActuelle);
         panCaseActuelle.setBounds(1330, 570, 320, 280);
+        
     }
     
     @Override
@@ -974,7 +1018,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             }
             de1.paint(de1.getGraphics());
             de2.paint(de2.getGraphics());
-            
+
             recuDes = false;
         }
         else if (e.getSource() == buttonTourSuivant)
@@ -995,7 +1039,9 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         else if (e.getSource() == buttonConstruire)
         {
             System.out.println("Construire");
-            //controleur.construirePropriete(joueurCourant.getProprieteConstructible(), message.getPrix());
+            fenetreConstruire.setJoueur(joueurCourant);
+            fenetreConstruire.paint(fenetreConstruire.getGraphics());
+            fenetreConstruire.setVisible(true);
         }
     }
     
@@ -1044,6 +1090,11 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panInfoCdC.paint(panInfoCdC.getGraphics());
     }
     
+    public void afficherLoyer()
+    {
+        panelCheque.setVisible(true);
+    }
+    
     public void afficherPrison(int tourRestant, boolean aCarteLiberation)
     {
         nbToursPrison.setText("il vous reste plus que " + tourRestant + " tour(s)");
@@ -1078,6 +1129,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     
     public void clearPlateau()
     {
+        panelCheque.setVisible(false);
         panInfoPrison.setVisible(false);
         panInfoCdC.setVisible(false);
         panInfoCarteChance.setVisible(false);
@@ -1090,6 +1142,11 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     public void displayClassementGeneral()
     {
         fenetreClassement.setVisible(true);
+    }
+    public ProprieteConstructible afficherConstruire(Joueur joueur)
+    {
+        fenetreConstruire.setVisible(true);
+        return fenetreConstruire.getProrpieteAConstruire();
     }
     @Override
     public void notifier(Message message) 
@@ -1125,14 +1182,17 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 afficherPrison(3, message.getJoueur().getNbCartesLiberation() > 0);
                 break;
             case PAYER_LOYER:
-                System.out.println("Le joueur " + message.getJoueur().getNom() + " a payé " + message.getLoyer() + "$ de loyer à " + message.getPropriete().getProprietaire().getNom());
                 if (message.getEstConstructible())
                 {
                     afficherProprieteConstructible(message.getProprieteConstructible(), false, false);
                 }
+                montantLoyer.setText(message.getLoyer() + " €");
+                destinataireDuLoyer.setText(message.getPropriete().getProprietaire().getNom());
+                causeDuPayement.setText("Passage sur la propriété " + message.getPropriete().getNom());
+                afficherLoyer();
                 break;
             case ACHAT:
-                if (message.getEstConstructible())
+                if (message.getEstConstructible())//controleur.construirePropriete(joueurCourant.getProprieteConstructible(), message.getPrix());
                 {
                     afficherProprieteConstructible(message.getProprieteConstructible(), false, true);
                 }
@@ -1140,11 +1200,8 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 break;
             case CONSTRUIRE:
                 afficherProprieteConstructible(message.getProprieteConstructible(), true, false);
+                //afficherConstruire(message.getJoueur());
                 buttonConstruire.setEnabled(true);
-                //if (demanderJoueur("Voulez-vous construire pour " + message.getPrix() + " ?"))
-                //{
-                //    controleur.construirePropriete(message.getProprieteConstructible(), message.getPrix());
-                //}
                 break;
             case RIEN:
                 System.out.println("RIEN!");
