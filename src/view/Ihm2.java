@@ -305,8 +305,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         fenetreConstruire.setVisible(false);
         
         //Classement général
-        fenetreClassement.setBackground(new java.awt.Color(205, 230, 208));
-        fenetreClassement.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 8, true));
+        fenetreClassement.setBorder(new LineBorder(Color.BLACK, 5, true));
         fenetreClassement.setLayout(null);
 
         panelClassement.setOpaque(false);
@@ -366,7 +365,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panelClassement.setVisible(true);
 
         labelClassement.setFont(new java.awt.Font("TeXGyreAdventor", 1, 30));
-        labelClassement.setForeground(new java.awt.Color(0, 0, 0));
+        labelClassement.setForeground(new Color(0, 0, 0));
         labelClassement.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelClassement.setText("Classement");
         fenetreClassement.add(labelClassement);
@@ -374,10 +373,10 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
 
         labelImageFondClassement.setIcon(new javax.swing.ImageIcon(getClass().getResource("wallpaperQuiCommence.png")));
         fenetreClassement.add(labelImageFondClassement);
-        labelImageFondClassement.setBounds(7, 5, 390, 370);
+        labelImageFondClassement.setBounds(5, 5, 390, 370);
 
         fenetreJeu.add(fenetreClassement);
-        fenetreClassement.setBounds(670, 310, 400, 380);
+        fenetreClassement.setBounds(650, 290, 400, 380);
         fenetreClassement.setVisible(false);
         
         //fenetre carte chance
