@@ -103,6 +103,30 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private Joueur joueurCourant;
     private Propriete proprieteCourante;
     
+    //classement final
+    private JPanel fenetreClassement; 
+    private JPanel panelClassement;
+    private JPanel panelLogoPodium;
+    private JLabel labelLogoGagnant;
+    private JLabel labelLogoSecond;
+    private JLabel labelLogoTroisieme;
+    private JPanel sousPanelLogoPodium;
+    private JLabel labelGagnant;
+    private JLabel labelSecond;
+    private JLabel labelTroisieme;
+    private JPanel panelLogoPlace456;
+    private JLabel JoueurQuatrieme;
+    private JLabel JoueurCinquieme;
+    private JLabel JoueurSixieme;
+    private JLabel labelClassement;
+    private JLabel labelImageFondClassement;
+    private JLabel labelNom1;
+    private JLabel labelNom2;
+    private JLabel labelNom3;
+    private JLabel labelNom4;
+    private JLabel labelNom5;
+    private JLabel labelNom6;
+    
     //Fonts
     Font font = new Font("TeXGyreAdventor", 1, 30);
     Font font2 = new Font("TeXGyreAdventor", 1, 21);
@@ -112,6 +136,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     Font font6 = new Font("Lato Light", 0, 18);
     Font font7 = new Font("Lato Semibold", 1, 18);
     Font font8 = new Font("FreeSans", 0, 12);
+    Font font9 = new Font("FreeSans", 1, 14);
     
     //déplacement pions
     float positionHorizontale = 0;
@@ -128,7 +153,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         this.setVisible(false);
         
         PlayerFrame playerFrame = new PlayerFrame(this);
-        playerFrame.setSize(620, 380);
+        playerFrame.setSize(1020, 680);
         playerFrame.setLocationRelativeTo(null);
         playerFrame.setVisible(true);
         
@@ -146,6 +171,8 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     
     private void initComponents() 
     {
+        this.setUndecorated(true);
+        
         fenetreJeu = new JPanel();
         panInfoCarteChance = new JPanel();
         txtCarteChance1 = new JLabel();
@@ -177,7 +204,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         textPrison = new JLabel();
         nbToursPrison = new JLabel();
         wallpaperPrison = new JLabel();
-        //panelPions = new JPanel();
         panInfoCdC = new JPanel();
         txtCarteChance1 = new JLabel();
         txtCartChance2 = new JLabel();
@@ -207,11 +233,109 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         labelCdC1 = new JLabel();
         areaInfoCarteChance = new JTextArea();
         areaInfoCdC = new JTextArea();
+        fenetreClassement = new JPanel();
+        panelClassement = new JPanel();
+        panelLogoPodium = new JPanel();
+        labelLogoGagnant = new JLabel();
+        labelLogoSecond = new JLabel();
+        labelLogoTroisieme = new JLabel();
+        sousPanelLogoPodium = new JPanel();
+        labelGagnant = new JLabel();
+        labelSecond = new JLabel();
+        labelTroisieme = new JLabel();
+        panelLogoPlace456 = new JPanel();
+        JoueurQuatrieme = new JLabel();
+        JoueurCinquieme = new JLabel();
+        JoueurSixieme = new JLabel();
+        labelClassement = new JLabel();
+        labelImageFondClassement = new JLabel();
+        labelNom1 = new JLabel();
+        labelNom2 = new JLabel();
+        labelNom3 = new JLabel();
+        labelNom4 = new JLabel();
+        labelNom5 = new JLabel();
+        labelNom6 = new JLabel();
         
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         fenetreJeu.setBackground(new Color(204, 204, 204));
         fenetreJeu.setLayout(null);
+        
+        //Classement général
+        fenetreClassement.setBackground(new java.awt.Color(205, 230, 208));
+        fenetreClassement.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 8, true));
+        fenetreClassement.setLayout(null);
+
+        panelClassement.setOpaque(false);
+        panelClassement.setLayout(new java.awt.GridLayout(1, 4, 10, 1));
+
+        panelLogoPodium.setOpaque(false);
+        panelLogoPodium.setLayout(new java.awt.GridLayout(3, 1, 10, 20));
+
+        sousPanelLogoPodium.setOpaque(false);
+        sousPanelLogoPodium.setLayout(new java.awt.GridLayout(3, 1, 10, 30));
+
+        labelGagnant.setIcon(new javax.swing.ImageIcon(getClass().getResource("n1.png")));
+        sousPanelLogoPodium.add(labelGagnant);
+        labelNom1.setFont(font9);
+        labelNom1.setText("Gagnant");
+        sousPanelLogoPodium.add(labelNom1);
+
+        labelSecond.setIcon(new javax.swing.ImageIcon(getClass().getResource("n2.png")));
+        sousPanelLogoPodium.add(labelSecond);
+        labelNom2.setFont(font9);
+        labelNom2.setText("deuxieme");
+        sousPanelLogoPodium.add(labelNom2);
+
+        labelTroisieme.setIcon(new javax.swing.ImageIcon(getClass().getResource("n3.png")));
+        sousPanelLogoPodium.add(labelTroisieme);
+        labelNom3.setFont(font9);
+        labelNom3.setText("troisième");
+        sousPanelLogoPodium.add(labelNom3);
+
+        panelClassement.add(sousPanelLogoPodium);
+
+        panelLogoPlace456.setOpaque(false);
+        panelLogoPlace456.setLayout(new java.awt.GridLayout(3, 1, 10, 30));
+
+        JoueurQuatrieme.setIcon(new javax.swing.ImageIcon(getClass().getResource("n4.png")));
+        panelLogoPlace456.add(JoueurQuatrieme);
+        labelNom4.setFont(font9);
+        labelNom4.setText("quatrième");
+        panelLogoPlace456.add(labelNom4);
+
+        JoueurCinquieme.setIcon(new javax.swing.ImageIcon(getClass().getResource("n5.png")));
+        panelLogoPlace456.add(JoueurCinquieme);
+        labelNom5.setFont(font9);
+        labelNom5.setText("cinquième");
+        panelLogoPlace456.add(labelNom5);
+
+        JoueurSixieme.setIcon(new javax.swing.ImageIcon(getClass().getResource("n6.png")));
+        panelLogoPlace456.add(JoueurSixieme);
+        labelNom6.setFont(font9);
+        labelNom6.setText("sixième");
+        panelLogoPlace456.add(labelNom6);
+
+        panelClassement.add(panelLogoPlace456);
+
+        fenetreClassement.add(panelClassement);
+        panelClassement.setBounds(20, 60, 360, 300);
+        panelClassement.setVisible(true);
+
+        labelClassement.setFont(new java.awt.Font("TeXGyreAdventor", 1, 30));
+        labelClassement.setForeground(new java.awt.Color(0, 0, 0));
+        labelClassement.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelClassement.setText("Classement");
+        fenetreClassement.add(labelClassement);
+        labelClassement.setBounds(110, 20, 190, 30);
+
+        labelImageFondClassement.setIcon(new javax.swing.ImageIcon(getClass().getResource("wallpaperQuiCommence.png")));
+        fenetreClassement.add(labelImageFondClassement);
+        labelImageFondClassement.setBounds(7, 5, 390, 370);
+
+        fenetreJeu.add(fenetreClassement);
+        fenetreClassement.setBounds(670, 310, 400, 380);
+        fenetreClassement.setVisible(false);
         
         //fenetre carte chance
         panInfoCarteChance.setBorder(new LineBorder(new Color(0, 0, 0), 8, true));
@@ -402,7 +526,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         labelTourSuivant.setText("TOUR SUIVANT");
         labelTourSuivant.setCursor(new Cursor(Cursor.HAND_CURSOR));
         fenetreJeu.add(labelTourSuivant);
-        labelTourSuivant.setBounds(1370, 893, 260, 40);
+        labelTourSuivant.setBounds(1380, 893, 260, 40);
 
         buttonTourSuivant.setIcon(new ImageIcon(getClass().getResource("bouton_rouge.png"))); 
         buttonTourSuivant.setBorder(null);
@@ -939,6 +1063,10 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     {
         this.des = des;
     }
+    public void displayClassementGeneral()
+    {
+        fenetreClassement.setVisible(true);
+    }
     @Override
     public void notifier(Message message) 
     {
@@ -1007,6 +1135,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 break;
             case FIN_PARTIE:
                 System.out.println("Fin du jeu ! Gagnant :  " + message.getJoueur().getNom());
+                displayClassementGeneral();
                 break;
             case DEBUT_COUP:
                 System.out.println("Debut du coup de " + message.getJoueur().getNom());

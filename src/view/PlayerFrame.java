@@ -30,8 +30,7 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
     private int joueursActifs = 2;
     private ArrayList<JTextField> listTextField;
     private boolean fenetreVisible = true;
-    
-    // Variables declaration - do not modify                     
+                       
     private JButton jButtonValider;
     private JButton jButtonSupprimer;
     private JButton jButtonAjouter;
@@ -165,7 +164,7 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
         panelErreur1.add(labelErreur1, BorderLayout.CENTER);
         panelErreur1.setBackground(Color.black);
         getContentPane().add(panelErreur1);
-        panelErreur1.setBounds(300, 220, 420, 20);
+        panelErreur1.setBounds(300, 220, 455, 20);
         panelErreur1.setVisible(false);
         
         Font font = new Font("Lucida Bright", 1, 18);
@@ -179,7 +178,7 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
         panelErreur2.add(labelErreur2, BorderLayout.CENTER);
         panelErreur2.setBackground(Color.black);
         getContentPane().add(panelErreur2);
-        panelErreur2.setBounds(270, 220, 470, 20);
+        panelErreur2.setBounds(270, 220, 520, 20);
         panelErreur2.setVisible(false);
         
         jTextJoueur1.setFont(font);
@@ -385,6 +384,19 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
                 }
             }
             
+            if (listNom.size() <= 1 || erreur1)
+            {
+                fenetreVisible = true;
+                panelErreur2.setVisible(erreur1);
+                panelErreur1.setVisible(!erreur1);
+            }
+            else
+            { 
+                fenetreVisible = false; 
+                ihm.initialiserJoueurs(listNom);
+                this.dispose();
+            }
+            
             HashMap<JTextField, Integer> listeJoueurs = new HashMap<JTextField, Integer>();
             
             for (Entry<JTextField, Integer> entry : listeResultatsDes.entrySet())
@@ -399,22 +411,6 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
             while (!listeJoueurs.isEmpty())
             {
                 listNom.add(getMax(listeJoueurs));
-            }
-            
-            
-            
-            
-            if (listNom.size() <= 1 || erreur1)
-            {
-                fenetreVisible = true;
-                panelErreur2.setVisible(erreur1);
-                panelErreur1.setVisible(!erreur1);
-            }
-            else
-            { 
-                fenetreVisible = false; 
-                ihm.initialiserJoueurs(listNom);
-                this.dispose();
             }
             
         }
