@@ -392,26 +392,27 @@ public class PlayerFrame extends JFrame implements ActionListener, KeyListener
             }
             else
             { 
+                HashMap<JTextField, Integer> listeJoueurs = new HashMap<JTextField, Integer>();
+            
+                for (Entry<JTextField, Integer> entry : listeResultatsDes.entrySet())
+                {
+                    if (entry.getKey().isVisible())
+                    {
+                        listeJoueurs.put(entry.getKey(), entry.getValue());
+                    }
+                }
+
+                listNom.clear();
+                while (!listeJoueurs.isEmpty())
+                {
+                    listNom.add(getMax(listeJoueurs));
+                }
                 fenetreVisible = false; 
                 ihm.initialiserJoueurs(listNom);
                 this.dispose();
             }
             
-            HashMap<JTextField, Integer> listeJoueurs = new HashMap<JTextField, Integer>();
             
-            for (Entry<JTextField, Integer> entry : listeResultatsDes.entrySet())
-            {
-                if (entry.getKey().isVisible())
-                {
-                    listeJoueurs.put(entry.getKey(), entry.getValue());
-                }
-            }
-            
-            listNom.clear();
-            while (!listeJoueurs.isEmpty())
-            {
-                listNom.add(getMax(listeJoueurs));
-            }
             
         }
     }
