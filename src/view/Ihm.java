@@ -196,7 +196,7 @@ public class Ihm implements Observateur
                 System.out.println("Le joueur" + message.getJoueur().getNom() + " rejoue");
                 controleur.jouerCarreau(message.getJoueur());
                 break;
-            case CONSTRUIRE:
+            case CONSTRUIRE_INFOS:
                 System.out.println("Le joueur " + message.getJoueur().getNom() + " a la possibilité de construire sur " + message.getPropriete().getNom());
                 if (demanderJoueur("Voulez-vous construire pour " + message.getPrix() + " ?"))
                 {

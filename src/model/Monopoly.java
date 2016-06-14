@@ -139,7 +139,21 @@ public class Monopoly
         joueur.getCompagnies().clear();
         joueursElimines.add(joueur);
     }
+       
+    public void actualiserProprietesConstructibles(Joueur joueur)
+    {
+        final ArrayList<ProprieteConstructible> proprietesConstructibles = new ArrayList<ProprieteConstructible>();
         
+        for (ProprieteConstructible prop : joueur.getProprietes())
+        {
+            if (prop.maisonConstructible() && maisonsDisponibles > 0 || prop.hotelConstructible() && hotelsDisponibles > 0)
+            {
+                proprietesConstructibles.add(prop);
+            }
+        }
+        joueur.setProprietesConstructibles(proprietesConstructibles);
+    }
+    
     public ArrayList<Joueur> getJoueurs()
     {
         return joueurs;

@@ -103,6 +103,8 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     private Joueur joueurCourant;
     private Propriete proprieteCourante;
     
+    /* Proprietes constructibles du joueur courant */
+    private ArrayList<ProprieteConstructible> constructiblesJoueurCourant;
     //classement final
     private JPanel fenetreClassement; 
     private JPanel panelClassement;
@@ -180,7 +182,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     
     private void initComponents() 
     {
-        this.setUndecorated(true);
+        //this.setUndecorated(true);
         
         fenetreJeu = new JPanel();
         panInfoCarteChance = new JPanel();
@@ -1038,9 +1040,8 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         else if (e.getSource() == buttonConstruire)
         {
             System.out.println("Construire");
-            fenetreConstruire.setJoueur(joueurCourant);
+            fenetreConstruire.afficher(joueurCourant);
             fenetreConstruire.paint(fenetreConstruire.getGraphics());
-            fenetreConstruire.setVisible(true);
         }
     }
     
@@ -1062,7 +1063,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         buttonLancerDes.setVisible(true);
         buttonTourSuivant.setVisible(false);
         labelTourSuivant.setVisible(false);
-        panCaseActuelle.setVisible(false);
     }
     
     public void deplacerPion(int num, String nom)
@@ -1145,7 +1145,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     public ProprieteConstructible afficherConstruire(Joueur joueur)
     {
         fenetreConstruire.setVisible(true);
-        return fenetreConstruire.getProrpieteAConstruire();
+        return fenetreConstruire.getProprieteAConstruire();
     }
     @Override
     public void notifier(Message message) 
@@ -1197,11 +1197,11 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 }
                 proprieteCourante = message.getPropriete();
                 break;
-            case CONSTRUIRE:
-                afficherProprieteConstructible(message.getProprieteConstructible(), true, false);
-                //afficherConstruire(message.getJoueur());
+            case CONSTRUIRE_INFOS:
                 buttonConstruire.setEnabled(true);
                 break;
+            case PROPRIETE:
+                afficherProprieteConstructible(message.getProprieteConstructible(), true, false);
             case RIEN:
                 System.out.println("RIEN!");
                 break;
@@ -1222,6 +1222,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             case DEBUT_COUP:
                 System.out.println("Debut du coup de " + message.getJoueur().getNom());
                 displayJoueurs(message.getJoueurs());
+                panCaseActuelle.setVisible(false); // On ne le met pas dans le debutCoup car on ne veut pas que ca arrive quand le joueur fait un double de
                 debutCoup(message.getJoueur());
                 break;
             case FIN_COUP:

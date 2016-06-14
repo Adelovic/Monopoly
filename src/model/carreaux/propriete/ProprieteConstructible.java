@@ -61,7 +61,7 @@ public class ProprieteConstructible extends Propriete
            }
            else
            {
-               message.setType(TypeAction.RIEN);
+               message.setType(TypeAction.PROPRIETE);
            }
         }
         // La propriete a un proprietaire, le joueur doit payer
@@ -72,8 +72,7 @@ public class ProprieteConstructible extends Propriete
         }
         else
         {
-            // Le controleur vérifiera s'il peut construire
-            message.setType(TypeAction.CONSTRUIRE);
+            message.setType(TypeAction.PROPRIETE);
         }
         
         return message;

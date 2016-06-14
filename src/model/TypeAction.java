@@ -11,7 +11,8 @@ public enum TypeAction
     PAYER_LOYER,
     ACHAT,
     RIEN,
-    CONSTRUIRE,
+    CONSTRUIRE_INFOS,
+    PROPRIETE,
     ELIMINER_JOUEUR, // Envoyé en fin de tour quand le joueur est éliminé
     DEBUT_PARTIE,
     FIN_PARTIE,

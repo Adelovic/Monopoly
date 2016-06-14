@@ -15,6 +15,9 @@ public class Joueur
     private Carreau positionCourante;
     private ArrayList<Gare> gares = new ArrayList<Gare>();
     private ArrayList<ProprieteConstructible> proprietes = new ArrayList<ProprieteConstructible>();
+    
+    private ArrayList<ProprieteConstructible> proprietesConstructibles = new ArrayList<ProprieteConstructible>();
+    
     private ArrayList<Compagnie> compagnies = new ArrayList<Compagnie>();
     private boolean enPrison;
     
@@ -33,7 +36,7 @@ public class Joueur
     {
         return nbDoubleDes;
     }
-    
+            
     //Getters
     public ArrayList<Gare> getGares(){ return gares; }
 
@@ -182,6 +185,11 @@ public class Joueur
             nbHotels += p.getNbHotels();
         }
         return nbHotels;
+    }
+    
+    public void setProprietesConstructibles(ArrayList<ProprieteConstructible> props)
+    {
+        this.proprietesConstructibles = props;
     }
     
 

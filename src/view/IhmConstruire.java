@@ -22,14 +22,18 @@ public class IhmConstruire extends JPanel implements ActionListener
     private javax.swing.JLabel titreConstruction;
     private javax.swing.JLabel wallpaperConstruction;
     private Joueur joueur;
-    private ProprieteConstructible prorpieteAConstruire = null;
+    private ProprieteConstructible proprieteAConstruire = null;
     private Ihm2 ihm;
     private ArrayList<ProprieteConstructible> proprietes;
 
+    private int nbMaisons;
+    private int nbHotels;
     public IhmConstruire(Joueur joueur, Ihm2 ihm) 
     {
         this.ihm = ihm;
         this.joueur = joueur;
+        this.nbMaisons = nbMaisons;
+        this.nbHotels = nbHotels;
         initComponents();
     }                       
     private void initComponents() {
@@ -113,16 +117,23 @@ public class IhmConstruire extends JPanel implements ActionListener
         );
     }    
 
-    public ProprieteConstructible getProrpieteAConstruire() 
+    public ProprieteConstructible getProprieteAConstruire() 
     {
-        return prorpieteAConstruire;
+        ihm.set
+        return proprieteAConstruire;
     }
 
-    public void setJoueur(final Joueur joueur) {
+    public void afficher(final Joueur joueur) {
         this.joueur = joueur;
+        this.nbMaisons = nbMaisons;
+        this.nbHotels = nbHotels;
+        
+        this.setVisible(true);
+        
         titreConstruction.setText("Construction de " + joueur.getNom());
+        
         listRue.setModel(new javax.swing.AbstractListModel<String>() {
-            ArrayList<ProprieteConstructible> jListProprietes = joueur.getProprietes();
+            ArrayList<ProprieteConstructible> jListProprietes = proprietesConstructibles;
             @Override
             public int getSize() { return jListProprietes.size(); }
             @Override
@@ -133,8 +144,8 @@ public class IhmConstruire extends JPanel implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) 
     {
-        prorpieteAConstruire = joueur.getProprietes().get(listRue.getSelectedIndex());
-        ihm.getControleur().construirePropriete(prorpieteAConstruire, prorpieteAConstruire.getPrix());
+        proprieteAConstruire = joueur.getProprietes().get(listRue.getSelectedIndex());
+        ihm.getControleur().construirePropriete(proprieteAConstruire, proprieteAConstruire.getPrix());
         this.setVisible(false);
         
     }

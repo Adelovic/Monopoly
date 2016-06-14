@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
 import model.carreaux.AutreCarreau;
 import model.carreaux.Carreau;
 import model.carreaux.propriete.Compagnie;
@@ -198,24 +200,6 @@ public class Controleur
                 Joueur proprio = messageCarreau.getPropriete().getProprietaire();
                 joueur.payerA(proprio, messageCarreau.getLoyer());
                 break;
-                
-            case CONSTRUIRE:
-                ProprieteConstructible prop = messageCarreau.getProprieteConstructible();
-                
-                if (prop.maisonConstructible() && joueur.getCash() > prop.getNbMaisons() && monopoly.getMaisonsDisponibles() > 0)
-                {
-                    messageCarreau.setPrix(prop.getPrixMaison());
-                }
-                else if (prop.hotelConstructible() && joueur.getCash() > prop.getNbHotels() && monopoly.getHotelsDisponibles() > 0)
-                {
-                    messageCarreau.setPrix(prop.getPrixHotel());
-                }
-                else
-                {
-                    messageCarreau.setType(TypeAction.RIEN);
-                }
-                break;
-            
             /* Aucune action n'est effectuée */
             case RIEN:
                 break;
@@ -227,6 +211,11 @@ public class Controleur
         /* Construire le nouveau packet à envoyer en fonction de l'état du joueur */
         Message message = new Message();
         message.setJoueur(joueur); 
+        
+        /* Chaque fin d'action d'un carreau, renvoyer la liste des proprietes modifiables (maisons, hotels) du joueur */
+        message.setType(TypeAction.CONSTRUIRE_INFOS);
+        monopoly.actualiserProprietesConstructibles(joueur);
+        observateur.notifier(message);
         
         if (passeCaseDepart)
         {
@@ -287,7 +276,10 @@ public class Controleur
     {
         Joueur joueur = monopoly.getJoueurCourant();
         // Lancer les dés
-        int[] des = monopoly.lancerDes();
+        //int[] des = monopoly.lancerDes();
+        System.out.println("Dés ? ");
+        Scanner r = new Scanner(System.in);
+        int[] des = new int[] { r.nextInt(), r.nextInt() };
         joueur.setDernierDes(des);
                         
         // Notification à l'ihm du lancé de dés
@@ -335,6 +327,7 @@ public class Controleur
             msgDeplacement.setJoueur(joueur);
             msgDeplacement.setPasserCaseDepart(passeCaseDepart);
             observateur.notifier(msgDeplacement);
+            
             jouerCarreau(joueur);
         }
         

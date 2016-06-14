@@ -40,7 +40,7 @@ public abstract class ProprieteNonConstructible extends Propriete
            }
            else
            {
-               message.setType(TypeAction.RIEN);
+               message.setType(TypeAction.PROPRIETE);
            }
         }
         // La propriete a un proprietaire, le joueur doit payer
@@ -51,7 +51,7 @@ public abstract class ProprieteNonConstructible extends Propriete
         }
         else
         {
-            message.setType(TypeAction.RIEN);
+            message.setType(TypeAction.PROPRIETE);
         }
         
         return message;
