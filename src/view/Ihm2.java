@@ -914,7 +914,9 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         if (e.getSource() == buttonLancerDes)
         {
             buttonLancerDes.setVisible(false);
-            clearPlateau();
+            panelCheque.setVisible(false);
+            panInfoCdC.setVisible(false);
+            panInfoCarteChance.setVisible(false);
             controleur.jouerCoup();
             
             Random r = new Random();
@@ -952,10 +954,12 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         {
             clearPlateau();
             controleur.finCoup();
+            
         }
         else if (e.getSource() == buttonCautionPrison)
         {
             controleur.delivrerAvecCaution(joueurCourant);
+            panInfoPrison.setVisible(false);
         }
         else if (e.getSource() == buttonAcheter)
         {

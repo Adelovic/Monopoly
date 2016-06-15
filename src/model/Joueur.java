@@ -97,10 +97,10 @@ public class Joueur
     }
     public void modifierCash(int cash)
     {
-        cash += cash;
-        if (cash < 0) 
+        this.cash += cash;
+        if (this.cash < 0) 
         {
-            cash = 0;
+            this.cash = 0;
         }
     }
     

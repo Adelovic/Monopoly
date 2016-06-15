@@ -214,8 +214,8 @@ public class Monopoly
     
     public void  melangerCartes() 
     {
-        Collections.shuffle(cartesChance);
-        Collections.shuffle(cartesCommunaute);
+        //Collections.shuffle(cartesChance);
+        //Collections.shuffle(cartesCommunaute);
     }
     
     public void emprisonner(Joueur j)

@@ -119,6 +119,10 @@ public class IhmConstruire extends JPanel implements ActionListener
     {
         this.joueur = joueur;
         
+        if (joueur.getProprietesConstructibles().size() == 0)
+        {
+            buttonConstruire.setText("Quitter");
+        }
         this.setVisible(true);
         
         titreConstruction.setText("Construction de " + joueur.getNom());

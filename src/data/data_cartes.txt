@@ -1,32 +1,32 @@
+ch,TF,Amende pour excès de vitesse : 15€,-15
+c,TF,Recevez votre intérêt sur l'emprunt à 7% : 25€.,25
+c,TF,Recevez votre revenu annuel : 100€,100
+c,TF,Payez une amende de 10€.,-10
+c,TF,Payez à l'hôpital 100€.,-100
+ch,TF,Payez pour frais de scolarité : 150€,-150
+ch,TF,La Banque vous verse un dividende de 50€.,50
+ch,TF,Vous avez gagné le prix de mots croisés. Recevez 100€.,100
 ch,LP,Vous êtes libéré de prison. Cette carte peut être conservée jusqu'à ce qu'elle soit utilisée.
 ch,DR,Reculez de trois cases,-3
 ch,TP,Vous êtes imposés pour les réparations de voirie à raison de : 40 € par maison et 115€ par hôtel.,40,115
-ch,TF,Amende pour excès de vitesse : 15€,-15
 ch,TP,Faites des réparations dans toutes vos maisons : versez pour chaque maison 25€ et pour chaque hôtel 100€,25,100
 ch,TF,Amende pour ivresse : 20€,-20
 ch,DA,Avancez jusqu'à la case Départ.,1,true
 ch,DA,Allez tout droit en prison. Ne passez pas par la case Départ. Ne recevez pas 200€.,11,false
 ch,DA,Rendez vous à l'Avenue Henri Martin. Si vous passez par la case Départ recevez 200€.,25,true
 ch,DA,Allez à la gare de Lyon. Si vous passez par la case Départ recevez 200€.,16,true
-ch,TF,Payez pour frais de scolarité : 150€,-150
-ch,TF,Vous avez gagné le prix de mots croisés. Recevez 100€.,100
-ch,TF,La Banque vous verse un dividende de 50€.,50
 ch,DA,Rendez vous à la Rue de la Paix.,40,true
 ch,TF,Votre immeuble et votre prêt rapportent. Vous devez toucher 150€.,150
 ch,DA,Accédez au Boulevard de la Villette. Si vous passez par la case Départ recevez 200€,12,true
 c,LP,Vous êtes libéré de prison. Cette carte peut être conservée jusqu'à ce qu'elle soit utilisée.
-c,TF,Payez une amende de 10€.,-10
 c,TA,C'est votre anniversaire. Chaque joueur doit vous donner 10€.
 c,TF,Erreur de la banque en votre faveur. Recevez 200€.,200,
 c,DA,Retournez à Belleville.,2,true
 c,TF,Payez la note du medecin.,-50
 c,TF,Les contributions vous remboursent la somme de 20€.,20
-c,TF,Payez à l'hôpital 100€.,-100
 c,TF,Vous heritez de 100€.,100
 c,DA,Allez tout droit en prison. Ne passez pas par la case Départ. Ne recevez pas 200€.,11,false
 c,TF,Payez votre Police d'Assurance : 50€.,-50
 c,TF,La vente de votre stock vous rapporte 50€.,50
 c,DA,Avancez jusqu'a la case départ.,1,true
-c,TF,Recevez votre intérêt sur l'emprunt à 7% : 25€.,25
-c,TF,Recevez votre revenu annuel : 100€,100
 c,TF,Vous avez gagné le deuxieme prix de beauté : recevez 10€,10

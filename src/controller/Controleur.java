@@ -49,6 +49,7 @@ public class Controleur
     
     public static void main(String[] args)
     {
+        
         new Ihm2(new Controleur());
     }
     
@@ -200,7 +201,9 @@ public class Controleur
                 joueur.payerA(proprio, messageCarreau.getLoyer());
                 break;
             case C_TRANSACTION_FIXE:
+                System.out.println("WHY ? " + messageCarreau.getMontantTransaction());
                 joueur.modifierCash(messageCarreau.getMontantTransaction());
+                System.out.println(joueur.getCash());
                 break;
             /* Aucune action n'est effectuée */
             case RIEN:
@@ -272,15 +275,12 @@ public class Controleur
     
     }
     
-    /** Jouer un coup du joueur **/
-    public void jouerCoup()
+        /** Jouer un coup du joueur **/
+    public void jouerCoup(int de1, int de2)
     {
         Joueur joueur = monopoly.getJoueurCourant();
         // Lancer les dés
-        //int[] des = monopoly.lancerDes();
-        System.out.println("Dés ? ");
-        Scanner r = new Scanner(System.in);
-        int[] des = new int[] { r.nextInt(), r.nextInt() };
+        int[] des = new int[] { de1, de2 };
         joueur.setDernierDes(des);
 
         // Notification à l'ihm du lancé de dés
@@ -303,16 +303,81 @@ public class Controleur
                 messagePrison.setPasserCaseDepart(false);
                 jouerCarreau(joueur);
             }
-            else if (joueur.getTourPrison() == 3)
+            else if (joueur.getTourPrison() < 3)
             {
-                joueur.removeCash(50);
+                messagePrison.setType(TypeAction.FIN_COUP);
+                messagePrison.setPasserCaseDepart(false);
+            }
+            observateur.notifier(messagePrison);
+        }
+        /* Sinon, on joue */
+        else
+        {
+            boolean passeCaseDepart = monopoly.deplacerJoueur(joueur, des[0]+des[1]);
+            Message msgDeplacement = new Message();
+            msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+            msgDeplacement.setJoueur(joueur);
+            msgDeplacement.setPasserCaseDepart(passeCaseDepart);
+            observateur.notifier(msgDeplacement);
+            
+            jouerCarreau(joueur);
+        }
+        
+        /* Si le joueur a fait un double dé et qu'il n'est pas/plus en prison, on rejoue */
+        if (joueur.doubleDes() && !joueur.isEnPrison())
+        {
+            joueur.addDoubleDes();
+            Message message = new Message();
+            message.setJoueur(joueur);
+            
+            /* On envoie en prison le joueur et on envoie le message de déplacement à l'ihm */
+            if (joueur.getNbDoubleDes() == 3)
+            {
+                monopoly.emprisonner(joueur);
+                message.setType(TypeAction.ALLER_PRISON);
+                joueur.resetNbDoubleDe();
+                Message msgDeplacement = new Message();
+                msgDeplacement.setType(TypeAction.DEPLACER_JOUEUR);
+                msgDeplacement.setJoueur(joueur);
+                observateur.notifier(msgDeplacement);
+            }
+            else
+            {
+                message.setType(TypeAction.REJOUER_DOUBLE_DES);
+            }
+            observateur.notifier(message);
+        }
+    }
+    
+    /** Jouer un coup du joueur **/
+    public void jouerCoup()
+    {
+        Joueur joueur = monopoly.getJoueurCourant();
+        // Lancer les dés
+        int[] des = monopoly.lancerDes();
+        joueur.setDernierDes(des);
+
+        // Notification à l'ihm du lancé de dés
+        Message msg = new Message();
+        msg.setType(TypeAction.LANCER_DES);
+        msg.setJoueur(joueur);
+        msg.setDerniersDes(joueur.getDernierDes());
+        observateur.notifier(msg);
+            
+        /* On ne joue pas le coup si le joueur est en prison, on verifie simplement le résultat des dés et le nombre de tour en prison */
+        if (joueur.isEnPrison())
+        {
+            Message messagePrison = new Message();
+            messagePrison.setJoueur(joueur);
+            if (joueur.doubleDes())
+            {
                 monopoly.liberer(joueur);
                 monopoly.deplacerJoueur(joueur, des[0]+des[1]);
                 messagePrison.setType(TypeAction.DEPLACER_JOUEUR);
                 messagePrison.setPasserCaseDepart(false);
                 jouerCarreau(joueur);
             }
-            else
+            else if (joueur.getTourPrison() < 3)
             {
                 messagePrison.setType(TypeAction.FIN_COUP);
                 messagePrison.setPasserCaseDepart(false);
@@ -524,6 +589,10 @@ public class Controleur
     {
         joueur.removeCash(50);
         monopoly.liberer(joueur);
+        Message message = new Message();
+        message.setJoueur(joueur);
+        message.setType(TypeAction.FIN_COUP);
+        observateur.notifier(message);
     }
     
     /** Lis le fichier des carreaux et le renvoie sous forme de matrice **/
