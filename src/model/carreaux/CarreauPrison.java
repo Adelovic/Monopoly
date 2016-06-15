@@ -13,16 +13,17 @@ import model.TypeAction;
  *
  * @author raffya
  */
-public class Prison extends Carreau{
+public class CarreauPrison extends Carreau{
 
-    public Prison(int numero, String nom) {
+    public CarreauPrison(int numero, String nom) {
         super(numero, nom);
     }
 
     @Override
     public Message action(Joueur j) {
         Message message = new Message();
-        message.setType(TypeAction.PRISON);
+        message.setJoueur(j);
+        message.setType(TypeAction.ALLER_PRISON);
         return message;
     }
     

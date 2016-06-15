@@ -13,10 +13,10 @@ import model.TypeAction;
  *
  * @author raffya
  */
-public class Taxe extends Carreau {
+public class CarreauTaxe extends Carreau {
     int montant;
     
-    public Taxe(int numero, String nom, int montant) {
+    public CarreauTaxe(int numero, String nom, int montant) {
         super(numero, nom);
         this.montant = montant;
         
@@ -25,7 +25,9 @@ public class Taxe extends Carreau {
     @Override
     public Message action(Joueur j) {
         Message message = new Message();
+        message.setCarreau(this);
         message.setType(TypeAction.C_TRANSACTION_FIXE);
+        message.setMontantTransaction(montant);
         return message;
     }
 

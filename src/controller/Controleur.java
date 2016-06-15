@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 import model.carreaux.AutreCarreau;
 import model.carreaux.Carreau;
@@ -21,15 +20,15 @@ import model.TypeAction;
 import model.TypeCarte;
 import model.carreaux.CarreauSansAction;
 import model.carreaux.CarreauTirage;
-import model.carreaux.Prison;
-import model.carreaux.Taxe;
+import model.carreaux.CarreauPrison;
+import model.carreaux.CarreauTaxe;
 import model.carreaux.propriete.Propriete;
 import model.cartes.Carte;
 import model.cartes.CarteLiberationPrison;
 import model.cartes.deplacement.CarteDeplacementAbsolu;
 import model.cartes.deplacement.CarteDeplacementRelatif;
 import model.cartes.transaction.CarteAnniversaire;
-import model.cartes.transaction.CarteReparation;
+import model.cartes.CarteReparation;
 import model.cartes.transaction.CarteTransactionFixe;
 import view.Ihm2;
 import view.Observateur;
@@ -200,6 +199,9 @@ public class Controleur
                 Joueur proprio = messageCarreau.getPropriete().getProprietaire();
                 joueur.payerA(proprio, messageCarreau.getLoyer());
                 break;
+            case C_TRANSACTION_FIXE:
+                joueur.modifierCash(messageCarreau.getMontantTransaction());
+                break;
             /* Aucune action n'est effectuée */
             case RIEN:
                 break;
@@ -213,9 +215,7 @@ public class Controleur
         message.setJoueur(joueur); 
         
         /* Chaque fin d'action d'un carreau, renvoyer la liste des proprietes modifiables (maisons, hotels) du joueur */
-        message.setType(TypeAction.CONSTRUIRE_INFOS);
         monopoly.actualiserProprietesConstructibles(joueur);
-        observateur.notifier(message);
         
         if (passeCaseDepart)
         {
@@ -246,6 +246,7 @@ public class Controleur
             Message messageFinPartie = new Message();
             messageFinPartie.setType(TypeAction.FIN_PARTIE);
             messageFinPartie.setJoueur(monopoly.getJoueurs().get(0));
+            messageFinPartie.setJoueurs(monopoly.getJoueursElimines());
             observateur.notifier(messageFinPartie);
         }
     }
@@ -281,7 +282,7 @@ public class Controleur
         Scanner r = new Scanner(System.in);
         int[] des = new int[] { r.nextInt(), r.nextInt() };
         joueur.setDernierDes(des);
-                        
+
         // Notification à l'ihm du lancé de dés
         Message msg = new Message();
         msg.setType(TypeAction.LANCER_DES);
@@ -334,8 +335,8 @@ public class Controleur
         /* Si le joueur a fait un double dé et qu'il n'est pas/plus en prison, on rejoue */
         if (joueur.doubleDes() && !joueur.isEnPrison())
         {
+            joueur.addDoubleDes();
             Message message = new Message();
-            message.setType(TypeAction.REJOUER_DOUBLE_DES);
             message.setJoueur(joueur);
             
             /* On envoie en prison le joueur et on envoie le message de déplacement à l'ihm */
@@ -368,6 +369,7 @@ public class Controleur
     {
         propriete.construire();
         propriete.getProprietaire().removeCash(prix);
+        monopoly.actualiserProprietesConstructibles(propriete.getProprietaire());
     }
     /*
     * Crée les groupes de propriété à partir de CouleurPropriete
@@ -421,12 +423,12 @@ public class Controleur
                 else if(caseType.compareTo("PR") == 0)
                 {
                     System.out.println("Prison :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
-                    monopoly.addCarreau(new Prison(Integer.valueOf(caseInfos[1]), caseInfos[2]));
+                    monopoly.addCarreau(new CarreauPrison(Integer.valueOf(caseInfos[1]), caseInfos[2]));
                 }
                 else if(caseType.compareTo("TX") == 0)
                 {
                     System.out.println("Carreau taxe :\t" + caseInfos[2] + "\t@ case " + data.get(i)[1]);
-                    monopoly.addCarreau(new Taxe(Integer.valueOf(caseInfos[1]), caseInfos[2], Integer.valueOf(caseInfos[3])));
+                    monopoly.addCarreau(new CarreauTaxe(Integer.valueOf(caseInfos[1]), caseInfos[2], Integer.valueOf(caseInfos[3])));
                 }
                 else if(caseType.compareTo("CT") == 0)
                 {
@@ -516,6 +518,12 @@ public class Controleur
         {
             System.err.println("[buildGamePlateau()] : Error while reading file!");
         }
+    }
+    
+    public void delivrerAvecCaution(Joueur joueur)
+    {
+        joueur.removeCash(50);
+        monopoly.liberer(joueur);
     }
     
     /** Lis le fichier des carreaux et le renvoie sous forme de matrice **/

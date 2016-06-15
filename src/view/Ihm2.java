@@ -29,10 +29,6 @@ import model.cartes.Carte;
 public class Ihm2 extends JFrame implements ActionListener, Observateur
 {
     private String[] icones = { "chaussure.png", "chapeau.png", "chaussure.png", "voiture.png", "bateau.png", "deACoudre.png" };
-       
-    private HashMap<Joueur, ArrayList<ProprieteConstructible>> proprietesConstructibles;
-    
-    private Color[] listeCouleurs = {Color.red, Color.yellow, Color.green, Color.blue, Color.PINK, Color.GRAY};
     
     private boolean recuDes = false;
     
@@ -710,13 +706,14 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         buttonAcheter.addActionListener(this);
         panCaseActuelle.add(buttonAcheter);
         buttonAcheter.setBounds(190, 60, 120, 70);
+        buttonAcheter.setVisible(false);
 
         buttonConstruire.setBackground(new Color(153, 153, 153));
         buttonConstruire.setFont(new Font("TeXGyreAdventor", 1, 18)); 
         buttonConstruire.setForeground(new Color(255, 255, 255));
-        buttonConstruire.setText("Constuire");
+        buttonConstruire.setText("Construire");
         buttonConstruire.addActionListener(this);
-        buttonConstruire.setEnabled(false);
+        buttonConstruire.setEnabled(true);
         panCaseActuelle.add(buttonConstruire);
         buttonConstruire.setBounds(190, 170, 120, 70);
 
@@ -724,7 +721,6 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panelCartePosition.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
         panelCartePosition.setLayout(null);
 
-        panelCouleur.setBackground(new Color(51, 153, 0));
         panelCouleur.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0, 0, 0)));
 
         GroupLayout panelCouleurLayout = new GroupLayout(panelCouleur);
@@ -877,111 +873,41 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         }
     }
     
-    public void afficherProprieteConstructible(ProprieteConstructible prop, boolean estConstructible, boolean estAchetable)
+    public void afficherPropriete(Message message, boolean estAchetable)
     {
-        //panelLocation.setBackground(prop.getGroupe().getCouleur());
-        loyerVide.setText("Prix vide : " + prop.getPrix());
-        loyer1Maison.setText("1 maison " + prop.getLoyers().get(0));
-        loyer2Maisons.setText("2 maisons " + prop.getLoyers().get(1));
-        loyer3Maisons.setText("3 maisons " + prop.getLoyers().get(2));
-        loyer4Maisons.setText("4 maisons " + prop.getLoyers().get(3));
-        loyerHotel.setText("Hôtel " + prop.getLoyers().get(4));
-        panCaseActuelle.setVisible(true);
-        
-        if (estConstructible)
+        nomPropriete.setText(message.getPropriete().getNom());
+        if (message.getEstConstructible())
         {
-            buttonConstruire.setVisible(true);
-            buttonAcheter.setVisible(false);
+            ProprieteConstructible prop = message.getProprieteConstructible();
+            loyerVide.setText("Prix vide : " + prop.getPrix());
+            loyer1Maison.setText("1 maison " + prop.getLoyers().get(0));
+            loyer2Maisons.setText("2 maisons " + prop.getLoyers().get(1));
+            loyer3Maisons.setText("3 maisons " + prop.getLoyers().get(2));
+            loyer4Maisons.setText("4 maisons " + prop.getLoyers().get(3));
+            loyerHotel.setText("Hôtel " + prop.getLoyers().get(4));
+            
+            panelCouleur.setBackground(new Color(prop.getGroupe().getCouleur().getCouleur()));
         }
-        else if (estAchetable)
+        else
         {
-            buttonConstruire.setVisible(false);
+            Propriete prop = message.getPropriete();
+            loyerVide.setText("Prix vide : " + prop.getPrix());
+            panelCouleur.setBackground(Color.BLACK);
+        }
+        
+        if (estAchetable)
+        {
             buttonAcheter.setVisible(true);
         }
         else
         {
-            buttonConstruire.setVisible(false);
             buttonAcheter.setVisible(false);
         }
+        
+        panCaseActuelle.setVisible(true);
     }
     
-    public void displayProprieteNonConstructible(ProprieteNonConstructible prop)
-    {
-        panCaseActuelle.setBackground(new Color(208, 230, 205));
-        panCaseActuelle.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, new Color(255, 255, 255)));
-        panCaseActuelle.setLayout(null);
 
-        txtPosition.setFont(font5); 
-        txtPosition.setText("Position Actuelle");
-        panCaseActuelle.add(txtPosition);
-        txtPosition.setBounds(58, 4, 215, 30);
-
-        buttonAcheter.setBackground(new Color(153, 153, 153));
-        buttonAcheter.setFont(new Font("TeXGyreAdventor", 1, 19)); 
-        buttonAcheter.setForeground(new Color(255, 255, 255));
-        buttonAcheter.setText("Acheter");
-        buttonAcheter.addActionListener(this);
-        panCaseActuelle.add(buttonAcheter);
-        buttonAcheter.setBounds(190, 60, 120, 70);
-
-        buttonConstruire.setBackground(new Color(153, 153, 153));
-        buttonConstruire.setFont(new Font("TeXGyreAdventor", 1, 18)); 
-        buttonConstruire.setForeground(new Color(255, 255, 255));
-        buttonConstruire.setText("Constuire");
-        buttonConstruire.addActionListener(this);
-        
-        panCaseActuelle.add(buttonConstruire);
-        buttonConstruire.setBounds(190, 170, 120, 70);
-
-        panelCartePosition.setBackground(new Color(203, 230, 208));
-        panelCartePosition.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
-        panelCartePosition.setLayout(null);
-
-        panelCouleur.setBackground(new Color(51, 153, 0));
-        panelCouleur.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0, 0, 0)));
-
-        GroupLayout panelCouleurLayout = new GroupLayout(panelCouleur);
-        panelCouleur.setLayout(panelCouleurLayout);
-        panelCouleurLayout.setHorizontalGroup(
-            panelCouleurLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 166, Short.MAX_VALUE)
-        );
-        panelCouleurLayout.setVerticalGroup(
-            panelCouleurLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 64, Short.MAX_VALUE)
-        );
-
-        panelCartePosition.add(panelCouleur);
-        panelCouleur.setBounds(2, 2, 166, 66);
-
-        panelLocation.setBackground(new Color(205, 230, 208));
-        panelLocation.setBorder(BorderFactory.createMatteBorder(1, 2, 1, 2, new Color(0, 0, 0)));
-        panelLocation.setLayout(new GridLayout(6, 0));
-
-        loyerVide.setText("Prix vide : " + prop.getPrix());
-        panelLocation.add(loyerVide);
-
-        panelCartePosition.add(panelLocation);
-        panelLocation.setBounds(0, 100, 170, 100);
-
-        nomPropriete.setText(prop.getNom());
-        panelCartePosition.add(nomPropriete);
-        nomPropriete.setBounds(0, 70, 170, 30);
-
-        panInfoCarreau.setBackground(new Color(205, 230, 208));
-        panInfoCarreau.setBorder(BorderFactory.createMatteBorder(0, 1, 2, 2, new Color(0, 0, 0)));
-        panInfoCarreau.setLayout(new GridLayout(2, 0));
-
-        panelCartePosition.add(panInfoCarreau);
-        panInfoCarreau.setBounds(0, 200, 170, 30);
-
-        panCaseActuelle.add(panelCartePosition);
-        panelCartePosition.setBounds(10, 40, 170, 230);
-
-        fenetreJeu.add(panCaseActuelle);
-        panCaseActuelle.setBounds(1330, 570, 320, 280);
-        
-    }
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -1029,7 +955,7 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         }
         else if (e.getSource() == buttonCautionPrison)
         {
-            
+            controleur.delivrerAvecCaution(joueurCourant);
         }
         else if (e.getSource() == buttonAcheter)
         {
@@ -1089,8 +1015,19 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
         panInfoCdC.paint(panInfoCdC.getGraphics());
     }
     
-    public void afficherLoyer()
+    public void afficherLoyer(Message message)
     {
+        montantLoyer.setText(message.getLoyer() + " €");
+        destinataireDuLoyer.setText(message.getPropriete().getProprietaire().getNom());
+        causeDuPayement.setText("Passage sur la propriété " + message.getPropriete().getNom());
+        panelCheque.setVisible(true);
+    }
+    
+    public void afficherTransaction(Message message)
+    {
+        montantLoyer.setText(String.valueOf(Math.abs(message.getMontantTransaction())) + " €");
+        destinataireDuLoyer.setText("Banque");
+        causeDuPayement.setText(message.getCarreau().getNom());
         panelCheque.setVisible(true);
     }
     
@@ -1138,18 +1075,25 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
     {
         this.des = des;
     }
-    public void displayClassementGeneral()
-    {
+    
+    public void afficherClassementGeneral(Message message)
+    {   
+        clearPlateau();
+        
+        labelNom1.setText(message.getJoueur().getNom());
+        labelNom2.setText(message.getJoueurs().get(0).getNom());
+        labelNom3.setText(message.getJoueurs().size() < 3 ? "" : message.getJoueurs().get(2).getNom());
+        labelNom4.setText(message.getJoueurs().size() < 4 ? "" : message.getJoueurs().get(3).getNom());
+        labelNom5.setText(message.getJoueurs().size() < 5 ? "" : message.getJoueurs().get(4).getNom());
+        labelNom6.setText(message.getJoueurs().size() < 6 ? "" : message.getJoueurs().get(5).getNom());
+        
         fenetreClassement.setVisible(true);
     }
-    public ProprieteConstructible afficherConstruire(Joueur joueur)
-    {
-        fenetreConstruire.setVisible(true);
-        return fenetreConstruire.getProprieteAConstruire();
-    }
+    
     @Override
     public void notifier(Message message) 
     {
+        System.out.println(message.getType());
         switch (message.getType())
         {
             case TIRER_CARTE:
@@ -1181,27 +1125,17 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 afficherPrison(3, message.getJoueur().getNbCartesLiberation() > 0);
                 break;
             case PAYER_LOYER:
-                if (message.getEstConstructible())
-                {
-                    afficherProprieteConstructible(message.getProprieteConstructible(), false, false);
-                }
-                montantLoyer.setText(message.getLoyer() + " €");
-                destinataireDuLoyer.setText(message.getPropriete().getProprietaire().getNom());
-                causeDuPayement.setText("Passage sur la propriété " + message.getPropriete().getNom());
-                afficherLoyer();
+                afficherPropriete(message, false);
+                afficherLoyer(message);
                 break;
             case ACHAT:
-                if (message.getEstConstructible())//controleur.construirePropriete(joueurCourant.getProprieteConstructible(), message.getPrix());
-                {
-                    afficherProprieteConstructible(message.getProprieteConstructible(), false, true);
-                }
+                afficherPropriete(message, true);
                 proprieteCourante = message.getPropriete();
                 break;
             case CONSTRUIRE_INFOS:
-                buttonConstruire.setEnabled(true);
                 break;
             case PROPRIETE:
-                afficherProprieteConstructible(message.getProprieteConstructible(), true, false);
+                afficherPropriete(message, false);
             case RIEN:
                 System.out.println("RIEN!");
                 break;
@@ -1217,12 +1151,12 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
                 break;
             case FIN_PARTIE:
                 System.out.println("Fin du jeu ! Gagnant :  " + message.getJoueur().getNom());
-                displayClassementGeneral();
+                afficherClassementGeneral(message);
                 break;
             case DEBUT_COUP:
                 System.out.println("Debut du coup de " + message.getJoueur().getNom());
                 displayJoueurs(message.getJoueurs());
-                panCaseActuelle.setVisible(false); // On ne le met pas dans le debutCoup car on ne veut pas que ca arrive quand le joueur fait un double de
+                panCaseActuelle.setVisible(true); // On ne le met pas dans le debutCoup car on ne veut pas que ca arrive quand le joueur fait un double de
                 debutCoup(message.getJoueur());
                 break;
             case FIN_COUP:
@@ -1236,6 +1170,9 @@ public class Ihm2 extends JFrame implements ActionListener, Observateur
             case REJOUER:
                 System.out.println("Le joueur" + message.getJoueur().getNom() + " rejoue");
                 controleur.jouerCarreau(message.getJoueur());
+                break;
+            case C_TRANSACTION_FIXE:
+                afficherTransaction(message);
                 break;
         }
     }

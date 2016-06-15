@@ -1,4 +1,4 @@
-package model.cartes.transaction;
+package model.cartes;
 
 import model.Joueur;
 import model.Message;

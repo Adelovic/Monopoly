@@ -146,7 +146,7 @@ public class Monopoly
         
         for (ProprieteConstructible prop : joueur.getProprietes())
         {
-            if (prop.maisonConstructible() && maisonsDisponibles > 0 || prop.hotelConstructible() && hotelsDisponibles > 0)
+            if (prop.maisonConstructible() && maisonsDisponibles > 0 && joueur.getCash() >= prop.getPrixMaison() || prop.hotelConstructible() && hotelsDisponibles > 0 && joueur.getCash() >= prop.getPrixHotel())
             {
                 proprietesConstructibles.add(prop);
             }

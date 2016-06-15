@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import model.carreaux.Carreau;
 import model.carreaux.propriete.Propriete;
 import model.carreaux.propriete.ProprieteConstructible;
 import model.cartes.Carte;
@@ -49,7 +50,19 @@ public class Message
     private ArrayList<Joueur> joueurs;
     
     private boolean estConstructible;
+    
+    private Carreau carreau;
 
+    
+    public Carreau getCarreau()
+    {
+        return carreau;
+    }
+    
+    public void setCarreau(Carreau carreau)
+    {
+        this.carreau = carreau;
+    }
     
     public void setEstConstructible(boolean estConstructible)
     {

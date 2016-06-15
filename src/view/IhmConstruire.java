@@ -32,8 +32,6 @@ public class IhmConstruire extends JPanel implements ActionListener
     {
         this.ihm = ihm;
         this.joueur = joueur;
-        this.nbMaisons = nbMaisons;
-        this.nbHotels = nbHotels;
         initComponents();
     }                       
     private void initComponents() {
@@ -117,23 +115,16 @@ public class IhmConstruire extends JPanel implements ActionListener
         );
     }    
 
-    public ProprieteConstructible getProprieteAConstruire() 
+    public void afficher(final Joueur joueur) 
     {
-        ihm.set
-        return proprieteAConstruire;
-    }
-
-    public void afficher(final Joueur joueur) {
         this.joueur = joueur;
-        this.nbMaisons = nbMaisons;
-        this.nbHotels = nbHotels;
         
         this.setVisible(true);
         
         titreConstruction.setText("Construction de " + joueur.getNom());
         
         listRue.setModel(new javax.swing.AbstractListModel<String>() {
-            ArrayList<ProprieteConstructible> jListProprietes = proprietesConstructibles;
+            ArrayList<ProprieteConstructible> jListProprietes = joueur.getProprietesConstructibles();
             @Override
             public int getSize() { return jListProprietes.size(); }
             @Override
@@ -144,8 +135,21 @@ public class IhmConstruire extends JPanel implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) 
     {
-        proprieteAConstruire = joueur.getProprietes().get(listRue.getSelectedIndex());
-        ihm.getControleur().construirePropriete(proprieteAConstruire, proprieteAConstruire.getPrix());
+        if (listRue.getSelectedIndex() != -1)
+        {
+            proprieteAConstruire = joueur.getProprietes().get(listRue.getSelectedIndex());
+        
+            int prix;
+            if (proprieteAConstruire.maisonConstructible())
+            {
+                prix = proprieteAConstruire.getPrixMaison();
+            }
+            else
+            {
+                prix = proprieteAConstruire.getPrixHotel();
+            }
+            ihm.getControleur().construirePropriete(proprieteAConstruire, prix);
+        }
         this.setVisible(false);
         
     }

@@ -5,7 +5,6 @@
  */
 package model.cartes.deplacement;
 
-import model.Joueur;
 import model.Message;
 import model.TypeAction;
 import model.TypeCarte;
@@ -14,14 +13,15 @@ import model.TypeCarte;
  *
  * @author raffya
  */
-public class CarteDeplacementAbsolu extends CarteDeplacement{
+public class CarteDeplacementAbsolu extends CarteDeplacement
+{
     
-    private boolean passerCasedepart;
+    private final boolean passerCaseDepart;
     
-    public CarteDeplacementAbsolu(TypeCarte type, String description, int deplacement, boolean passerCasedepart) 
+    public CarteDeplacementAbsolu(TypeCarte type, String description, int deplacement, boolean passerCaseDepart) 
     {
         super(type, description, deplacement);
-        this.passerCasedepart = passerCasedepart;
+        this.passerCaseDepart = passerCaseDepart;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CarteDeplacementAbsolu extends CarteDeplacement{
         Message message = new Message();
         message.setType(TypeAction.C_DEPLACEMENT_ABSOLU);
         message.setDeplacement(getDeplacement());
-        message.setPasserCaseDepart(passerCasedepart);
+        message.setPasserCaseDepart(passerCaseDepart);
         return message;
     }
     

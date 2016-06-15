@@ -192,5 +192,10 @@ public class Joueur
         this.proprietesConstructibles = props;
     }
     
+    public ArrayList<ProprieteConstructible> getProprietesConstructibles()
+    {
+        return proprietesConstructibles;
+    }
+    
 
 }
