@@ -257,6 +257,7 @@ public class Controleur
     /* La fin d'un coup change le joueur courant et envoie le signal d'un nouveau courant à l'ihm */
     public void finCoup()
     {
+        monopoly.getJoueurCourant().resetNbDoubleDe();
         Joueur joueur = monopoly.prochainJoueur();
         Message message = new Message();
         message.setType(TypeAction.DEBUT_COUP);
